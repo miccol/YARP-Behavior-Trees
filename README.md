@@ -1,28 +1,8 @@
-<img width="100" alt="portfolio_view" src="http://michelecolledanchise.com/BTPPLOGO.png"> BT++ ![License MIT](https://img.shields.io/dub/l/vibe-d.svg)
+
 ====
-![Version](https://img.shields.io/badge/version-v1.4-green.svg) <br/> 
-A behavior tree library in `C++`.
+A behavior tree library in `YARP`.
 
-REFERENCE
-------------
-Please refer to the following paper when using the library:
 
-**How Behavior Trees Modularize Hybrid Control Systems and Generalize Sequential Behavior Compositions, the Subsumption Architecture, and Decision Trees.** Michele Colledanchise and Petter Ogren. IEEE Transaction on Robotics 2017.
-
-bibtex entry:
-
-`@ARTICLE{TRO17Colledanchise,` <br/>
-`author={M. Colledanchise and P. Ögren},` <br/>
-`journal={IEEE Transactions on Robotics},` <br/>
-`title={{How Behavior Trees Modularize Hybrid Control Systems and Generalize Sequential Behavior Compositions, the Subsumption Architecture, and Decision Trees}},` <br/> 
-`year={2017},` <br/>
-`volume={33},` <br/>
-`number={2},` <br/>
-`pages={372-389},` <br/>
-`keywords={Computer architecture;Decision trees;High definition video;Robot control;Switches;Behavior trees (BTs);decision trees;finite state machines (FSMs);hybrid dynamical systems (HDSs);modularity;sequential behavior compositions;subsumption architecture}, ` <br/>
-`doi={10.1109/TRO.2016.2633567},` <br/>
-`ISSN={1552-3098},` <br/>
-`month={April},}`<br/>
 
 
 DEPENDENCIES
@@ -31,6 +11,7 @@ DEPENDENCIES
 Regarding visualization purposes:
 * [OpenGL](https://www.opengl.org/)
 * [Glut](https://www.opengl.org/resources/libraries/glut/)
+* [YARP](https://www.yarp.it/)
 
 Regarding tests:
 * [GTests](https://github.com/google/googletest)
@@ -68,26 +49,6 @@ Once you have the repository, compile the library:
 `$ cmake ..` <br/>
 `$ make` <br/>
 
-Check the installation by running a sample example.
-
-`$ cd /path/to/folder/` <br/>
-`$ cd build/sample` <br/>
-`$ ./btpp_example` <br/>
-
-Note that the local installation generates the shared library in `/path/to/folder/build/lib`.
-
-INSTALL THE LIBRARY SYSTEM-WIDE (tested on Ubuntu 14.04 only)
--------------------------------
-
-If you would like to install the library system-wide, then run:
-
-`$ cd /path/to/folder/` <br/>
-`$ cd build` <br/>
-`$ sudo make install` <br/>
-
-On Ubuntu 14.04, this will install the shared library (libbtpp.so) in `/usr/local/lib`. <br/>
-The repository [my-behavior-tree-project](https://github.com/miccol/my-behavior-tree-project) shows an example on how to use the library once system-wide installed.
-
 
 CREATE YOUR OWN ACTION NODE
 ------
@@ -106,7 +67,7 @@ LICENSE
 -------
 The MIT License (MIT)
 
-Copyright (c) 2014-2017 Michele Colledanchise
+Copyright (c) 2017 Michele Colledanchise
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
