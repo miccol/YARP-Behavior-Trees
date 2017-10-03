@@ -63,6 +63,78 @@ CREATE YOUR OWN CONDITION NODE
 2) Implement the method `BT::ReturnStatus Tick()` with the code you want to execute to check the condition. Return `BT::SUCCESS` or `BT::FAILURE` accordingly.  
 See the file `src/example.cpp` for an example.
 
+### Set up an Behavior Tree's action in YARP
+The file templates/yarp_bt_action_template.cpp is a template on how the your YARP BT action should look like, it performs and action (it is an action n in the Behavior Tree).
+Your action is the Server and does stuff. The Behavior Tree is the Client and tells to all the Server which ones have to start (TICK) and which have to stop (HALT).
+
+in your module you should implement two functions: bool Exec() and void Halt()
+
+
+In the function bool Exec() you must write the code to be executed when the module needs to be run. The function it must return true if the execution of the action has succeeded and false if it has failed.
+To allow preemption to your action, it is preferable to check whenever possible if the action has been halted checking the function is_halted().
+
+For example:
+
+
+
+    bool Exec()
+    {
+        if (!is_halted())
+        {
+            std::cout << "Doing Something" << std::endl;
+        }
+        return true;
+    }
+
+
+In the function Halt() you must write the code to be executed when the module need to be stopped (e.g. when stopping a walking module we would like to have to robot stop in a home position).
+For Example:
+
+
+    void Halt()
+    {
+            std::cout << "Halting the Action" << std::endl;
+    }
+
+
+
+
+
+
+Then set a name for your module. The name has the be unique. It will be used bt the behavior tree to recognize it. For example if you created a class called MyBTModule
+
+     MyBTModule* action_module = new MyBTModule("/your_bt_action_name");
+
+
+The file src/walking_module.cpp gives an example of a BT action node in YARP.
+
+### Set up an Behavior Tree's condition in YARP
+The procedure is similar to the one for the action node, with the only difference that you don't need to implement the function Halt().
+
+The file templates/yarp_bt_condition_template.cpp gives an example of a BT conditon node in YARP.
+
+    
+
+### Test your YARP Action or Condition
+
+You can also test if your YARP Module (Action or Condition) works properly without running the BT. 
+
+in one terminal run your module:
+
+     cd build
+     ./your_module
+
+and in another terminal run the progrem "test_your_module" specifing the port of your module.
+
+     cd build
+     ./test_your_module port_name
+
+Follow the instruction in the program
+Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the program.
+
+
+
+
 LICENSE
 -------
 The MIT License (MIT)
