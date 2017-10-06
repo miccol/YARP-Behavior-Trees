@@ -5,7 +5,7 @@
 
 
 
-#include <draw.h>
+//#include <draw.h>
 
 #include <parallel_node.h>
 #include <fallback_node.h>
@@ -16,8 +16,8 @@
 #include <action_node.h>
 #include <condition_node.h>
 
-#include <yarp_condition_node.h>
-#include <yarp_action_node.h>
+#include <yarp_nodes/yarp_condition_node.h>
+#include <yarp_nodes/yarp_action_node.h>
 
 
 #include <sequence_node_with_memory.h>

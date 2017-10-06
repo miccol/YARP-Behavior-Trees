@@ -11,63 +11,31 @@
 */
 
 
-#include <action_test_node.h>
-#include <string>
+#include<behavior_tree.h>
 
 
-BT::ActionTestNode::ActionTestNode(std::string name) : ActionNode::ActionNode(name)
+
+void Execute(BT::ControlNode* root, int TickPeriod_milliseconds)
 {
-    boolean_value_ = true;
-    time_ = 3;
-}
+    std::cout << "Start Drawing!" << std::endl;
+    // Starts in another thread the drawing of the BT
+//    std::thread t(&drawTree, root);
 
-BT::ActionTestNode::~ActionTestNode() {}
+    root->ResetColorState();
 
-BT::ReturnStatus BT::ActionTestNode::Tick()
-{
-
-    int i = 0;
-    while (get_status() != BT::HALTED && i++ < time_)
+    while (true)
     {
-        DEBUG_STDOUT(" Action " << get_name() << "running! Thread id:" << std::this_thread::get_id());
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-    if (get_status() != BT::HALTED)
-    {
-        if (boolean_value_)
+        DEBUG_STDOUT("Ticking the root node !");
+
+        // Ticking the root node
+        root->Tick();
+        // Printing its state
+
+        if (root->get_status() != BT::RUNNING)
         {
-            DEBUG_STDOUT(" Action " << get_name() << " Done!");
-            return BT::SUCCESS;
+            // when the root returns a status it resets the colors of the tree
+//            root->ResetColorState();
         }
-        else
-        {
-            DEBUG_STDOUT(" Action " << get_name() << " FAILED!");
-            return BT::FAILURE;
-        }
-    }
-    else
-    {
-        return BT::HALTED;
+        std::this_thread::sleep_for(std::chrono::milliseconds(TickPeriod_milliseconds));
     }
 }
-
-void BT::ActionTestNode::Halt()
-{
-    set_status(BT::HALTED);
-    DEBUG_STDOUT("HALTED state set!");
-}
-
-
-void BT::ActionTestNode::set_time(int time)
-{
-    time_ = time;
-}
-
-
-
-void BT::ActionTestNode::set_boolean_value(bool boolean_value)
-{
-    boolean_value_ = boolean_value;
-}
-
-
