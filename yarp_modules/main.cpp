@@ -8,17 +8,17 @@
 class MyAction : public BTYARPAction
 {
 public:
-    MyAction::MyAction(std::string name) : BTYARPAction(name)
+    MyAction(std::string name) : BTYARPAction(name)
     {
 
     }
-    int MyAction::tick()
+    int tick()
     {
         std::cout << "Ticking" << std::endl;
         return 1;
     }
 
-    void MyAction::halt()
+    void halt()
     {
         std::cout << "Halting" << std::endl;
 

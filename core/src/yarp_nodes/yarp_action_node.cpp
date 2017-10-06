@@ -47,11 +47,6 @@ BT::YARPActionNode::~YARPActionNode() {}
 BT::ReturnStatus BT::YARPActionNode::Tick()
 {
 
-    printf("YARP ticking the BT Action Module \n");
-
-
-
-    printf("YARP requesting tick \n");
 
     int status = action_server_.request_tick();
 

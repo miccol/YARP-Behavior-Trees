@@ -38,7 +38,7 @@ private:
 class BTYARPAction : public BTYARPModule
 {
 public:
-    BTYARPAction::BTYARPAction(std::string name) : BTYARPModule(name)   {}
+    BTYARPAction(std::string name) : BTYARPModule(name)   {}
     virtual int tick() = 0;
 
     virtual void halt() = 0;
@@ -48,10 +48,10 @@ public:
 class BTYARPCondition : public BTYARPModule
 {
 public:
-    BTYARPCondition::BTYARPCondition(std::string name) : BTYARPModule(name) {}
+    BTYARPCondition(std::string name) : BTYARPModule(name) {}
     virtual int tick() = 0;
 
-    void BTYARPCondition::halt()
+    void halt()
     {
 
     }

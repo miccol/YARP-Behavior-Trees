@@ -4,7 +4,7 @@
 #include <condition_node.h>
 #include <yarp/os/all.h>
 #include <stdio.h>
-
+#include <BTCmd.h>
 using namespace yarp::os;
 
 
@@ -13,7 +13,7 @@ namespace BT
 class YARPConditionNode : public BT::ConditionNode
 {
 public:
-    YARPConditionNode(std::string name, const char *yarp_client_name, const char *yarp_server_name);
+    YARPConditionNode(std::string name, std::string server_name);
     ~YARPConditionNode();
     BT::ReturnStatus Tick();
 private:

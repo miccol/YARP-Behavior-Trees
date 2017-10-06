@@ -15,7 +15,7 @@
 
 using namespace yarp::os;
 
-BT::YARPConditionNode::YARPConditionNode(std::string name, std::string server_name) : BT::ActionNode::ActionNode(name)
+BT::YARPConditionNode::YARPConditionNode(std::string name, std::string server_name) : BT::ConditionNode::ConditionNode(name)
 {
     std::string client_name_ = "/" + name;
     port_.open(client_name_);
