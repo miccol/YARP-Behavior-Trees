@@ -49,16 +49,11 @@ BT::ReturnStatus BT::YARPActionNode::Tick()
 
     printf("YARP ticking the BT Action Module \n");
 
-//    Bottle cmd;
-//    cmd.addString("tick");
-//    Bottle response;
-//    port_.write(cmd,response);
-//    printf("YARP Action Got response: %s\n", response.toString().c_str());
+
 
     printf("YARP requesting tick \n");
 
-    int status = 0;
-    action_server_.request_tick();
+    int status = action_server_.request_tick();
 
     switch(status)
     {
@@ -76,5 +71,4 @@ BT::ReturnStatus BT::YARPActionNode::Tick()
 void BT::YARPActionNode::Halt()
 {
     action_server_.request_halt();
-
 }

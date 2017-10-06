@@ -15,15 +15,29 @@
 
 using namespace yarp::os;
 
-BT::YARPConditionNode::YARPConditionNode(std::string name, const char *yarp_client_name, const char *yarp_server_name) : BT::ConditionNode::ConditionNode(name)
+BT::YARPConditionNode::YARPConditionNode(std::string name, std::string server_name) : BT::ActionNode::ActionNode(name)
 {
+    std::string client_name_ = "/" + name;
+    port_.open(client_name_);
 
-    port_.open(yarp_client_name);
-    std::cout << "Waiting for the module port name "<< yarp_server_name << " to start." << std::endl;
+    std::cout << "Waiting for the module port name "<< server_name << " to start." << std::endl;
 
-    yarp_.sync(yarp_server_name);//waits for the port
-    yarp_.connect(yarp_client_name, yarp_server_name);
-    std::cout << "Module port name "<< yarp_server_name << " Started.****************************" << std::endl;
+    yarp_.sync("/" + server_name + "/cmd");//waits for the port
+    if(!yarp_.connect(client_name_, "/" + server_name + "/cmd"))
+    {
+       std::cout << "Error! Could not connect to module " << server_name << std::endl;
+       return;
+    }
+
+    BTCmd condition_server;
+
+    condition_server = condition_server;
+    std::cout << "Module "<< server_name << " has started." << std::endl;
+
+    condition_server.yarp().attachAsClient(port_);
+
+
+    std::cout << "Module "<< server_name << " attached." << std::endl;
 
 }
 BT::YARPConditionNode::~YARPConditionNode() {}
@@ -33,23 +47,18 @@ BT::YARPConditionNode::~YARPConditionNode() {}
 BT::ReturnStatus BT::YARPConditionNode::Tick()
 {
 
-    printf("YARP ticking the BT Condition Module \n");
+    int status = action_server_.request_tick();
 
-    Bottle cmd;
-    cmd.addString("tick");
-    Bottle response;
-    port_.write(cmd,response);
-
-    printf("YARP Condition Got response: %s\n", response.toString().c_str());
-
-
-    if(response.pop().asInt() == 0)
+    switch(status)
     {
+    case 0:
         return BT::SUCCESS;
-    }
-    else
-    {
+        break;
+    case 1:
         return BT::FAILURE;
+        break;
+    default:
+        return BT::RUNNING;
     }
 
 }

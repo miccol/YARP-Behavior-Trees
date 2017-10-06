@@ -18,7 +18,10 @@ public:
     BT::ReturnStatus Tick();
 private:
     Network yarp_;
-    RpcClient port_;
+    yarp::os::Port port_;
+    const char* client_name_;
+    const char* server_name_;
+    BTCmd action_server_;
 
 };
 }
