@@ -8,13 +8,11 @@ A behavior tree library in `YARP`.
 DEPENDENCIES
 ------------
 
-Regarding visualization purposes:
-* [OpenGL](https://www.opengl.org/)
-* [Glut](https://www.opengl.org/resources/libraries/glut/)
-* [YARP](https://www.yarp.it/)
 
-Regarding tests:
-* [GTests](https://github.com/google/googletest)
+* [YARP](https://www.yarp.it/)
+* [LUA](https://www.lua.org/)
+
+
 
 BT NODES SUPPORT
 ----------------
