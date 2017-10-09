@@ -1,4 +1,5 @@
-
+# pick up YARP find scripts
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${YARP_MODULE_PATH})
 #compile definition file to generate source code into the desired directory
 set(generated_libs_dir "${CMAKE_CURRENT_SOURCE_DIR}")
 yarp_idl_to_dir(BTCmd.thrift ${generated_libs_dir} sources headers include_dirs)
@@ -27,5 +28,5 @@ set(MYYARP_BT_NODES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/btyarpmodule.h)
 
 
-add_executable(yarp_module_example ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS})
-target_link_libraries(yarp_module_example ${YARP_LIBRARIES})
+#add_executable(yarp_module_example ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS})
+#target_link_libraries(yarp_module_example ${YARP_LIBRARIES})

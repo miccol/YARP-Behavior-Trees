@@ -4,7 +4,6 @@
 #include <btyarpmodule.h>
 
 
-
 class MyAction : public BTYARPAction
 {
 public:

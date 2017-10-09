@@ -11,7 +11,8 @@
 */
 
 #include <yarp_nodes/yarp_condition_node.h>
-#include <string>
+#include <yarp/os/Network.h>
+#include <yarp/os/Port.h>
 
 using namespace yarp::os;
 

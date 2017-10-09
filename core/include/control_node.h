@@ -42,6 +42,16 @@ namespace BT
         // conditional waiting (only mutual access)
         bool WriteState(ReturnStatus new_state);
     };
+    class RootNode : public ControlNode
+    {
+    public:
+        // Constructor
+        RootNode();
+        ~RootNode();
+        int DrawType();
+        // The method that is going to be executed by the thread
+        BT::ReturnStatus Tick();
+    };
 }
 
 #endif

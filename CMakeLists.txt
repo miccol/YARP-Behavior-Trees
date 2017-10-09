@@ -26,8 +26,14 @@ endif()
 #########################################################
 
 find_package(YARP REQUIRED)
+INCLUDE_DIRECTORIES(${YARP_INCLUDE_DIRS})
+ ADD_DEFINITIONS(${YARP_DEFINES}) # optional
 
+ # pick up YARP find scripts
+ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${YARP_MODULE_PATH})
 
 add_subdirectory(yarp_modules)
 
 add_subdirectory(core)
+
+add_subdirectory(editor)

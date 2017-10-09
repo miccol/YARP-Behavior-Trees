@@ -2,11 +2,10 @@
 #define YARPACTIONNODE_H
 
 #include <action_node.h>
-#include <yarp/os/all.h>
-#include <stdio.h>
-#include <btyarpmodule.h>
+#include <yarp/os/Network.h>
+#include <yarp/os/Port.h>
+#include <../yarp_modules/include/btyarpmodule.h>
 
-using namespace yarp::os;
 
 
 namespace BT
@@ -20,7 +19,7 @@ public:
     void Halt();
 
 private:
-    Network yarp_;
+    yarp::os::Network yarp_;
     yarp::os::Port port_;
     const char* client_name_;
     const char* server_name_;

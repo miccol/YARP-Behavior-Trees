@@ -26,8 +26,6 @@ BT::TreeNode::~TreeNode() {}
 
 void BT::TreeNode::set_status(ReturnStatus new_status)
 {
-    DEBUG_STDOUT(get_name() << " is setting its status to " << new_status);
-
     if (new_status != BT::IDLE)
     {
         set_color_status(new_status);
@@ -43,6 +41,7 @@ void BT::TreeNode::set_status(ReturnStatus new_status)
 BT::ReturnStatus BT::TreeNode::get_status()
 {
     // Lock acquistion
+    DEBUG_STDOUT(get_name() << " is setting its status to " << status_);
 
     std::lock_guard<std::mutex> LockGuard(state_mutex_);
 
@@ -104,13 +103,4 @@ BT::NodeType BT::TreeNode::get_type()
 bool BT::TreeNode::is_halted()
 {
     return get_status() == BT::HALTED;
-}
-
-
-BT::ReturnStatus BT::TreeNode::TickSync(int id)
-
-{
-
-    throw std::string("you did not implement TickSync for node %s", name_.c_str());
-
 }

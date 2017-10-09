@@ -106,3 +106,44 @@ int BT::ControlNode::Depth()
     return 1 + depMax;
 }
 
+
+
+BT::RootNode::RootNode() : ControlNode::ControlNode("root") {}
+
+BT::RootNode::~RootNode() {}
+
+BT::ReturnStatus BT::RootNode::Tick()
+{
+    std::cout << "root !" << std::endl;
+
+    // gets the number of children. The number could change if, at runtime, one edits the tree.
+    N_of_children_ = children_nodes_.size();
+
+    if (N_of_children_ > 1)
+    {
+        std::cout << "root can have at most one child" << std::endl;
+        exit(1);
+    }
+
+    if (N_of_children_  ==0 )
+    {
+        std::cout << "root has no child" << std::endl;
+
+    }
+    // Routing the ticks according to the sequence node's logic:
+
+    for (unsigned int i = 0; i < N_of_children_; i++)
+    {
+
+        children_nodes_[i]->Tick();
+
+    }
+
+}
+
+
+int BT::RootNode::DrawType()
+{
+    return BT::ROOT;
+}
+

@@ -28,7 +28,7 @@
 
 #endif
 
-   #define DEBUG //uncomment this line if you want to print debug messages
+  // #define DEBUG //uncomment this line if you want to print debug messages
 
 #ifdef DEBUG
   // #define DEBUG_STDERR(x) (std::cerr << (x))
@@ -41,6 +41,7 @@
 
 #include <iostream>
 
+//#include <unistd.h>
 
 #include <string>
 
@@ -58,7 +59,7 @@ namespace BT
     // Enumerates the possible types of a node, for drawinf we have do discriminate whoich control node it is:
 
     enum NodeType {ACTION_NODE, CONDITION_NODE, CONTROL_NODE};
-    enum DrawNodeType {PARALLEL, SELECTOR, SEQUENCE, SEQUENCESTAR, SELECTORSTAR, ACTION, CONDITION,DECORATOR};
+    enum DrawNodeType {PARALLEL, SELECTOR, SEQUENCE, SEQUENCESTAR, SELECTORSTAR, ACTION, CONDITION,DECORATOR, ROOT, SUBTREE};
     // Enumerates the states every node can be in after execution during a particular
     // time step:
     // - "Success" indicates that the node has completed running during this time step;
@@ -68,7 +69,7 @@ namespace BT
     //   time step, but the task is not yet complete;
     // - "Idle" indicates that the node hasn't run yet.
     // - "Halted" indicates that the node has been halted by its father.
-    enum ReturnStatus {SUCCESS, FAILURE, RUNNING, IDLE, HALTED, EXIT};
+    enum ReturnStatus {RUNNING, SUCCESS, FAILURE, IDLE, HALTED, EXIT};
 
     // Enumerates the options for when a parallel node is considered to have failed:
     // - "FAIL_ON_ONE" indicates that the node will return failure as soon as one of
@@ -89,7 +90,6 @@ namespace BT
     // same time step, failure will take precedence.
 
     // Abstract base class for Behavior Tree Nodes
-
     class TreeNode
     {
     private:
@@ -167,8 +167,6 @@ namespace BT
         void set_name(std::string new_name);
 
         NodeType get_type();
-
-        BT::ReturnStatus TickSync(int id);
 
     };
 }
