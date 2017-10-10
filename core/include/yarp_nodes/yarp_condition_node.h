@@ -20,7 +20,7 @@ private:
     yarp::os::Port port_;
     const char* client_name_;
     const char* server_name_;
-   BTCmd action_server_;
+   BTCmd condition_server_;
 
 };
 }

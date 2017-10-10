@@ -30,15 +30,16 @@ BT::YARPActionNode::YARPActionNode(std::string name, std::string server_name) : 
        return;
     }
 
-    BTCmd action_server;
+   // BTCmd action_server;
 
-    action_server_ = action_server;
+    //action_server_ = action_server;
     std::cout << "Module "<< server_name << " has started." << std::endl;
 
     action_server_.yarp().attachAsClient(port_);
 
 
     std::cout << "Module "<< server_name << " attached." << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 
 }
@@ -49,15 +50,18 @@ BT::YARPActionNode::~YARPActionNode() {}
 BT::ReturnStatus BT::YARPActionNode::Tick()
 {
 
+    std::cout << "Ticking "  << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
-    int status = action_server_.request_tick();
+    int status = BT::SUCCESS; //action_server_.request_tick();
+    std::cout << "status "<< status << std::endl;
 
     switch(status)
     {
-    case 0:
+    case BT::SUCCESS:
         return BT::SUCCESS;
         break;
-    case 1:
+    case BT::FAILURE:
         return BT::FAILURE;
         break;
     default:

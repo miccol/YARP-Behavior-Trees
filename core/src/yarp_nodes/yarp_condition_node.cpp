@@ -32,10 +32,10 @@ BT::YARPConditionNode::YARPConditionNode(std::string name, std::string server_na
 
     BTCmd condition_server;
 
-    condition_server = condition_server;
+    condition_server_ = condition_server;
     std::cout << "Module "<< server_name << " has started." << std::endl;
 
-    condition_server.yarp().attachAsClient(port_);
+    condition_server_.yarp().attachAsClient(port_);
 
 
     std::cout << "Module "<< server_name << " attached." << std::endl;
@@ -48,7 +48,7 @@ BT::YARPConditionNode::~YARPConditionNode() {}
 BT::ReturnStatus BT::YARPConditionNode::Tick()
 {
 
-    int status = action_server_.request_tick();
+    int status = condition_server_.request_tick();
 
     switch(status)
     {

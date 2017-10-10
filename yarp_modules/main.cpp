@@ -3,7 +3,6 @@
 #include <yarp/os/RFModule.h>
 #include <btyarpmodule.h>
 
-
 class MyAction : public BTYARPAction
 {
 public:
@@ -14,7 +13,7 @@ public:
     int tick()
     {
         std::cout << "Ticking" << std::endl;
-        return 1;
+        return 0;
     }
 
     void halt()

@@ -125,19 +125,19 @@ BT::ReturnStatus BT::RootNode::Tick()
         exit(1);
     }
 
-    if (N_of_children_  ==0 )
+    if (N_of_children_  == 0 )
     {
         std::cout << "root has no child" << std::endl;
+        exit(1);
 
     }
     // Routing the ticks according to the sequence node's logic:
 
-    for (unsigned int i = 0; i < N_of_children_; i++)
-    {
+    BT::ReturnStatus status = children_nodes_[0]->Tick();
+    std::cout << "root returning: " << status << std::endl;
 
-        children_nodes_[i]->Tick();
+    return status;
 
-    }
 
 }
 

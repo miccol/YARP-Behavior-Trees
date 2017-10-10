@@ -4,10 +4,13 @@
 #include <set>
 #include <node_editor/Node>
 #include <bt_editor/BehaviorTreeNodeModel.hpp>
+#include <bt_editor/YARPNodeModel.h>
 #include <iostream>
 #include <fstream>
 #include "RootNodeModel.hpp"
 
+
+#include <QThread>
 #include <behavior_tree.h>
 
 
@@ -480,9 +483,8 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     switch (bt_type) {
     case QtNodes::LUAACTION:
     {
-        std::cout << "The node is an action node" << std::endl;
 
-        std::string filename = ((BehaviorTreeNodeModel*)node.nodeDataModel())->type().toStdString();
+        std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
         BT::LuaActionNode* bt_node = new BT::LuaActionNode(filename,filename, lua_state);
         node.linkBTNode(bt_node);
         return bt_node;
@@ -490,19 +492,33 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     }
     case QtNodes::LUACONDITION:
     {
-        std::cout << "The node is a condition node" << std::endl;
-        std::string filename = ((BehaviorTreeNodeModel*)node.nodeDataModel())->type().toStdString();
+        std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
         BT::LuaConditionNode* bt_node = new BT::LuaConditionNode(filename,filename,lua_state);
 
         node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
+    case QtNodes::YARPACTION:
+    {
+        std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();
+
+        BT::YARPActionNode* bt_node = new BT::YARPActionNode(server_name,server_name);
+        node.linkBTNode(bt_node);
+        return bt_node;
+        break;
+    }
+    case QtNodes::YARPCONDITION:
+    {
+        std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();
+        BT::YARPConditionNode* bt_node = new BT::YARPConditionNode(server_name,server_name);
+        node.linkBTNode(bt_node);
+        return bt_node;
+        break;
+    }
     case QtNodes::SEQUENCE:
     {
-        BT::SequenceNode* bt_node = new BT::SequenceNode("ciao");
-        std::cout << "The node is a sequence node" << std::endl;
-
+        BT::SequenceNode* bt_node = new BT::SequenceNode("Sequence");
 
         std::vector<QtNodes::Node*> children = getChildren(scene, node );
 
@@ -517,8 +533,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     }
     case QtNodes::SELECTOR:
     {
-        BT::FallbackNode* bt_node = new BT::FallbackNode("ciao");
-        std::cout << "The node is a fallback node" << std::endl;
+        BT::FallbackNode* bt_node = new BT::FallbackNode("Fallback");
 
 
         std::vector<QtNodes::Node*> children = getChildren(scene, node );
@@ -535,7 +550,6 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     case QtNodes::ROOT:
     {
         BT::RootNode* bt_node = new BT::RootNode();
-        std::cout << "The node is a root node" << std::endl;
         std::vector<QtNodes::Node*> children = getChildren(scene, node );
 
         for(int i = 0; i < children.size(); i++)
@@ -590,8 +604,6 @@ void runTree(QtNodes::FlowScene* scene)
 
 
 
-    //std::vector<QtNodes::Node*> children = getChildren(*scene,*root);
-
 
     std::cout << "Creating the Lua state" << std::endl;
 
@@ -602,14 +614,12 @@ void runTree(QtNodes::FlowScene* scene)
 
 
 
-    //    QtNodes::Node*   child = children[0];
 
 
     BT::TreeNode* bt_root = getBTObject(*scene, *root, lua_state);
 
     std::cout << "bt_root found: " << bt_root->get_name() << "!" << std::endl;
 
-    //bt_root->ResetColorState();
 
 
     std::cout << "here we go " << std::endl;
@@ -619,9 +629,14 @@ void runTree(QtNodes::FlowScene* scene)
         std::cout <<"Ticking the root node !"<< std::endl;
 
         // Ticking the root node
-        bt_root->Tick();
+        //bt_root->Tick();
+        std::cout <<"root node Ticked!"<< std::endl;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        //QThread::sleep(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::cout <<"sleeped!"<< std::endl;
+
     }
     std::cout << "Closing the Lua state" << std::endl;
 
