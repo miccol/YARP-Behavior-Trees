@@ -56,6 +56,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ret->registerModel<SelectorModel>("Control");
 
     ret->registerModel<ActionNodeModel>("Action");
+    ret->registerModel<YARPActionNodeModel>("Action");
+
+
+
     ret->registerModel<ConditionNodeModel>("Condition");
     //ret->registerModel<YARPConditionNodeModel>("Condition");
     ret->registerModel<DecoratorNodeModel>("Decorator");
@@ -516,6 +520,7 @@ void MainWindow::on_actionAdd_Action_triggered()
         BehaviorTreeNodeModel& node_on_scene = (BehaviorTreeNodeModel&)_main_scene->createNode( std::move(dataModel) );
 
         node_on_scene.lastComboItem();
+
         NodeReorder(*_main_scene);
 
 

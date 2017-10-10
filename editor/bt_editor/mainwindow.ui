@@ -171,12 +171,12 @@
   </action>
   <action name="actionAdd_Action">
    <property name="text">
-    <string>Add Action</string>
+    <string>Create Action Script</string>
    </property>
   </action>
   <action name="actionAdd_Condition">
    <property name="text">
-    <string>Add Condition</string>
+    <string>Create Condition Script</string>
    </property>
   </action>
  </widget>

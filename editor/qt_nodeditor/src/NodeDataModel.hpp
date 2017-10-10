@@ -25,6 +25,9 @@ enum class NodeValidationState
   Error
 };
 
+enum NodeModel {PARALLEL, SELECTOR, SEQUENCE, SEQUENCESTAR, SELECTORSTAR, LUAACTION, LUACONDITION,  YARPACTION, YARPCONDITION, DECORATOR, ROOT, SUBTREE};
+
+
 class StyleCollection;
 class NodeStyle;
 class NodePainterDelegate;

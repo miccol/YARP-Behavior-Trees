@@ -4,9 +4,6 @@ project(behavior_tree_editor)
 add_definitions(-std=c++11  -pthread)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
-#set (CMAKE_PREFIX_PATH "C:\\Qt\\5.9.1\\mingw53_32")
-
-
 
 
 #if(APPLE AND EXISTS /usr/local/opt/qt5)
@@ -17,15 +14,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 #endif()
 #SET(Qt5_DIR C:/Program Files (x86)/robotology/Qt-5.6.1_v14_x86)
 
-#find_package(Qt5 COMPONENTS  Core Widgets Gui OpenGL Xml)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL Xml)
 
-#find_package(Qt5Core REQUIRED)
-#find_package(Qt5Widgets)
-#find_package(Qt5Gui)
-#find_package(Qt5OpenGL)
-#find_package(Qt5Xml)
 
 #########################################################
 # FIND Lua
@@ -50,25 +41,9 @@ add_definitions(${Qt5Widgets_DEFINITIONS} -DNODE_EDITOR_STATIC -std=c++11)
 set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 
-INCLUDE_DIRECTORIES( ${catkin_INCLUDE_DIRS} ./qt_nodeditor/include )
-
-
-
+INCLUDE_DIRECTORIES(${catkin_INCLUDE_DIRS} ./qt_nodeditor/include )
 INCLUDE_DIRECTORIES(${BT_CORE_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${YARP_BT_NODES_INCLUDE_DIRS})
-
-#########################################################
-# FIND Lua
-#########################################################
-find_package(Lua REQUIRED)
-INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-
-
-#INCLUDE_DIRECTORIES (${Qt5_DIR}/include)
-#INCLUDE_DIRECTORIES (${Qt5_DIR}/lib)
-#INCLUDE_DIRECTORIES (${Qt5_DIR}/bin)
-
-message("the value of Qt5_DIR" ${Qt5_DIR})
 
 
 

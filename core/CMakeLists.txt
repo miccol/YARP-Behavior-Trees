@@ -22,12 +22,10 @@ endif(NOT GTEST_FOUND)
 # FIND Lua
 #########################################################
 find_package(Lua REQUIRED)
-IF(Lua_FOUND)
-ELSE(Lua_FOUND)
-message(WARNING "Lua not found!")
-ENDIF(Lua_FOUND)
-
 INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
+
+
+
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include/)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/icons/)
