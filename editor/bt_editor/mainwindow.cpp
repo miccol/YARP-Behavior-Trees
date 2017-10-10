@@ -60,8 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
 
-    ret->registerModel<ConditionNodeModel>("Condition");
-    //ret->registerModel<YARPConditionNodeModel>("Condition");
+    ret->registerModel<LuaConditionNodeModel>("Condition");
+    ret->registerModel<YARPConditionNodeModel>("Condition");
     ret->registerModel<DecoratorNodeModel>("Decorator");
     //ret->registerModel<SubtreeNodeModel>("SubTree");
 
@@ -192,12 +192,26 @@ void MainWindow::recursivelyCreateXml(QDomDocument& doc, QDomElement& parent_ele
     const QtNodes::NodeDataModel* node_model = node->nodeDataModel();
     const QString model_name = node_model->name();
     QDomElement element = doc.createElement( model_name );
-    if( model_name == "Action" || model_name == "Condition")
+    if( model_name == "LuaAction" || model_name == "LuaCondition")
     {
-        const BehaviorTreeNodeModel* action_node = dynamic_cast<const BehaviorTreeNodeModel*>(node_model);
+        const LuaNodeModel* action_node = dynamic_cast<const LuaNodeModel*>(node_model);
         if( action_node )
         {
             element.setAttribute("ID", action_node->type() );
+        }
+        auto parameters = action_node->getCurrentParameters();
+        for(const auto& param: parameters)
+        {
+            element.setAttribute( param.first, param.second );
+        }
+    }else if (model_name == "YARPAction" || model_name == "YARPCondition")
+    {
+        const YARPNodeModel* action_node = dynamic_cast<const YARPNodeModel*>(node_model);
+        if( action_node )
+        {
+
+            element.setAttribute("ID", action_node->type() );
+
         }
         auto parameters = action_node->getCurrentParameters();
         for(const auto& param: parameters)

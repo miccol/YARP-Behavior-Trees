@@ -73,7 +73,7 @@ public:
             _name_edit->setText( v.toString() );
         }
         else{
-          _name_edit->setHidden(true);
+          _name_edit->setHidden(false);
         }
     }
 

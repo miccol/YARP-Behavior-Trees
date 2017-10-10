@@ -26,17 +26,38 @@ public:
 
 
 
-class YARPConditionNodeModel : public BehaviorTreeNodeModel
+class LuaConditionNodeModel : public LuaNodeModel
 {
 public:
-    YARPConditionNodeModel():
-        BehaviorTreeNodeModel("YARP Condition", NodeFactory::get().getActionParameterModel() )
+    LuaConditionNodeModel(): LuaNodeModel("Condition", NodeFactory::get().getActionParameterModel() )
     { }
     int BTType()
     {
-        return BT::CONDITION;
+        return QtNodes::LUACONDITION;
     }
+    virtual ~LuaConditionNodeModel() {}
 
+    virtual unsigned int  nPorts(PortType portType) const override
+    { return (portType==PortType::In) ? 1:0; }
+
+    virtual std::unique_ptr<NodeDataModel> clone() const override
+    { return  std::unique_ptr<NodeDataModel>( new LuaConditionNodeModel ); }
+
+    virtual QString name() const override { return QString("LuaCondition"); }
+};
+
+
+
+class YARPConditionNodeModel : public YARPNodeModel
+{
+public:
+    YARPConditionNodeModel():
+        YARPNodeModel("Condition", NodeFactory::get().getActionParameterModel() )
+    { }
+    int BTType()
+    {
+        return QtNodes::YARPCONDITION;
+    }
     virtual ~YARPConditionNodeModel() {}
 
     virtual unsigned int  nPorts(PortType portType) const override
@@ -45,5 +66,5 @@ public:
     virtual std::unique_ptr<NodeDataModel> clone() const override
     { return  std::unique_ptr<NodeDataModel>( new YARPConditionNodeModel ); }
 
-    virtual QString name() const override { return QString("YARP Condition"); }
+    virtual QString name() const override { return QString("YARPCondition"); }
 };
