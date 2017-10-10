@@ -26,6 +26,7 @@ void setMode(int mode);
 int getMode();
 
 bool is_BT_valid(QtNodes::FlowScene* scene);
+bool has_root(QtNodes::FlowScene* scene);
 
 
 #endif // NODE_UTILS_H

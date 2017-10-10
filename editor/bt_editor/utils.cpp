@@ -657,3 +657,23 @@ bool is_BT_valid(QtNodes::FlowScene* scene)
 
 
 }
+
+
+
+bool has_root(QtNodes::FlowScene* scene)
+{
+
+    std::vector<QtNodes::Node*> roots = findRoots( *scene );
+
+    for(int i = 0; i < roots.size(); i++)
+
+    {
+       if(dynamic_cast<RootNodeModel*>(roots.front()->nodeDataModel()))
+       {
+           return true;
+       }
+    }
+    return false ;
+
+}
+

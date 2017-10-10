@@ -63,13 +63,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ret->registerModel<LuaConditionNodeModel>("Condition");
     ret->registerModel<YARPConditionNodeModel>("Condition");
     ret->registerModel<DecoratorNodeModel>("Decorator");
+
     ret->registerModel<LuaPreambleNodeModel>("Preamble");
 
     //ret->registerModel<SubtreeNodeModel>("SubTree");
 
     _main_scene = new FlowScene( ret );
     _main_view  = new FlowView( _main_scene );
-
     ui->tabWidget->addTab( _main_view, "BehaviorTree" );
 
     this->setMenuBar(ui->menubar);

@@ -16,7 +16,6 @@ create(QString const &modelName)
   {
     return it->second->clone();
   }
-
   return std::unique_ptr<NodeDataModel>();
 }
 

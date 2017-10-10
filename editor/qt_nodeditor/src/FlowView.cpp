@@ -20,6 +20,8 @@
 #include "NodeGraphicsObject.hpp"
 #include "ConnectionGraphicsObject.hpp"
 #include "StyleCollection.hpp"
+#include "bt_editor/utils.h"
+
 
 using QtNodes::FlowView;
 using QtNodes::FlowScene;
@@ -125,19 +127,31 @@ contextMenuEvent(QContextMenuEvent *event)
 
     auto type = _scene->registry().create(modelName);
 
-    if (type)
+
+    //HERE check if you are trying to add a second root or preamble
+
+
+    if (modelName == "Root" && has_root(_scene))
     {
-      auto& node = _scene->createNode(std::move(type));
+        int ret = QMessageBox::warning(this, tr("Oops!"),
+                                       tr("A Behavior Tree can have ony one root node"),
+                                       QMessageBox::Ok);
+    }else{
 
-      QPoint pos = event->pos();
+        if (type)
+        {
+            auto& node = _scene->createNode(std::move(type));
 
-      QPointF posView = this->mapToScene(pos);
+            QPoint pos = event->pos();
 
-      node.nodeGraphicsObject().setPos(posView);
-    }
-    else
-    {
-      qDebug() << "Model not found";
+            QPointF posView = this->mapToScene(pos);
+
+            node.nodeGraphicsObject().setPos(posView);
+        }
+        else
+        {
+            qDebug() << "Model not found";
+        }
     }
     modelMenu.close();
   });
@@ -145,7 +159,7 @@ contextMenuEvent(QContextMenuEvent *event)
   //Setup filtering
   connect(txtBox, &QLineEdit::textChanged, [&](const QString &text)
   {
-    for (auto& topLvlItem : topLevelItems)
+      for (auto& topLvlItem : topLevelItems)
     {
       for (int i = 0; i < topLvlItem->childCount(); ++i)
       {
