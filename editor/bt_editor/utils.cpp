@@ -478,7 +478,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     std::cout << "The node is :" << bt_type << std::endl;
 
     switch (bt_type) {
-    case BT::ACTION:
+    case QtNodes::LUAACTION:
     {
         std::cout << "The node is an action node" << std::endl;
 
@@ -488,7 +488,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         return bt_node;
         break;
     }
-    case BT::CONDITION:
+    case QtNodes::LUACONDITION:
     {
         std::cout << "The node is a condition node" << std::endl;
         std::string filename = ((BehaviorTreeNodeModel*)node.nodeDataModel())->type().toStdString();
@@ -498,7 +498,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         return bt_node;
         break;
     }
-    case BT::SEQUENCE:
+    case QtNodes::SEQUENCE:
     {
         BT::SequenceNode* bt_node = new BT::SequenceNode("ciao");
         std::cout << "The node is a sequence node" << std::endl;
@@ -515,7 +515,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         return bt_node;
         break;
     }
-    case BT::SELECTOR:
+    case QtNodes::SELECTOR:
     {
         BT::FallbackNode* bt_node = new BT::FallbackNode("ciao");
         std::cout << "The node is a fallback node" << std::endl;
@@ -532,7 +532,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         return bt_node;
         break;
     }
-    case BT::ROOT:
+    case QtNodes::ROOT:
     {
         BT::RootNode* bt_node = new BT::RootNode();
         std::cout << "The node is a root node" << std::endl;

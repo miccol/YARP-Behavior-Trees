@@ -17,7 +17,7 @@ public:
     virtual ~DecoratorNodeModel() {}
     int BTType()
     {
-        return BT::DECORATOR;
+        return QtNodes::DECORATOR;
     }
 
     unsigned int  nPorts(PortType portType) const override

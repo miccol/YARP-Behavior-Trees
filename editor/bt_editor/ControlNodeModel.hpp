@@ -149,7 +149,7 @@ public:
     virtual ~SequenceModel() {}
     int BTType()
     {
-        return BT::SEQUENCE;
+        return QtNodes::SEQUENCE;
     }
     static QString staticName() { return QString("Sequence"); }
 };
@@ -161,7 +161,7 @@ public:
     SelectorModel(): ControlNodeModelBase() { }
     int BTType()
     {
-        return BT::SELECTOR;
+        return QtNodes::SELECTOR;
     }
     virtual ~SelectorModel() {}
     static QString staticName() { return QString("Fallback"); }
@@ -174,7 +174,7 @@ public:
     SequenceStarModel(): ControlNodeModelBase() { }
     int BTType()
     {
-        return BT::SEQUENCESTAR;
+        return QtNodes::SEQUENCESTAR;
     }
     virtual ~SequenceStarModel() {}
     static QString staticName() { return QString("SequenceStar"); }
@@ -188,7 +188,7 @@ public:
     IfThenElseModel(): ControlNodeModelBase() { }
     int BTType()
     {
-        return BT::DECORATOR;
+        return QtNodes::DECORATOR;
     }
     virtual ~IfThenElseModel() {}
     static QString staticName() { return QString("IfThenElse"); }

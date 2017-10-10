@@ -42,7 +42,7 @@ public:
 
   int BTType()
   {
-      return BT::ROOT;
+      return QtNodes::ROOT;
   }
 
   QString get_line_edit()

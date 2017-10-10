@@ -35,13 +35,13 @@ public:
 
 public:
 
-  NodeDataType dataType(PortType portType, PortIndex portIndex) const override final
+  NodeDataType dataType(PortType portType, PortIndex portIndex) const override
   { return NodeDataType {"", ""}; }
 
   virtual std::shared_ptr<NodeData> outData(PortIndex port) override
   { return nullptr; }
 
-  void setInData(std::shared_ptr<NodeData> data, int) override final {}
+  void setInData(std::shared_ptr<NodeData> data, int) override {}
 
   virtual QString caption() const override;
 

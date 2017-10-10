@@ -61,7 +61,7 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
 //    return bt_node_model_;
 //}
 
-void CodeEditor::set_bt_node_model(BehaviorTreeNodeModel* bt_node_model)
+void CodeEditor::set_bt_node_model(LuaNodeModel *bt_node_model)
 {
     bt_node_model_ = bt_node_model;
 }

@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //ret->registerModel<SequenceStarModel>("Control");
     ret->registerModel<SelectorModel>("Control");
 
-    ret->registerModel<ActionNodeModel>("Action");
+    ret->registerModel<LuaActionNodeModel>("Action");
     ret->registerModel<YARPActionNodeModel>("Action");
 
 
@@ -515,9 +515,9 @@ void MainWindow::on_actionAdd_Action_triggered()
         outfile << "--script created with BT GUI" << std::endl;
         outfile.close();
 
-        std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("Action");
+        std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("LuaAction");
 
-        BehaviorTreeNodeModel& node_on_scene = (BehaviorTreeNodeModel&)_main_scene->createNode( std::move(dataModel) );
+        LuaNodeModel& node_on_scene = (LuaNodeModel&)_main_scene->createNode( std::move(dataModel) );
 
         node_on_scene.lastComboItem();
 

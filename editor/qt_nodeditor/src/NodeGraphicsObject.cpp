@@ -20,6 +20,7 @@
 #include <iostream>
 
 #include <bt_editor/BehaviorTreeNodeModel.hpp>
+#include <bt_editor/LuaNodeModel.h>
 #include <bt_editor/code_editor.h>
 
 using QtNodes::NodeGraphicsObject;
@@ -388,12 +389,12 @@ NodeGraphicsObject::
 mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
 
-   if ( _node.nodeDataModel()->BTType() == BT::ACTION ||  _node.nodeDataModel()->BTType() == BT::CONDITION)
+   if ( _node.nodeDataModel()->BTType() == QtNodes::LUAACTION ||  _node.nodeDataModel()->BTType() == QtNodes::LUACONDITION)
    {
        std::cout << "double click" << std::endl;
 
 
-     BehaviorTreeNodeModel* node_model = dynamic_cast<BehaviorTreeNodeModel*>(_node.nodeDataModel());
+     LuaNodeModel* node_model = dynamic_cast<LuaNodeModel*>(_node.nodeDataModel());
      code_editor_.clear(); // unless you know the editor is empty
      code_editor_.appendPlainText(node_model->get_text_edit().toStdString().c_str());
      code_editor_.set_filename(node_model->filename());

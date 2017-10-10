@@ -1,6 +1,8 @@
 #pragma once
 
 #include "BehaviorTreeNodeModel.hpp"
+#include "LuaNodeModel.h"
+#include "YARPNodeModel.h"
 
 
 class ActionNodeModel : public BehaviorTreeNodeModel
@@ -26,14 +28,14 @@ public:
 };
 
 
-class LuaActionNodeModel : public BehaviorTreeNodeModel
+class LuaActionNodeModel : public LuaNodeModel
 {
 public:
-    LuaActionNodeModel(): BehaviorTreeNodeModel("Action", NodeFactory::get().getActionParameterModel() )
+    LuaActionNodeModel(): LuaNodeModel("Action", NodeFactory::get().getActionParameterModel() )
     { }
     int BTType()
     {
-        return BT::ACTION;
+        return QtNodes::LUAACTION;
     }
     virtual ~LuaActionNodeModel() {}
 
@@ -43,19 +45,19 @@ public:
     virtual std::unique_ptr<NodeDataModel> clone() const override
     { return  std::unique_ptr<NodeDataModel>( new LuaActionNodeModel ); }
 
-    virtual QString name() const override { return QString("LuaActionScript"); }
+    virtual QString name() const override { return QString("LuaAction"); }
 };
 
 
-class YARPActionNodeModel : public ActionNodeModel
+class YARPActionNodeModel : public YARPNodeModel
 {
 public:
     YARPActionNodeModel():
-        ActionNodeModel()
+        YARPNodeModel("Action", NodeFactory::get().getActionParameterModel() )
     { }
     int BTType()
     {
-        return BT::ACTION;
+        return QtNodes::YARPACTION;
     }
     virtual ~YARPActionNodeModel() {}
 

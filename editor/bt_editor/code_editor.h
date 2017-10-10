@@ -4,7 +4,7 @@
 #include <QPlainTextEdit>
 #include <QObject>
 #include <QDialog>
-#include <bt_editor/BehaviorTreeNodeModel.hpp>
+#include <bt_editor/LuaNodeModel.h>
 
 QT_BEGIN_NAMESPACE
 class QPaintEvent;
@@ -30,7 +30,7 @@ public:
     void closeEvent(QCloseEvent *event);
     void set_filename(std::string filename);
 
-    void set_bt_node_model(BehaviorTreeNodeModel* bt_node_model);
+    void set_bt_node_model(LuaNodeModel* bt_node_model);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
@@ -43,7 +43,7 @@ private slots:
 private:
     QWidget *lineNumberArea;
     std::string filename_;
-    BehaviorTreeNodeModel* bt_node_model_;
+    LuaNodeModel* bt_node_model_;
     void writeToFile();
 };
 
