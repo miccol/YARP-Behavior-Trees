@@ -28,6 +28,9 @@ public:
     ~MainWindow();
 
 private slots:
+    void on_actionCreate_Preamble_triggered();
+
+private slots:
 
     void on_actionLoad_triggered();
 

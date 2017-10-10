@@ -638,10 +638,6 @@ void runTree(QtNodes::FlowScene* scene)
 
 }
 
-
-
-
-
 bool is_BT_valid(QtNodes::FlowScene* scene)
 {
 

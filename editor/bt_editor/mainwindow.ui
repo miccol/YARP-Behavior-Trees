@@ -115,6 +115,7 @@
     </property>
     <addaction name="actionAdd_Action"/>
     <addaction name="actionAdd_Condition"/>
+    <addaction name="actionCreate_Preamble"/>
    </widget>
    <addaction name="menuLoad"/>
    <addaction name="menuZoom"/>
@@ -177,6 +178,11 @@
   <action name="actionAdd_Condition">
    <property name="text">
     <string>Create Condition Script</string>
+   </property>
+  </action>
+  <action name="actionCreate_Preamble">
+   <property name="text">
+    <string>Create Preamble</string>
    </property>
   </action>
  </widget>

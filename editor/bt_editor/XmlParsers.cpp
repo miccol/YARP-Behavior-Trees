@@ -85,7 +85,6 @@ void ParseLooseNodesXML(const QDomElement &xml_root, QtNodes::FlowScene* scene, 
 
   recursiveStep = [&recursiveStep, &scene, &cursor, &nested_nodes](const QDomNode& xml_node, Node& parent_qtnode)
   {
-      std::cout << "LOOSE NODE!" << std::endl;
     QDomNamedNodeMap attributes = xml_node.attributes();
 
     QJsonObject node_json;
@@ -94,10 +93,8 @@ void ParseLooseNodesXML(const QDomElement &xml_root, QtNodes::FlowScene* scene, 
       auto item = attributes.item(index);
       node_json[item.nodeName()] = item.nodeValue();
     }
-    std::cout << "LOOSE NODE!1" << std::endl;
 
     std::unique_ptr<NodeDataModel> dataModel = scene->registry().create(xml_node.nodeName());
-    std::cout << "LOOSE NODE!1bis" << std::endl;
 
     if (!dataModel){
         std::cout << "No registered model with name "
@@ -107,12 +104,10 @@ void ParseLooseNodesXML(const QDomElement &xml_root, QtNodes::FlowScene* scene, 
                                + xml_node.nodeName().toStdString() );
     }
 
-    std::cout << "LOOSE NODE!2" << std::endl;
 
 
     dataModel->restore(node_json);
 
-    std::cout << "LOOSE NODE3" << std::endl;
 
     Node& new_node = scene->createNode( std::move(dataModel) );
 
@@ -121,7 +116,6 @@ void ParseLooseNodesXML(const QDomElement &xml_root, QtNodes::FlowScene* scene, 
 
     scene->setNodePosition(new_node, cursor);
     //scene->createConnection(new_node, 0, parent_qtnode, 0 );
-    std::cout << "LOOSE NODE4" << std::endl;
 
     nested_nodes++;
 

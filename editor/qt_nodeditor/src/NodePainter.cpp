@@ -78,7 +78,7 @@ drawNodeRect(QPainter* painter,
             ? nodeStyle.SelectedBoundaryColor
             : nodeStyle.NormalBoundaryColor;
 
-    color = Qt::gray;
+  //  color = Qt::gray;
 
 //    if(getMode() == 1)
 //    {

@@ -49,6 +49,28 @@ public:
 };
 
 
+class LuaPreambleNodeModel : public LuaNodeModel
+{
+public:
+    LuaPreambleNodeModel(): LuaNodeModel("Preamble", NodeFactory::get().getActionParameterModel() )
+    { }
+    int BTType()
+    {
+        return QtNodes::LUAACTION;
+    }
+    virtual ~LuaPreambleNodeModel() {}
+
+
+    virtual unsigned int  nPorts(PortType portType) const override
+    { return 0; }
+
+    virtual std::unique_ptr<NodeDataModel> clone() const override
+    { return  std::unique_ptr<NodeDataModel>( new LuaPreambleNodeModel ); }
+
+    virtual QString name() const override { return QString("Preamble"); }
+};
+
+
 class YARPActionNodeModel : public YARPNodeModel
 {
 public:

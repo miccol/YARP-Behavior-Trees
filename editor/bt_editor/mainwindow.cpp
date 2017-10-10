@@ -63,6 +63,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ret->registerModel<LuaConditionNodeModel>("Condition");
     ret->registerModel<YARPConditionNodeModel>("Condition");
     ret->registerModel<DecoratorNodeModel>("Decorator");
+    ret->registerModel<LuaPreambleNodeModel>("Preamble");
+
     //ret->registerModel<SubtreeNodeModel>("SubTree");
 
     _main_scene = new FlowScene( ret );
@@ -192,7 +194,7 @@ void MainWindow::recursivelyCreateXml(QDomDocument& doc, QDomElement& parent_ele
     const QtNodes::NodeDataModel* node_model = node->nodeDataModel();
     const QString model_name = node_model->name();
     QDomElement element = doc.createElement( model_name );
-    if( model_name == "LuaAction" || model_name == "LuaCondition")
+    if( model_name == "LuaAction" || model_name == "LuaCondition" || model_name == "YARPAction" || model_name == "YARPCondition" |model_name == "YARPAction" || model_name == "Preamble")
     {
         const LuaNodeModel* action_node = dynamic_cast<const LuaNodeModel*>(node_model);
         if( action_node )
@@ -533,7 +535,7 @@ void MainWindow::on_actionAdd_Action_triggered()
 
         LuaNodeModel& node_on_scene = (LuaNodeModel&)_main_scene->createNode( std::move(dataModel) );
 
-        node_on_scene.lastComboItem();
+        //node_on_scene.lastComboItem();
 
         NodeReorder(*_main_scene);
 
@@ -598,12 +600,25 @@ void MainWindow::on_actionAdd_Condition_triggered()
         outfile << "--script created with BT GUI" << std::endl;
         outfile.close();
 
-        std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("Condition");
+        std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("LuaCondition");
 
-        BehaviorTreeNodeModel& node_on_scene = (BehaviorTreeNodeModel&)_main_scene->createNode( std::move(dataModel) );
-
-        node_on_scene.lastComboItem();
+        LuaConditionNodeModel& node_on_scene = (LuaConditionNodeModel&)_main_scene->createNode( std::move(dataModel) );
         NodeReorder(*_main_scene);
+
+//        for (auto& it: _main_scene->nodes() )
+//        {
+//            QtNodes::Node* node = it.second.get();
+//            node->nodeGraphicsObject().update();
+//            if (node->nodeDataModel() == &node_on_scene)
+//            {
+//                ((LuaConditionNodeModel*)node->nodeDataModel())->lastComboItem();
+//                std::cout << "FOUND " << filename <<std::endl;
+//            }
+//        }
+
+
+       //node_on_scene.onCodeUpdated();
+
 
     }
 }
@@ -664,4 +679,73 @@ void MainWindow::on_playButton_released()
 
 
 
+}
+
+void MainWindow::on_actionCreate_Preamble_triggered()
+{
+    bool ok;
+    std::string filename;
+    QString text = QInputDialog::getText(0, "New Preamble",
+                                         "filename:", QLineEdit::Normal,
+                                         "", &ok);
+
+    filename = text.toStdString();
+    if (ok && !text.isEmpty())
+    {
+
+
+
+        if(filename.find(".")!=std::string::npos)
+        {
+            //has extension, checking that the extension is .lua
+
+            if(filename.substr(filename.find_last_of(".") + 1) != "lua")
+            {
+                QErrorMessage* error_message = new QErrorMessage();
+
+                error_message->showMessage("Invalid Extension");
+                return;
+            }
+        }
+        else
+        {
+            filename +=".lua";
+
+        }
+
+        filename = "Preamble"+filename;
+
+        //check if the file exists already
+
+
+        std::ifstream file(filename.c_str());
+
+        if(file.is_open())
+        {
+            QMessageBox::StandardButton reply;
+            reply = QMessageBox::question(this, "Warning", "The file exists. Do you want overwrite it?",
+                                          QMessageBox::Yes|QMessageBox::No);
+            if (reply == QMessageBox::No)
+            {
+                file.close();
+                return;
+            }
+        }
+
+        std::cout << "Creating file " << filename <<std::endl;
+
+        std::ofstream outfile (filename);
+        outfile << "--script created with BT GUI" << std::endl;
+        outfile.close();
+
+
+
+        std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("Preamble");
+
+        LuaNodeModel& node_on_scene = (LuaNodeModel&)_main_scene->createNode( std::move(dataModel) );
+
+        //&node_on_scene.lastComboItem();
+
+        NodeReorder(*_main_scene);
+    }
 }
