@@ -4,7 +4,7 @@
 #include <action_node.h>
 #include <yarp/os/Network.h>
 #include <yarp/os/Port.h>
-#include <../yarp_modules/include/btyarpmodule.h>
+#include <btyarpmodule.h>
 
 
 
@@ -17,6 +17,7 @@ public:
     ~YARPActionNode();
     BT::ReturnStatus Tick();
     void Halt();
+    void Finalize();
 
 private:
     yarp::os::Network yarp_;

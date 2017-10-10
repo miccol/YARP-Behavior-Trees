@@ -168,6 +168,7 @@ namespace BT
 
         NodeType get_type();
 
+        virtual void Finalize();
     };
 }
 

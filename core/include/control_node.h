@@ -41,6 +41,7 @@ namespace BT
         // Methods used to access the node state without the
         // conditional waiting (only mutual access)
         bool WriteState(ReturnStatus new_state);
+        void Finalize();
     };
     class RootNode : public ControlNode
     {

@@ -503,7 +503,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     {
         std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();
 
-        BT::YARPActionNode* bt_node = new BT::YARPActionNode(server_name,server_name);
+        BT::YARPActionNode* bt_node = new BT::YARPActionNode(server_name+"BTAction",server_name);
         node.linkBTNode(bt_node);
         return bt_node;
         break;
@@ -511,7 +511,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     case QtNodes::YARPCONDITION:
     {
         std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();
-        BT::YARPConditionNode* bt_node = new BT::YARPConditionNode(server_name,server_name);
+        BT::YARPConditionNode* bt_node = new BT::YARPConditionNode(server_name+"BTCondition",server_name);
         node.linkBTNode(bt_node);
         return bt_node;
         break;
@@ -543,7 +543,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         {
             bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
         }
-        node.linkBTNode(bt_node);
+        //node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
@@ -556,7 +556,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         {
             bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
         }
-        node.linkBTNode(bt_node);
+        //node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
@@ -566,11 +566,6 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         break;
     }
     }
-
-
-
-
-
 
 
 }
@@ -629,17 +624,16 @@ void runTree(QtNodes::FlowScene* scene)
         std::cout <<"Ticking the root node !"<< std::endl;
 
         // Ticking the root node
-        //bt_root->Tick();
+        bt_root->Tick();
         std::cout <<"root node Ticked!"<< std::endl;
 
-
-        //QThread::sleep(1);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         std::cout <<"sleeped!"<< std::endl;
 
     }
-    std::cout << "Closing the Lua state" << std::endl;
 
+    std::cout << "Closing the Lua state" << std::endl;
+    bt_root->Finalize();
     lua_close(lua_state);
 
 }
@@ -661,19 +655,7 @@ bool is_BT_valid(QtNodes::FlowScene* scene)
        valid_root = valid_root || dynamic_cast<RootNodeModel*>(roots.front()->nodeDataModel());
     }
 
-//    bool valid_root = (roots.size() == 1) && ( dynamic_cast<RootNodeModel*>(roots.front()->nodeDataModel() ));
 
-//    QtNodes::Node* current_node = nullptr;
-
-//    if( valid_root ){
-//      auto root_children = getChildren(*scene, *roots.front() );
-//      if( root_children.size() == 1){
-//        current_node = root_children.front();
-//      }
-//      else{
-//        valid_root = false;
-//      }
-//    }
 
     return valid_root ;
 

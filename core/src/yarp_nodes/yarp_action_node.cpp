@@ -39,32 +39,31 @@ BT::YARPActionNode::YARPActionNode(std::string name, std::string server_name) : 
 
 
     std::cout << "Module "<< server_name << " attached." << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+}
+BT::YARPActionNode::~YARPActionNode()
+{
 
 
 }
-BT::YARPActionNode::~YARPActionNode() {}
 
 
 
 BT::ReturnStatus BT::YARPActionNode::Tick()
 {
 
-    std::cout << "Ticking "  << std::endl;
-    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
-    int status = BT::SUCCESS; //action_server_.request_tick();
-    std::cout << "status "<< status << std::endl;
-
+    int status = action_server_.request_tick();
     switch(status)
     {
     case BT::SUCCESS:
+        set_status(BT::SUCCESS);
         return BT::SUCCESS;
         break;
     case BT::FAILURE:
+        set_status(BT::FAILURE);
         return BT::FAILURE;
         break;
     default:
+        set_status(BT::RUNNING);
         return BT::RUNNING;
     }
 }
@@ -73,3 +72,13 @@ void BT::YARPActionNode::Halt()
 {
     action_server_.request_halt();
 }
+
+
+
+void BT::YARPActionNode::Finalize()
+{
+     port_.close();
+     std::cout << "port closed" << std::endl;
+}
+
+

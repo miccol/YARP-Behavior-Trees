@@ -41,7 +41,10 @@ BT::YARPConditionNode::YARPConditionNode(std::string name, std::string server_na
     std::cout << "Module "<< server_name << " attached." << std::endl;
 
 }
-BT::YARPConditionNode::~YARPConditionNode() {}
+BT::YARPConditionNode::~YARPConditionNode()
+{
+    port_.close();
+}
 
 
 
@@ -49,18 +52,19 @@ BT::ReturnStatus BT::YARPConditionNode::Tick()
 {
 
     int status = condition_server_.request_tick();
-
     switch(status)
     {
-    case 0:
+    case BT::SUCCESS:
+        set_status(BT::SUCCESS);
         return BT::SUCCESS;
         break;
-    case 1:
+    case BT::FAILURE:
+        set_status(BT::FAILURE);
         return BT::FAILURE;
         break;
     default:
+        set_status(BT::RUNNING);
         return BT::RUNNING;
     }
-
 }
 

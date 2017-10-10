@@ -26,3 +26,6 @@ int BT::ConditionNode::DrawType()
 {
     return BT::CONDITION;
 }
+
+
+

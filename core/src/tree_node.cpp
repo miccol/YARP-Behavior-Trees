@@ -104,3 +104,8 @@ bool BT::TreeNode::is_halted()
 {
     return get_status() == BT::HALTED;
 }
+
+
+void BT::TreeNode::Finalize()
+{
+}

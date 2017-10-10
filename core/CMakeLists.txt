@@ -86,6 +86,11 @@ if(GTEST_FOUND)
 endif(GTEST_FOUND)
 
 
+
+add_executable(example src/example.cpp ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURCES})
+target_link_libraries(example ${YARP_LIBRARIES} ${LUA_LIBRARIES})
+
+
 #######################################################
 ## COMPILING LIBRARY
 #######################################################

@@ -78,25 +78,26 @@ drawNodeRect(QPainter* painter,
             ? nodeStyle.SelectedBoundaryColor
             : nodeStyle.NormalBoundaryColor;
 
+    color = Qt::gray;
 
-    if(getMode() == 1)
-    {
+//    if(getMode() == 1)
+//    {
 
-        switch (bt_node->get_color_status()) {
-        case BT::RUNNING:
-            color = Qt::gray;
-            break;
-        case BT::SUCCESS:
-            color = Qt::green;
-            break;
-        case BT::FAILURE:
-            color = Qt::red;
-            break;
-        default:
-            color = Qt::black;
-            break;
-        }
-    }
+//        switch (bt_node->get_color_status()) {
+//        case BT::RUNNING:
+//            color = Qt::gray;
+//            break;
+//        case BT::SUCCESS:
+//            color = Qt::green;
+//            break;
+//        case BT::FAILURE:
+//            color = Qt::red;
+//            break;
+//        default:
+//            color = Qt::black;
+//            break;
+//        }
+//    }
 
 
     if (geom.hovered())
