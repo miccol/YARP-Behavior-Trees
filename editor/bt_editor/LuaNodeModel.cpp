@@ -49,7 +49,7 @@ QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, 
     DIR *dir;
     struct dirent *ent;
     std::regex txt_regex(search_path.c_str());
-    if ((dir = opendir (folder)) != NULL) {
+    if ((dir = opendir (folder.c_str())) != NULL) {
         /* print all the files and directories within directory */
         while ((ent = readdir (dir)) != NULL) {
             if(std::regex_match(ent->d_name, txt_regex))
