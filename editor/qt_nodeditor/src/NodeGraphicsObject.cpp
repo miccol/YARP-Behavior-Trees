@@ -389,7 +389,7 @@ NodeGraphicsObject::
 mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
 
-   if ( _node.nodeDataModel()->BTType() == QtNodes::LUAACTION ||  _node.nodeDataModel()->BTType() == QtNodes::LUACONDITION)
+   if ( _node.nodeDataModel()->BTType() == QtNodes::LUAACTION ||  _node.nodeDataModel()->BTType() == QtNodes::LUACONDITION ||  _node.nodeDataModel()->BTType() == -1 )
    {
        std::cout << "double click" << std::endl;
 

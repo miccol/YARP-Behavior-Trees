@@ -194,26 +194,12 @@ void MainWindow::recursivelyCreateXml(QDomDocument& doc, QDomElement& parent_ele
     const QtNodes::NodeDataModel* node_model = node->nodeDataModel();
     const QString model_name = node_model->name();
     QDomElement element = doc.createElement( model_name );
-    if( model_name == "LuaAction" || model_name == "LuaCondition" || model_name == "YARPAction" || model_name == "YARPCondition" |model_name == "YARPAction" || model_name == "Preamble")
+    if( model_name == "LuaAction" || model_name == "LuaCondition" || model_name == "YARPAction" || model_name == "YARPCondition" |model_name == "YARPAction" || model_name == "LuaPreamble")
     {
         const LuaNodeModel* action_node = dynamic_cast<const LuaNodeModel*>(node_model);
         if( action_node )
         {
             element.setAttribute("ID", action_node->type() );
-        }
-        auto parameters = action_node->getCurrentParameters();
-        for(const auto& param: parameters)
-        {
-            element.setAttribute( param.first, param.second );
-        }
-    }else if (model_name == "YARPAction" || model_name == "YARPCondition")
-    {
-        const YARPNodeModel* action_node = dynamic_cast<const YARPNodeModel*>(node_model);
-        if( action_node )
-        {
-
-            element.setAttribute("ID", action_node->type() );
-
         }
         auto parameters = action_node->getCurrentParameters();
         for(const auto& param: parameters)
@@ -647,7 +633,7 @@ void MainWindow::on_selectMode_sliderReleased()
 void MainWindow::on_playButton_released()
 {
 
-        if(!is_BT_valid(_main_scene))
+        if(!has_root(_main_scene))
         {
             int ret = QMessageBox::warning(this, tr("Oops!"),
                                            tr("Invalid behavior tree. There must be a root node"),
@@ -655,6 +641,9 @@ void MainWindow::on_playButton_released()
             ui->playButton->setChecked(false);
             return;
         }
+
+
+
 
     bool locked = ui->playButton->isChecked();
     lockEditing( locked );
@@ -713,7 +702,7 @@ void MainWindow::on_actionCreate_Preamble_triggered()
 
         }
 
-        filename = "Preamble"+filename;
+        filename = "LuaPreamble"+filename;
 
         //check if the file exists already
 
@@ -735,12 +724,12 @@ void MainWindow::on_actionCreate_Preamble_triggered()
         std::cout << "Creating file " << filename <<std::endl;
 
         std::ofstream outfile (filename);
-        outfile << "--script created with BT GUI" << std::endl;
+        outfile << "--preamble created with BT GUI" << std::endl;
         outfile.close();
 
 
 
-        std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("Preamble");
+        std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("LuaPreamble");
 
         LuaNodeModel& node_on_scene = (LuaNodeModel&)_main_scene->createNode( std::move(dataModel) );
 

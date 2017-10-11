@@ -38,10 +38,6 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
     luaL_dofile(lua_state_, filename_.c_str());
 
 
-
-
-    // close the Lua state
-
     bool lua_return = lua_toboolean(lua_state_, lua_gettop(lua_state_));
     // if the return is not a boolean, the Lua script returned somethig else, either nil (error in the return value)
     //or a generic error message

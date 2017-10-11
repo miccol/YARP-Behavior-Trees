@@ -128,15 +128,20 @@ contextMenuEvent(QContextMenuEvent *event)
     auto type = _scene->registry().create(modelName);
 
 
-    //HERE check if you are trying to add a second root or preamble
 
 
     if (modelName == "Root" && has_root(_scene))
     {
         int ret = QMessageBox::warning(this, tr("Oops!"),
-                                       tr("A Behavior Tree can have ony one root node"),
+                                       tr("A Behavior Tree can have ony one root node!"),
                                        QMessageBox::Ok);
-    }else{
+    }else if(modelName == "LuaPreamble" && has_lua_preable(_scene))
+    {
+        int ret = QMessageBox::warning(this, tr("Oops!"),
+                                       tr("A lua preamble exists already!"),
+                                       QMessageBox::Ok);
+    }
+    else{
 
         if (type)
         {

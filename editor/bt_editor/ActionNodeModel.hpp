@@ -52,11 +52,11 @@ public:
 class LuaPreambleNodeModel : public LuaNodeModel
 {
 public:
-    LuaPreambleNodeModel(): LuaNodeModel("Preamble", NodeFactory::get().getActionParameterModel() )
+    LuaPreambleNodeModel(): LuaNodeModel("LuaPreamble", NodeFactory::get().getActionParameterModel() )
     { }
     int BTType()
     {
-        return QtNodes::LUAACTION;
+        return -1;
     }
     virtual ~LuaPreambleNodeModel() {}
 
@@ -67,7 +67,7 @@ public:
     virtual std::unique_ptr<NodeDataModel> clone() const override
     { return  std::unique_ptr<NodeDataModel>( new LuaPreambleNodeModel ); }
 
-    virtual QString name() const override { return QString("Preamble"); }
+    virtual QString name() const override { return QString("LuaPreamble"); }
 };
 
 

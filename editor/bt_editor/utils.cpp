@@ -5,6 +5,7 @@
 #include <node_editor/Node>
 #include <bt_editor/BehaviorTreeNodeModel.hpp>
 #include <bt_editor/YARPNodeModel.h>
+
 #include <iostream>
 #include <fstream>
 #include "RootNodeModel.hpp"
@@ -430,8 +431,6 @@ void NodeReorder(QtNodes::FlowScene &scene)
 }
 
 
-
-
 void SubtreeReorder(QtNodes::FlowScene &scene, QtNodes::Node &root_node)
 {
     std::cout << "--------------------------" << std::endl;
@@ -447,10 +446,6 @@ void SubtreeReorder(QtNodes::FlowScene &scene, QtNodes::Node &root_node)
     {
         SubtreeReorderRecursive(scene, *node, root_node, cursor, 0, nodes_by_level);
     }
-
-
-
-
 
     double right   = 0;
     double bottom  = 0;
@@ -468,8 +463,6 @@ void SubtreeReorder(QtNodes::FlowScene &scene, QtNodes::Node &root_node)
 
     scene.setSceneRect(-30, -30, right + 60, bottom + 60);
 }
-
-
 
 
 
@@ -590,34 +583,22 @@ void runTree(QtNodes::FlowScene* scene)
 {
 
 
-    QtNodes::Node* root;
-    std::vector<QtNodes::Node*> roots = findRoots(*scene);
-
-    root = roots[0];
-
-    std::cout << roots.size() <<" Root found!: " << root->nodeDataModel()->name().toStdString() << std::endl;
-
-
-
-
-    std::cout << "Creating the Lua state" << std::endl;
+    QtNodes::Node* root = BTRoot(scene);
 
     lua_State *lua_state;
     lua_state = luaL_newstate();
 
-    std::cout << "Lua state Created" << std::endl;
+    QtNodes::Node* lua_preamble = LuaPreamble(scene);
 
-
+    if(lua_preamble !=NULL)
+    {
+        //has a preamble, execute this before the tree
+        RunPreamble(lua_state, (LuaPreambleNodeModel*)lua_preamble->nodeDataModel());
+    }
 
 
 
     BT::TreeNode* bt_root = getBTObject(*scene, *root, lua_state);
-
-    std::cout << "bt_root found: " << bt_root->get_name() << "!" << std::endl;
-
-
-
-    std::cout << "here we go " << std::endl;
 
     while (getMode() == 1)
     {
@@ -625,15 +606,14 @@ void runTree(QtNodes::FlowScene* scene)
 
         // Ticking the root node
         bt_root->Tick();
-        std::cout <<"root node Ticked!"<< std::endl;
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        std::cout <<"sleeped!"<< std::endl;
 
     }
 
-    std::cout << "Closing the Lua state" << std::endl;
+    std::cout << "Finalizing the BT" << std::endl;
     bt_root->Finalize();
+    std::cout << "Closing the Lua state" << std::endl;
     lua_close(lua_state);
 
 }
@@ -650,30 +630,100 @@ bool is_BT_valid(QtNodes::FlowScene* scene)
     {
        valid_root = valid_root || dynamic_cast<RootNodeModel*>(roots.front()->nodeDataModel());
     }
-
-
-
     return valid_root ;
-
-
 }
 
 
 
 bool has_root(QtNodes::FlowScene* scene)
 {
-
-    std::vector<QtNodes::Node*> roots = findRoots( *scene );
-
-    for(int i = 0; i < roots.size(); i++)
-
+    for(QtNodes::Node* root : findRoots( *scene ))
     {
-       if(dynamic_cast<RootNodeModel*>(roots.front()->nodeDataModel()))
+       if(dynamic_cast<RootNodeModel*>(root->nodeDataModel()))
+       {
+           std::cout << "has root" << std::endl;
+           return true;
+       }
+    }
+    std::cout << "has no root" << std::endl;
+
+    return false ;
+}
+
+
+QtNodes::Node* BTRoot(QtNodes::FlowScene* scene)
+{
+    for(QtNodes::Node* root : findRoots( *scene ))
+    {
+       if(dynamic_cast<RootNodeModel*>(root->nodeDataModel()))
+       {
+           return root;
+       }
+    }
+
+    return NULL ;
+}
+
+
+bool has_yarp(QtNodes::FlowScene* scene)
+{
+    for(auto&it : scene->nodes())
+    {
+        QtNodes::Node* node = it.second.get();
+       if(dynamic_cast<YARPNodeModel*>(node->nodeDataModel()))
        {
            return true;
        }
     }
     return false ;
+}
 
+
+bool has_lua_preable(QtNodes::FlowScene* scene)
+{
+    for(auto &it : scene->nodes())
+    {
+        QtNodes::Node* node = it.second.get();
+       if(dynamic_cast<LuaPreambleNodeModel*>(node->nodeDataModel()))
+       {
+           return true;
+       }
+    }
+    return false ;
+}
+
+
+QtNodes::Node* LuaPreamble(QtNodes::FlowScene* scene)
+{
+    for(auto &it : scene->nodes())
+    {
+        QtNodes::Node* node = it.second.get();
+       if(dynamic_cast<LuaPreambleNodeModel*>(node->nodeDataModel()))
+       {
+           return node;
+       }
+    }
+    return NULL ;
+}
+
+
+void RunPreamble(lua_State *lua_state, LuaPreambleNodeModel *lua_preamble_node)
+{
+    lua_State *my_lua_state = lua_state;
+    std::string filename = lua_preamble_node->type().toStdString();
+    static const luaL_Reg lualibs[] =
+    {
+        { "base", luaopen_base },
+        { NULL, NULL}
+    };
+
+    const luaL_Reg *lib = lualibs;
+    for(; lib->func != NULL; lib++)
+    {
+        lib->func(my_lua_state);
+        lua_settop(my_lua_state, 0);
+    }
+    // run the Lua script
+    luaL_dofile(my_lua_state, filename.c_str());
 }
 
