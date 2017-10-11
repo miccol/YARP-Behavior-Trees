@@ -21,7 +21,6 @@ extern "C" {
 # include "lualib.h"
 }
 
-
 std::vector<QtNodes::Node*> findRoots(const QtNodes::FlowScene &scene)
 {
     std::set<QUuid> roots;
@@ -111,9 +110,6 @@ QtNodes::Node* getParent(const QtNodes::FlowScene &scene,
 
 
 
-
-
-
 //---------------------------------------------------
 void NodeReorderRecursive(QtNodes::FlowScene &scene,
                              QtNodes::Node& node,
@@ -123,8 +119,6 @@ void NodeReorderRecursive(QtNodes::FlowScene &scene,
 {
     const double vertical_spacing = 15;
     std::vector<QtNodes::Node*> children = getChildren(scene, node );
-
-    std::cout << "n of children " << children.size() <<std::endl;
 
     double total_height = 0;
     for (QtNodes::Node* child_node: children)
@@ -465,7 +459,6 @@ void SubtreeReorder(QtNodes::FlowScene &scene, QtNodes::Node &root_node)
 }
 
 
-
 BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_State* lua_state )
 {
 
@@ -540,6 +533,35 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         return bt_node;
         break;
     }
+    case QtNodes::SEQUENCESTAR:
+    {
+        BT::SequenceNodeWithMemory* bt_node = new BT::SequenceNodeWithMemory("SequenceWithMemory");
+
+        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+
+        for(int i = 0; i < children.size(); i++)
+
+        {
+            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+        }
+        node.linkBTNode(bt_node);
+        return bt_node;
+        break;
+    }
+    case QtNodes::SELECTORSTAR:
+    {
+        BT::FallbackNodeWithMemory* bt_node = new BT::FallbackNodeWithMemory("FallbackWithMemory");
+        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+
+        for(int i = 0; i < children.size(); i++)
+
+        {
+            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+        }
+        //node.linkBTNode(bt_node);
+        return bt_node;
+        break;
+    }
     case QtNodes::ROOT:
     {
         BT::RootNode* bt_node = new BT::RootNode();
@@ -579,14 +601,33 @@ int getMode()
     return mode_;
 }
 
+
+
+
+int lua_get_mode(lua_State* L)
+{
+    int mode = getMode();
+    lua_pushnumber(L, mode);
+    return mode;
+}
+
 void runTree(QtNodes::FlowScene* scene)
 {
 
 
     QtNodes::Node* root = BTRoot(scene);
 
+
+
     lua_State *lua_state;
     lua_state = luaL_newstate();
+    luaL_openlibs(lua_state);
+
+    /* register our function */
+    lua_register(lua_state, "lua_get_mode", lua_get_mode);
+
+
+
 
     QtNodes::Node* lua_preamble = LuaPreamble(scene);
 
@@ -623,8 +664,6 @@ bool is_BT_valid(QtNodes::FlowScene* scene)
 
     std::vector<QtNodes::Node*> roots = findRoots( *scene );
     bool valid_root = false;
-
-
     for(int i = 0; i < roots.size(); i++)
 
     {
@@ -641,12 +680,9 @@ bool has_root(QtNodes::FlowScene* scene)
     {
        if(dynamic_cast<RootNodeModel*>(root->nodeDataModel()))
        {
-           std::cout << "has root" << std::endl;
            return true;
        }
     }
-    std::cout << "has no root" << std::endl;
-
     return false ;
 }
 

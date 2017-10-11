@@ -145,7 +145,7 @@ public:
 class SequenceModel: public ControlNodeModelBase<SequenceModel>
 {
 public:
-    SequenceModel(): ControlNodeModelBase() {  _bt_node_type = BT::SEQUENCE;  std::cout << "Sequence Created: " << _bt_node_type << std::endl;}
+    SequenceModel(): ControlNodeModelBase() {  _bt_node_type = BT::SEQUENCE;}
     virtual ~SequenceModel() {}
     int BTType()
     {
@@ -168,31 +168,42 @@ public:
 };
 
 
-class SequenceStarModel: public ControlNodeModelBase<SequenceStarModel>
+class SequenceWithMemoryModel: public ControlNodeModelBase<SequenceWithMemoryModel>
 {
 public:
-    SequenceStarModel(): ControlNodeModelBase() { }
+    SequenceWithMemoryModel(): ControlNodeModelBase() { }
     int BTType()
     {
         return QtNodes::SEQUENCESTAR;
     }
-    virtual ~SequenceStarModel() {}
-    static QString staticName() { return QString("SequenceStar"); }
+    virtual ~SequenceWithMemoryModel() {}
+    static QString staticName() { return QString("SequenceWithMemory"); }
 };
 
 
-
-class IfThenElseModel: public  ControlNodeModelBase<IfThenElseModel>
+class FallbackWithMemoryModel: public ControlNodeModelBase<FallbackWithMemoryModel>
 {
 public:
-    IfThenElseModel(): ControlNodeModelBase() { }
+    FallbackWithMemoryModel(): ControlNodeModelBase() { }
     int BTType()
     {
-        return QtNodes::DECORATOR;
+        return QtNodes::SELECTORSTAR;
     }
-    virtual ~IfThenElseModel() {}
-    static QString staticName() { return QString("IfThenElse"); }
+    virtual ~FallbackWithMemoryModel() {}
+    static QString staticName() { return QString("FallbackWithMemory"); }
 };
+
+//class IfThenElseModel: public  ControlNodeModelBase<IfThenElseModel>
+//{
+//public:
+//    IfThenElseModel(): ControlNodeModelBase() { }
+//    int BTType()
+//    {
+//        return QtNodes::DECORATOR;
+//    }
+//    virtual ~IfThenElseModel() {}
+//    static QString staticName() { return QString("IfThenElse"); }
+//};
 
 
 

@@ -70,7 +70,7 @@ public slots:
   void onCodeUpdated();
   void onComboBoxUpdated(QString item_text);
 
-public:
+private:
   QWidget*   _main_widget;
   QWidget*   _params_widget;
   QFormLayout *_form_layout;

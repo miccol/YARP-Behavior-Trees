@@ -124,8 +124,6 @@ BT::RootNode::~RootNode() {}
 
 BT::ReturnStatus BT::RootNode::Tick()
 {
-    std::cout << "root !" << std::endl;
-
     // gets the number of children. The number could change if, at runtime, one edits the tree.
     N_of_children_ = children_nodes_.size();
 
@@ -143,8 +141,10 @@ BT::ReturnStatus BT::RootNode::Tick()
     }
     // Routing the ticks according to the sequence node's logic:
 
-    BT::ReturnStatus status = children_nodes_[0]->Tick();
-    std::cout << "root returning: " << status << std::endl;
+
+    BT::ReturnStatus status = children_nodes_[0]->Tick(); //TODO check here if children_nodes_[0] is an action. if so you need to tick it using the tick engine
+
+
 
     return status;
 

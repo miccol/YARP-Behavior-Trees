@@ -31,14 +31,11 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
 
 
     lua_createtable(lua_state_, 1, 0);
-    //    lua_settable(lua_state_, -3);
-    //lua_setglobal(lua_state_, "arg");
 
     // run the Lua script
     luaL_dofile(lua_state_, filename_.c_str());
-
-
     bool lua_return = lua_toboolean(lua_state_, lua_gettop(lua_state_));
+
     // if the return is not a boolean, the Lua script returned somethig else, either nil (error in the return value)
     //or a generic error message
     if(!lua_isboolean(lua_state_,lua_gettop(lua_state_)))
@@ -49,23 +46,23 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
         }
         else
         {
-//            std::cout << "writing the output" << std::endl;
-
-//            std::string output = lua_tostring(lua_state_, lua_gettop(lua_state_));
-//            std::cout  << output << std::endl;
-//            std::cout << "output wrote" << std::endl;
-
+            std::cout  << lua_tostring(lua_state_, lua_gettop(lua_state_)) << std::endl;
         }
-    }
-    //lua_close(lua_state_);
+        std::cout << "Something went wrong in" << get_name() << std::endl;
 
-    if(lua_return)
-    {
-        return BT::SUCCESS;
+        return BT::FAILURE;
     }
     else
     {
-        return BT::FAILURE;
+
+        if(true)//lua_return)
+        {
+            return BT::SUCCESS;
+        }
+        else
+        {
+            return BT::FAILURE;
+        }
     }
 
 }

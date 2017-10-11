@@ -122,38 +122,9 @@ BehaviorTreeNodeModel::BehaviorTreeNodeModel(QString name,
     main_layout->setMargin(0);
     _main_widget->setStyleSheet("background-color: transparent; color: white; ");
 
-//    if(!combo_items.empty())
-//    {
-//        onComboBoxUpdated(combo_items[0]);
-//    }
 
-
-
-//    connect(_text_edit, SIGNAL(textChanged()),this,
-//            SLOT(onTextBoxUpdated()));
-
-
-
-//    connect(_ID_selection_combobox, SIGNAL(currentIndexChanged(QString)),
-//            this, SLOT(onComboBoxUpdated(QString)) );
 }
 
-
-//bool BehaviorTreeNodeModel::eventFilter(QObject* object, QEvent* event)
-//{
-//    if (event->type() == QEvent::MouseButtonDblClick)
-//    {
-//         std::cout << "Double click" << std::endl;
-
-//         editor_.setWindowTitle(QObject::tr("Code Editor Example"));
-//         editor_.show();
-
-
-//         std::cout << "Done!" << std::endl;
-
-//    }
-//    return true;
-//}
 
 QString BehaviorTreeNodeModel::caption() const {
     return type();
@@ -173,14 +144,6 @@ QString BehaviorTreeNodeModel::get_line_edit()
 QString BehaviorTreeNodeModel::get_text_edit()
 {
     return _text_edit->toPlainText();
-}
-
-void BehaviorTreeNodeModel::lastComboItem() const
-{
-    // TODO DO IT!
-    std::cout << "Setting combobox item" << std::endl;
-    // ID_selection_combobox->isEnabled();
-    std::cout << "combobox item SET" << std::endl;
 }
 
 

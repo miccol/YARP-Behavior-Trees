@@ -30,9 +30,11 @@ void BT::ActionNode::WaitForTick()
     {
         // Waiting for the tick to come
         DEBUG_STDOUT(get_name() << " WAIT FOR TICK");
+        std::cout << get_name() << " WAIT FOR TICK " << std::endl;
 
         tick_engine.Wait();
         DEBUG_STDOUT(get_name() << " TICK RECEIVED");
+        std::cout << get_name() << " TICK RECEIVED" << std::endl;
 
         // Running state
         set_status(BT::RUNNING);
