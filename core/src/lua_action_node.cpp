@@ -55,7 +55,7 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
     else
     {
 
-        if(true)//lua_return)
+        if(lua_return)
         {
             return BT::SUCCESS;
         }
@@ -69,5 +69,9 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
 
 void BT::LuaActionNode::Halt()
 {
-
+    while (get_status() != BT::SUCCESS
+           && get_status() != BT::FAILURE);
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
 }

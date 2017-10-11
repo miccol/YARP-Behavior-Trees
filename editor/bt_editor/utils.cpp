@@ -637,8 +637,6 @@ void runTree(QtNodes::FlowScene* scene)
         RunPreamble(lua_state, (LuaPreambleNodeModel*)lua_preamble->nodeDataModel());
     }
 
-
-
     BT::TreeNode* bt_root = getBTObject(*scene, *root, lua_state);
 
     while (getMode() == 1)
@@ -653,6 +651,7 @@ void runTree(QtNodes::FlowScene* scene)
     }
 
     std::cout << "Finalizing the BT" << std::endl;
+    bt_root->Halt();
     bt_root->Finalize();
     std::cout << "Closing the Lua state" << std::endl;
     lua_close(lua_state);
@@ -671,8 +670,6 @@ bool is_BT_valid(QtNodes::FlowScene* scene)
     }
     return valid_root ;
 }
-
-
 
 bool has_root(QtNodes::FlowScene* scene)
 {
