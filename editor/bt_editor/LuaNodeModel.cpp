@@ -15,7 +15,8 @@
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <windows.h>
 #else
-#include  <dirent.h> //dirent would also work for windows to find file in a directory but <windows.h> has a better font
+#include  <dirent.h> //dirent could also work for windows to find file in a directory but <windows.h> has a better font
+#include <regex>
 #endif
 
 
@@ -47,10 +48,14 @@ QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, 
 
     DIR *dir;
     struct dirent *ent;
-    if ((dir = opendir (search_path.c_str())) != NULL) {
+    std::regex txt_regex(search_path.c_str());
+    if ((dir = opendir (folder)) != NULL) {
         /* print all the files and directories within directory */
         while ((ent = readdir (dir)) != NULL) {
-            names.push_back(QString(ent->d_name));
+            if(std::regex_match(ent->d_name, txt_regex))
+            {
+                names.push_back(QString(ent->d_name));
+            }
         }
         closedir (dir);
     } else {
