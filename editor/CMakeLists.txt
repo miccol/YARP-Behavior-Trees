@@ -71,7 +71,8 @@ QT5_WRAP_UI(FORMS_HEADERS
 
 
 
-add_executable(behavior_tree_editor WIN32 ${APP_CPPS} ${FORMS_HEADERS} )
+#add_executable(behavior_tree_editor WIN32 ${APP_CPPS} ${FORMS_HEADERS} )
+add_executable(behavior_tree_editor ${APP_CPPS} ${FORMS_HEADERS} )
 target_link_libraries(behavior_tree_editor LINK_PUBLIC BT_CORE_LIBRARY qt_node_editor ${CMAKE_THREAD_LIBS_INIT} ${YARP_LIBRARIES})
 
 
