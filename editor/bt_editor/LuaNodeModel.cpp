@@ -26,10 +26,10 @@ QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, 
 {
 
     QStringList names;
-    std::string search_path = folder + "/"+type+"*.lua";
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     //OS is windows
+    std::string search_path = folder + "/"+type+"*.lua";
     WIN32_FIND_DATA fd;
     HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
     if(hFind != INVALID_HANDLE_VALUE) {
@@ -48,7 +48,7 @@ QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, 
 
     DIR *dir;
     struct dirent *ent;
-    std::regex txt_regex(search_path.c_str());
+    std::regex txt_regex("["+type+"]+[a-zA-Z]+\\.lua");
     if ((dir = opendir (folder.c_str())) != NULL) {
         /* print all the files and directories within directory */
         while ((ent = readdir (dir)) != NULL) {
