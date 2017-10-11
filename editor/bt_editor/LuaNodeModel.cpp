@@ -47,7 +47,7 @@ QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, 
 
     DIR *dir;
     struct dirent *ent;
-    if ((dir = opendir (search_path)) != NULL) {
+    if ((dir = opendir (search_path.c_str())) != NULL) {
         /* print all the files and directories within directory */
         while ((ent = readdir (dir)) != NULL) {
             names.push_back(QString(ent->d_name));
