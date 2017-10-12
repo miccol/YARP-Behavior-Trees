@@ -34,6 +34,8 @@ BT::ReturnStatus BT::SequenceNode::Tick()
                 Hence we cannot just call the method Tick() from the action as doing so will block the execution of the tree.
                 For this reason if a child of this node is an action, then we send the tick using the tick engine. Otherwise we call the method Tick() and wait for the response.
         */
+      //  std::cout << get_name() << "is checking " << children_nodes_[i]->get_name() << std::endl;
+
         if (children_nodes_[i]->get_type() == BT::ACTION_NODE)
         {
             // 1) If the child i is an action, read its state.
@@ -42,7 +44,7 @@ BT::ReturnStatus BT::SequenceNode::Tick()
             if (child_i_status_ == BT::IDLE || child_i_status_ == BT::HALTED)
             {
                 // 1.1) If the action status is not running, the sequence node sends a tick to it.
-                DEBUG_STDOUT(get_name() << "NEEDS TO TICK " << children_nodes_[i]->get_name());
+             //   std::cout << get_name() << "NEEDS TO TICK " << children_nodes_[i]->get_name() << std::endl;
                 children_nodes_[i]->tick_engine.Tick();
 
                 // waits for the tick to arrive to the child
@@ -54,9 +56,16 @@ BT::ReturnStatus BT::SequenceNode::Tick()
                 while (child_i_status_ != BT::RUNNING && child_i_status_ != BT::SUCCESS
                        && child_i_status_ != BT::FAILURE);
             }
+            else
+            {
+           //     std::cout << get_name() << "DOES NOT NEED TO TICK " << children_nodes_[i]->get_name() << std::endl;
+
+            }
         }
         else
         {
+           // std::cout << children_nodes_[i]->get_name() <<  "is not an action" << std::endl;
+
             // 2) if it's not an action:
             // Send the tick and wait for the response;
             child_i_status_ = children_nodes_[i]->Tick();

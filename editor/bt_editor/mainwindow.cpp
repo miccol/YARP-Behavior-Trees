@@ -52,7 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ret->registerModel<RootNodeModel>("Root");
     ret->registerModel<SequenceModel>("Control");
-    //ret->registerModel<SequenceStarModel>("Control");
+    ret->registerModel<FallbackWithMemoryModel>("Control");
+    ret->registerModel<SequenceWithMemoryModel>("Control");
     ret->registerModel<SelectorModel>("Control");
 
     ret->registerModel<LuaActionNodeModel>("Action");
@@ -81,8 +82,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect( _main_scene, &QtNodes::FlowScene::changed,
              this,   &MainWindow::onSceneChanged  );
 
-    connect( this, SIGNAL(updateGraphic()),  _main_scene,  SLOT(updateGraphic())  );
-    connect( this, SIGNAL(updateGraphic()),  _main_view,   SLOT(updateGraphic())  );
+   // connect( this, SIGNAL(updateGraphic()),  _main_scene,  SLOT(updateGraphic())  );
+   // connect( this, SIGNAL(updateGraphic()),  _main_view,   SLOT(updateGraphic())  );
     connect( this, SIGNAL(updateGraphic()),  _main_view,   SLOT(repaint())  );
     connect( &_periodic_timer, SIGNAL(timeout()), this, SLOT(onTimerUpdate()) );
 
@@ -447,15 +448,6 @@ void MainWindow::lockEditing(bool locked)
     }
 }
 
-void MainWindow::on_selectMode_sliderPressed()
-{
-
-}
-
-void MainWindow::on_selectMode_valueChanged(int value)
-{
-
-}
 
 
 
@@ -616,19 +608,6 @@ void MainWindow::onTimerUpdate()
 }
 
 
-void MainWindow::on_selectMode_sliderReleased()
-{
-//    if(!is_BT_valid(_main_scene))
-//    {
-//        int ret = QMessageBox::warning(this, tr("Oops!"),
-//                                       tr("Invalid behavior tree. There must be a root node"),
-//                                       QMessageBox::Ok);
-//        return;
-//    }
-
-//    const int new_value = (ui->selectMode->value() == 0) ? 1 : 0;
-//    ui->selectMode->setValue( new_value );
-}
 
 void MainWindow::on_playButton_released()
 {

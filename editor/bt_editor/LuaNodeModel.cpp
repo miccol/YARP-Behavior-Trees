@@ -76,7 +76,6 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
     _main_widget = new QWidget;
     _label = new QLabel( _main_widget );
     _ID_selection_combobox = new QComboBox(_main_widget);
-    std::cout << "combobox created" << std::endl;
     _label->setText( name );
 
     QVBoxLayout *main_layout = new QVBoxLayout( _main_widget );
@@ -86,6 +85,7 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
 
     _text_edit->setTextColor(Qt::black);
     _text_edit->setReadOnly(true);
+    _text_edit->setStyleSheet("color: black; background-color: white");
     _ID_selection_combobox->setStyleSheet("color: black; background-color: white");
 
 
@@ -104,7 +104,6 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
 
     QStringList combo_items = get_all_files_names_within_folder(".", name.toStdString());
     _ID_selection_combobox->addItems(combo_items);
-    std::cout << "combobox items added" << std::endl;
 
     _ID_selection_combobox->setCurrentIndex(0);
     QFont font = _label->font();
@@ -139,30 +138,11 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
     connect(_text_edit, SIGNAL(textChanged()),this,
             SLOT(onTextBoxUpdated()));
 
-//    connect(_text_edit, SIGNAL(doubleClicked(const QModelIndex&)),this,
-//            SLOT(onTextBoxUpdated()));
-
-
     connect(_ID_selection_combobox, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(onComboBoxUpdated(QString)) );
 }
 
 
-//bool LuaNodeModel::eventFilter(QObject* object, QEvent* event)
-//{
-//    if (event->type() == QEvent::MouseButtonDblClick)
-//    {
-//         std::cout << "Double click" << std::endl;
-
-//         editor_.setWindowTitle(QObject::tr("Code Editor Example"));
-//         editor_.show();
-
-
-//         std::cout << "Done!" << std::endl;
-
-//    }
-//    return true;
-//}
 
 QString LuaNodeModel::caption() const {
     return type();
@@ -392,15 +372,8 @@ void LuaNodeModel::onCodeUpdated()
 
 void LuaNodeModel::onTextBoxUpdated()
 {
-    //std::cout << "not saving file, edit LuaNodeModel::onTextBoxUpdated" << std::endl;
-
+    //not used now. May be useful later
     return;
-
-//    std::ofstream myfile;
-//    myfile.open (_ID_selection_combobox->currentText().toStdString().c_str());
-//    myfile << _text_edit->toPlainText().toStdString().c_str();
-//    myfile.close();
-//    std::cout << "new data added" << std::endl;
 }
 
 

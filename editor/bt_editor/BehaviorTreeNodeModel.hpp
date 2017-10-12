@@ -61,7 +61,6 @@ public:
 
   QString get_line_edit();
   QString get_text_edit();
-  void lastComboItem() const;
   //bool eventFilter(QObject *object, QEvent *event);
   std::string filename();
 public slots:

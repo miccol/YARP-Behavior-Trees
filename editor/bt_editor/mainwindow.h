@@ -50,17 +50,11 @@ private slots:
 
     virtual void closeEvent(QCloseEvent *event) override;
 
-    void on_selectMode_sliderPressed();
-
-    void on_selectMode_valueChanged(int value);
-
     void onTimerUpdate();
 
     void on_actionAdd_Action_triggered();
 
     void on_actionAdd_Condition_triggered();
-
-    void on_selectMode_sliderReleased();
 
     void on_playButton_released();
 

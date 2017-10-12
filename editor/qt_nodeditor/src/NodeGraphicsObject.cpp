@@ -391,9 +391,6 @@ mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 
    if ( _node.nodeDataModel()->BTType() == QtNodes::LUAACTION ||  _node.nodeDataModel()->BTType() == QtNodes::LUACONDITION ||  _node.nodeDataModel()->BTType() == -1 )
    {
-       std::cout << "double click" << std::endl;
-
-
      LuaNodeModel* node_model = dynamic_cast<LuaNodeModel*>(_node.nodeDataModel());
      code_editor_.clear(); // unless you know the editor is empty
      code_editor_.appendPlainText(node_model->get_text_edit().toStdString().c_str());
