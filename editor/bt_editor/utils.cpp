@@ -464,8 +464,6 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
 
     int bt_type = node.nodeDataModel()->BTType();
 
-    std::cout << "The node is :" << bt_type << std::endl;
-
     switch (bt_type) {
     case QtNodes::LUAACTION:
     {
@@ -529,7 +527,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         {
             bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
         }
-        //node.linkBTNode(bt_node);
+        node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
@@ -558,7 +556,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         {
             bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
         }
-        //node.linkBTNode(bt_node);
+        node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
@@ -571,7 +569,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         {
             bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
         }
-        //node.linkBTNode(bt_node);
+        node.linkBTNode(bt_node);
         return bt_node;
         break;
     }

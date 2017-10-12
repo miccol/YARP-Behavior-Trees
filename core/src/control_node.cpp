@@ -143,7 +143,7 @@ BT::ReturnStatus BT::RootNode::Tick()
 
 
     BT::ReturnStatus status = children_nodes_[0]->Tick(); //TODO check here if children_nodes_[0] is an action. if so you need to tick it using the tick engine
-
+    set_status(status);
 
 
     return status;
