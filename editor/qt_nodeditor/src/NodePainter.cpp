@@ -42,7 +42,7 @@ paint(QPainter* painter,
     //--------------------------------------------
     NodeDataModel const * model = node.nodeDataModel();
 
-    drawNodeRect(painter, geom, model, graphicsObject, bt_node);
+    drawNodeRect(painter, geom, model, graphicsObject, node);
 
     drawConnectionPoints(painter, geom, state, model, scene);
 
@@ -70,7 +70,7 @@ drawNodeRect(QPainter* painter,
              NodeGeometry const& geom,
              NodeDataModel const* model,
              NodeGraphicsObject const & graphicsObject,
-             BT::TreeNode* bt_node)
+             Node & node)
 {
     NodeStyle const& nodeStyle = model->nodeStyle();
 
@@ -78,25 +78,29 @@ drawNodeRect(QPainter* painter,
             ? nodeStyle.SelectedBoundaryColor
             : nodeStyle.NormalBoundaryColor;
 
-
-    if(getMode() == 1)
+    //if the BT is running and the node is linked (it could be a loose node), color it.
+    if(getMode() == 1 && node.BTNode() !=NULL)
     {
 
-        std::cout << "coloring " << bt_node->get_name() << std::endl;
-        switch (bt_node->get_color_status()) {
+        switch (node.BTNode()->get_color_status()) {
         case BT::RUNNING:
             color = Qt::gray;
             break;
+
         case BT::SUCCESS:
             color = Qt::green;
             break;
+
         case BT::FAILURE:
             color = Qt::red;
             break;
+
         default:
             color = Qt::black;
             break;
         }
+
+
     }
 
 

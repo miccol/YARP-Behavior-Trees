@@ -35,11 +35,14 @@ Node(std::unique_ptr<NodeDataModel> && dataModel)
   // propagate data: model => node
   connect(_nodeDataModel.get(), &NodeDataModel::dataUpdated,
           this, &Node::onDataUpdated);
+  _bt_node = NULL;
 }
 
 void Node::linkBTNode(BT::TreeNode *bt_node)
 {
     _bt_node = bt_node;
+    std::cout << "linked" << bt_node->get_name() << std::endl;
+
 }
 
 BT::TreeNode* Node::BTNode()

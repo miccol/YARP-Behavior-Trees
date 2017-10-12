@@ -142,11 +142,40 @@ BT::ReturnStatus BT::RootNode::Tick()
     // Routing the ticks according to the sequence node's logic:
 
 
-    BT::ReturnStatus status = children_nodes_[0]->Tick(); //TODO check here if children_nodes_[0] is an action. if so you need to tick it using the tick engine
-    set_status(status);
+/*    BT::ReturnStatus status = children_nodes_[0]->Tick(); //TODO check here if children_nodes_[0] is an action. if so you need to tick it using the tick engine
+    set_status(status)*/;
+
+    if (children_nodes_[0]->get_type() == BT::ACTION_NODE)
+    {
+        // 1) If the child i is an action, read its state.
+        child_i_status_ = children_nodes_[0]->get_status();
+
+        if (child_i_status_ == BT::IDLE || child_i_status_ == BT::HALTED)
+        {
+            // 1.1) If the action status is not running, the sequence node sends a tick to it.
+         //   std::cout << get_name() << "NEEDS TO TICK " << children_nodes_[i]->get_name() << std::endl;
+            children_nodes_[0]->tick_engine.Tick();
+
+            // waits for the tick to arrive to the child
+            do
+            {
+                child_i_status_ = children_nodes_[0]->get_status();
+                std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            }
+            while (child_i_status_ != BT::RUNNING && child_i_status_ != BT::SUCCESS
+                   && child_i_status_ != BT::FAILURE);
+        }
+    }
+    else
+    {
+        // 2) if it's not an action:
+        // Send the tick and wait for the response;
+        child_i_status_ = children_nodes_[0]->Tick();
+        children_nodes_[0]->set_status(child_i_status_);
+    }
 
 
-    return status;
+    return child_i_status_;
 
 
 }

@@ -1,4 +1,11 @@
 #include "lua_action_node.h"
+extern "C" {
+# include "lua.h"
+# include "lauxlib.h"
+# include "lualib.h"
+}
+
+
 
 BT::LuaActionNode::LuaActionNode(std::string name, std::string filename, lua_State *lua_state) : BT::ActionNode::ActionNode(name)
 {
@@ -49,7 +56,6 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
             std::cout  << lua_tostring(lua_state_, lua_gettop(lua_state_)) << std::endl;
         }
         std::cout << "Something went wrong in" << get_name() << std::endl;
-
         return BT::FAILURE;
     }
     else

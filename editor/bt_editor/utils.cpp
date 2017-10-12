@@ -463,6 +463,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
 {
 
     int bt_type = node.nodeDataModel()->BTType();
+    //std::cout << "The node is :" << bt_type << std::endl;
 
     switch (bt_type) {
     case QtNodes::LUAACTION:
@@ -478,7 +479,6 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
     {
         std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
         BT::LuaConditionNode* bt_node = new BT::LuaConditionNode(filename,filename,lua_state);
-
         node.linkBTNode(bt_node);
         return bt_node;
         break;

@@ -37,7 +37,7 @@ public:
                NodeGeometry const& geom,
                NodeDataModel const* model,
                NodeGraphicsObject const & graphicsObject,
-               BT::TreeNode* bt_node);
+               Node & node);
 
   static
   void
