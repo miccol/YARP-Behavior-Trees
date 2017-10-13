@@ -86,6 +86,11 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
     _text_edit->setTextColor(Qt::black);
     _text_edit->setReadOnly(true);
     _text_edit->setStyleSheet("color: black; background-color: white");
+
+    QFontMetrics m (_text_edit -> font()) ;
+    int RowHeight = m.lineSpacing() ;
+    _text_edit -> setFixedHeight  (3 * RowHeight) ;
+
     _ID_selection_combobox->setStyleSheet("color: black; background-color: white");
 
 
