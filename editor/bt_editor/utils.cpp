@@ -154,10 +154,6 @@ void NodeReorderRecursive(QtNodes::FlowScene &scene,
     // adjust cursor Y
     cursor.setX( std::max( this_max_Y, next_max_Y) ) ;
 
-
-    //    qDebug() << "node: " << node.nodeDataModel()->caption()<< " id: "<<
-//                node.nodeDataModel()->name() << " pos: " << cursor;
-
     scene.setNodePosition( node, cursor);
     nodes_by_level[level].push_back( &node );
     //---------------------------------------------
@@ -601,12 +597,19 @@ int getMode()
 
 
 
-
-int lua_get_mode(lua_State* L)
+static int lua_get_mode(lua_State* L)
 {
     int mode = getMode();
     lua_pushnumber(L, mode);
-    return mode;
+
+    return 1; //number of returning valude
+}
+
+static int lua_is_halted(lua_State* L)
+{
+    int mode = getMode();
+    lua_pushboolean(L, mode == 0);
+    return 1; //number of returning valude
 }
 
 void runTree(QtNodes::FlowScene* scene)
@@ -622,7 +625,7 @@ void runTree(QtNodes::FlowScene* scene)
     luaL_openlibs(lua_state);
 
     /* register our function */
-    lua_register(lua_state, "lua_get_mode", lua_get_mode);
+    lua_register(lua_state, "is_halted", lua_is_halted);
 
 
 
@@ -639,7 +642,7 @@ void runTree(QtNodes::FlowScene* scene)
 
     while (getMode() == 1)
     {
-        std::cout <<"Ticking the root node !"<< std::endl;
+        //std::cout <<"Ticking the root node !"<< std::endl;
 
         // Ticking the root node
         bt_root->Tick();
