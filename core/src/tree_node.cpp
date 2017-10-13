@@ -108,4 +108,5 @@ bool BT::TreeNode::is_halted()
 
 void BT::TreeNode::Finalize()
 {
+
 }

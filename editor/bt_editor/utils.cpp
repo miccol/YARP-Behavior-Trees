@@ -602,14 +602,14 @@ static int lua_get_mode(lua_State* L)
     int mode = getMode();
     lua_pushnumber(L, mode);
 
-    return 1; //number of returning valude
+    return 1; //number of returning values
 }
 
 static int lua_is_halted(lua_State* L)
 {
     int mode = getMode();
     lua_pushboolean(L, mode == 0);
-    return 1; //number of returning valude
+    return 1; //number of returning values
 }
 
 void runTree(QtNodes::FlowScene* scene)
@@ -618,16 +618,12 @@ void runTree(QtNodes::FlowScene* scene)
 
     QtNodes::Node* root = BTRoot(scene);
 
-
-
     lua_State *lua_state;
     lua_state = luaL_newstate();
     luaL_openlibs(lua_state);
 
     /* register our function */
     lua_register(lua_state, "is_halted", lua_is_halted);
-
-
 
 
     QtNodes::Node* lua_preamble = LuaPreamble(scene);

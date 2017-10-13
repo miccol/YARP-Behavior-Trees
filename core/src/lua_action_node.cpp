@@ -11,7 +11,6 @@ BT::LuaActionNode::LuaActionNode(std::string name, std::string filename, lua_Sta
 {
     filename_ = filename;
     lua_state_ = lua_state;
-
 }
 
 BT::ReturnStatus BT::LuaActionNode::Tick()
@@ -21,8 +20,11 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
     //lua_State *lua_state;
     //lua_state = luaL_newstate();
 
-    // load Lua libraries
+  //  lua_sethook(lua_state_, &BT::LuaActionNode::LineHookFunc, LUA_MASKLINE, 0);
 
+
+
+    // load Lua libraries
     static const luaL_Reg lualibs[] =
     {
         { "base", luaopen_base },
@@ -42,6 +44,8 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
     // run the Lua script
     luaL_dofile(lua_state_, filename_.c_str());
     bool lua_return = lua_toboolean(lua_state_, lua_gettop(lua_state_));
+    set_lua_script_done(true);
+
 
     // if the return is not a boolean, the Lua script returned somethig else, either nil (error in the return value)
     //or a generic error message
@@ -75,9 +79,37 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
 
 void BT::LuaActionNode::Halt()
 {
-    while (get_status() != BT::SUCCESS
-           && get_status() != BT::FAILURE);
+    set_status(BT::HALTED);
+    while (!lua_script_done());
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+}
+
+bool BT::LuaActionNode::lua_script_done()
+{
+    std::lock_guard<std::mutex> LockGuard(lua_script_done_mutex_);
+
+    return lua_script_done_;
+}
+
+void BT::LuaActionNode::set_lua_script_done(bool lua_script_done)
+{
+    std::lock_guard<std::mutex> LockGuard(lua_script_done_mutex_);
+    lua_script_done_ = lua_script_done;
+}
+
+int BT::LuaActionNode::lua_is_halted(lua_State* L)
+{
+    lua_pushboolean(L, is_halted());
+    return 1; //number of returning values
+}
+
+
+
+void BT::LuaActionNode::LineHookFunc(lua_State *L, lua_Debug *ar)
+{
+    if(ar->event == LUA_HOOKLINE)
+        if(is_halted() == true)
+            luaL_error(L, "HALTED");
 }
