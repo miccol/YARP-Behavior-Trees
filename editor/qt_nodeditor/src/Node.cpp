@@ -53,7 +53,6 @@ BT::TreeNode* Node::BTNode()
 Node::
 ~Node()
 {
-  std::cout << "Node destructor" << std::endl;
 }
 
 

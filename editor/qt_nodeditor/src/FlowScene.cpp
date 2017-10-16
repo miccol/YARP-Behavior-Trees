@@ -209,7 +209,7 @@ removeNode(Node& node)
 
   _nodes.erase(node.id());
 
-  NodeReorder(*this);
+  //NodeReorder(*this);
 
 }
 

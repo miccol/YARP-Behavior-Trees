@@ -515,7 +515,7 @@ void MainWindow::on_actionAdd_Action_triggered()
 
         //node_on_scene.lastComboItem();
 
-        NodeReorder(*_main_scene);
+        //NodeReorder(*_main_scene);
 
 
     }
@@ -581,7 +581,7 @@ void MainWindow::on_actionAdd_Condition_triggered()
         std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("LuaCondition");
 
         LuaConditionNodeModel& node_on_scene = (LuaConditionNodeModel&)_main_scene->createNode( std::move(dataModel) );
-        NodeReorder(*_main_scene);
+       // NodeReorder(*_main_scene);
 
 //        for (auto& it: _main_scene->nodes() )
 //        {
@@ -714,6 +714,6 @@ void MainWindow::on_actionCreate_Preamble_triggered()
 
         //&node_on_scene.lastComboItem();
 
-        NodeReorder(*_main_scene);
+       // NodeReorder(*_main_scene);
     }
 }

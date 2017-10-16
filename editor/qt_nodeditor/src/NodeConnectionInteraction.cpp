@@ -182,7 +182,7 @@ disconnect(PortType portToDisconnect) const
   _connection->setRequiredPort(portToDisconnect);
 
   _connection->getConnectionGraphicsObject().grabMouse();
-  NodeReorder(*_scene);
+  //NodeReorder(*_scene);
   return true;
 }
 
