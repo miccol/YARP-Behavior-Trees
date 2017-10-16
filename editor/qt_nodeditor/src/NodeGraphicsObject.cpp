@@ -23,6 +23,9 @@
 #include <bt_editor/LuaNodeModel.h>
 #include <bt_editor/code_editor.h>
 
+#include <QHoverEvent>
+
+
 using QtNodes::NodeGraphicsObject;
 using QtNodes::Node;
 using QtNodes::FlowScene;
@@ -64,7 +67,7 @@ NodeGraphicsObject(FlowScene &scene,
 
   // connect to the move signals to emit the move signals in FlowScene
   auto onMoveSlot = [this] {
-    _scene.nodeMoved(_node, pos());
+      _scene.nodeMoved(_node, pos());
   };
   connect(this, &QGraphicsObject::xChanged, this, onMoveSlot);
   connect(this, &QGraphicsObject::yChanged, this, onMoveSlot);
@@ -345,10 +348,19 @@ void
 NodeGraphicsObject::
 hoverEnterEvent(QGraphicsSceneHoverEvent * event)
 {
+
   _node.nodeGeometry().setHovered(true);
   update();
   _scene.nodeHovered(node(), event->screenPos());
   event->accept();
+
+
+  LuaNodeModel* node_model = dynamic_cast<LuaNodeModel*>(_node.nodeDataModel());
+  if(node_model)
+  {
+      this->setToolTip(node_model->get_source_code());
+  }
+
 }
 
 
@@ -392,14 +404,11 @@ mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
    if ( _node.nodeDataModel()->BTType() == QtNodes::LUAACTION ||  _node.nodeDataModel()->BTType() == QtNodes::LUACONDITION ||  _node.nodeDataModel()->BTType() == -1 )
    {
      LuaNodeModel* node_model = dynamic_cast<LuaNodeModel*>(_node.nodeDataModel());
-     code_editor_.clear(); // unless you know the editor is empty
-     code_editor_.appendPlainText(node_model->get_text_edit().toStdString().c_str());
-     code_editor_.set_filename(node_model->filename());
-     code_editor_.set_bt_node_model(node_model);
-     code_editor_.show();
-
+     CodeEditorWindow* cew = new CodeEditorWindow(node_model->filename(), node_model);
+     cew->show();
    }
   QGraphicsItem::mouseDoubleClickEvent(event);
 
   _scene.nodeDoubleClicked(node());
 }
+

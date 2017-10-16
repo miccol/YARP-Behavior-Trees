@@ -13,7 +13,7 @@ CodeEditor::CodeEditor(QWidget *parent) : QPlainTextEdit(parent)
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
 
 
-
+    setUndoRedoEnabled(true);
     updateLineNumberAreaWidth(0);
     highlightCurrentLine();
 }
