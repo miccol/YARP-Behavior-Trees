@@ -1,0 +1,28 @@
+<root>
+    <BehaviorTree>
+        <SequenceWithMemory>
+            <Fallback>
+                <LuaCondition ID="ConditioninitDone.lua"/>
+                <SequenceWithMemory name="INIT">
+                    <LuaAction ID="ActionDDD.lua"/>
+                    <LuaAction ID="ActionDDD.lua"/>
+                    <LuaAction ID="ActionDDD.lua"/>
+                    <LuaAction ID="ActionDDD.lua"/>
+                    <LuaAction ID="ActionDDD.lua"/>
+                </SequenceWithMemory>
+            </Fallback>
+            <SequenceWithMemory>
+                <LuaAction ID="ActionDDD.lua"/>
+                <FallbackWithMemory>
+                    <LuaAction ID="ActionDDD.lua"/>
+                    <LuaAction ID="ActionDDD.lua"/>
+                </FallbackWithMemory>
+                <LuaAction ID="ActionDDD.lua"/>
+            </SequenceWithMemory>
+        </SequenceWithMemory>
+    </BehaviorTree>
+    <LooseNodes>
+        <LuaPreamble ID="LuaPreambleCleanTable.lua"/>
+    </LooseNodes>
+</root>
+
