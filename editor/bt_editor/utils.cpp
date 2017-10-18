@@ -625,6 +625,7 @@ void runTree(QtNodes::FlowScene* scene)
     /* register our function */
     lua_register(lua_state, "is_halted", lua_is_halted);
 
+    lua_createtable(lua_state, 1, 0);
 
     QtNodes::Node* lua_preamble = LuaPreamble(scene);
 
