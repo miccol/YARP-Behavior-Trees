@@ -48,7 +48,7 @@ QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, 
 
     DIR *dir;
     struct dirent *ent;
-    std::regex txt_regex("["+type+"]+[a-zA-Z]+\\.lua");
+    std::regex txt_regex("["+type+"]+[a-zA-Z0-9_]+\\.lua");
     if ((dir = opendir (folder.c_str())) != NULL) {
         /* print all the files and directories within directory */
         while ((ent = readdir (dir)) != NULL) {
