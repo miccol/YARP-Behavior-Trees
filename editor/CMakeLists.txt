@@ -66,8 +66,7 @@ target_link_libraries(qt_node_editor
 
 QT5_WRAP_UI(FORMS_HEADERS
   ./bt_editor/mainwindow.ui
-  ./bt_editor/action_form.ui
-  ./bt_editor/condition_form.ui)
+  ./bt_editor/code_editor_window.ui)
 
 
 

@@ -8,7 +8,7 @@
 #include "NodeGeometry.hpp"
 #include "NodeState.hpp"
 #include <bt_editor/code_editor.h>
-
+#include <bt_editor/code_editor_window.h>
 
 
 class QGraphicsProxyWidget;
@@ -99,7 +99,7 @@ private:
 
   bool _locked;
 
-  CodeEditor code_editor_;
+  //CodeEditor code_editor_;
 
   // either nullptr or owned by parent QGraphicsItem
   QGraphicsProxyWidget * _proxyWidget;

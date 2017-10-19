@@ -81,15 +81,15 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
     QVBoxLayout *main_layout = new QVBoxLayout( _main_widget );
     QHBoxLayout *top_layout  = new QHBoxLayout(  );
     //_line_edit = new QLineEdit(_main_widget);
-    _text_edit = new QTextEdit (_main_widget);
+//    _text_edit = new QTextEdit (_main_widget);
 
-    _text_edit->setTextColor(Qt::black);
-    _text_edit->setReadOnly(true);
-    _text_edit->setStyleSheet("color: black; background-color: white");
+//    _text_edit->setTextColor(Qt::black);
+//    _text_edit->setReadOnly(true);
+//    _text_edit->setStyleSheet("color: black; background-color: white");
 
-    QFontMetrics m (_text_edit -> font()) ;
-    int RowHeight = m.lineSpacing() ;
-    _text_edit -> setFixedHeight  (3 * RowHeight) ;
+//    QFontMetrics m (_text_edit -> font()) ;
+    //int RowHeight = m.lineSpacing() ;
+    //_text_edit -> setFixedHeight  (3 * RowHeight) ;
 
     _ID_selection_combobox->setStyleSheet("color: black; background-color: white");
 
@@ -105,7 +105,7 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
     main_layout->addLayout(top_layout);
     //main_layout->addWidget(_params_widget);
     //main_layout->addWidget(_line_edit);
-    main_layout->addWidget(_text_edit);
+    //main_layout->addWidget(_text_edit);
 
     QStringList combo_items = get_all_files_names_within_folder(".", name.toStdString());
     _ID_selection_combobox->addItems(combo_items);
@@ -140,8 +140,8 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
    // _text_edit->viewport()->installEventFilter(this);
 
 
-    connect(_text_edit, SIGNAL(textChanged()),this,
-            SLOT(onTextBoxUpdated()));
+//    connect(_text_edit, SIGNAL(textChanged()),this,
+//            SLOT(onTextBoxUpdated()));
 
     connect(_ID_selection_combobox, SIGNAL(currentIndexChanged(QString)),
             this, SLOT(onComboBoxUpdated(QString)) );
@@ -164,9 +164,14 @@ QString LuaNodeModel::get_line_edit()
 }
 
 
-QString LuaNodeModel::get_text_edit()
+//QString LuaNodeModel::get_text_edit()
+//{
+//    return _text_edit->toPlainText();
+//}
+
+QString LuaNodeModel::get_source_code()
 {
-    return _text_edit->toPlainText();
+    return source_code_;
 }
 
 void LuaNodeModel::lastComboItem()
@@ -299,55 +304,9 @@ void LuaNodeModel::restore(const QJsonObject &nodeJson)
 void LuaNodeModel::lock(bool locked)
 {
     _ID_selection_combobox->setEnabled( !locked );
-    _text_edit->setEnabled(!locked);
+    //_text_edit->setEnabled(!locked);
 
-//    for(int row = 0; row < _form_layout->rowCount(); row++)
-//    {
-//        auto field_item  = _form_layout->itemAt(row, QFormLayout::FieldRole);
-
-//        if( field_item )
-//        {
-//            QLineEdit* line  = dynamic_cast<QLineEdit*>( field_item->widget() );
-//            QComboBox* combo = dynamic_cast<QComboBox*>( field_item->widget() );
-//            if( line ){
-//                line->setReadOnly( locked );
-//            }
-//            else if( combo )
-//            {
-//                combo->setEnabled( !locked );
-//            }
-//        }
-//    }
 }
-
-//void LuaNodeModel::onComboBoxUpdated(QString item_text)
-//{
-//  while ( _form_layout->count() != 0)
-//  {
-//    QLayoutItem *forDeletion = _form_layout->takeAt(0);
-//    delete forDeletion->widget();
-//    delete forDeletion;
-//  }
-
-//  int row = 0;
-//  //TODO: check if found
-//  const auto& params = _parameter_model.at(item_text);
-//  _params_widget->setVisible( params.size() > 0);
-
-//  for(const NodeFactory::ParamWidget& param: params )
-//  {
-//    QWidget* field_widget = param.instance_factory();
-//    field_widget->setStyleSheet("color: white; background-color: gray; border: 1px solid #FFFFFF");
-
-//    _form_layout->setWidget(row,  QFormLayout::LabelRole, new QLabel( param.label, _params_widget ));
-//    _form_layout->setWidget(row,  QFormLayout::FieldRole, field_widget);
-//    row++;
-//  }
-//  _params_widget->adjustSize();
-//  _main_widget->adjustSize();
-
-//  emit adjustSize();
-//}
 
 void LuaNodeModel::onComboBoxUpdated(QString item_text)
 {
@@ -359,7 +318,9 @@ void LuaNodeModel::onComboBoxUpdated(QString item_text)
         file_contents += str;
         file_contents.push_back('\n');
     }
-    _text_edit->setText(file_contents.c_str());
+   // _text_edit->setText(file_contents.c_str());
+    source_code_ = QString(file_contents.c_str());
+
 }
 
 void LuaNodeModel::onCodeUpdated()
@@ -372,13 +333,8 @@ void LuaNodeModel::onCodeUpdated()
         file_contents += str;
         file_contents.push_back('\n');
     }
-    _text_edit->setText(file_contents.c_str());
-}
-
-void LuaNodeModel::onTextBoxUpdated()
-{
-    //not used now. May be useful later
-    return;
+   // _text_edit->setText(file_contents.c_str());
+    source_code_ = QString(file_contents.c_str());
 }
 
 

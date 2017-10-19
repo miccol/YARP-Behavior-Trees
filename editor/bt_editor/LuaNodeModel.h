@@ -60,7 +60,7 @@ public:
   virtual void lock(bool locked);
 
   QString get_line_edit();
-  QString get_text_edit();
+  //QString get_text_edit();
   QStringList get_all_files_names_within_folder(std::string folder, std::string type);
 
   void lastComboItem();
@@ -70,6 +70,7 @@ public slots:
   void onCodeUpdated();
   void onComboBoxUpdated(QString item_text);
 
+  QString get_source_code();
 private:
   QWidget*   _main_widget;
   QWidget*   _params_widget;
@@ -78,11 +79,12 @@ private:
   QComboBox* _ID_selection_combobox;
   QString    _ID;
   QLineEdit* _line_edit;
-  QTextEdit * _text_edit;
+  //QTextEdit * _text_edit;
+  QString     source_code_;
   const NodeFactory::ParametersModel& _parameter_model;
 
 private slots:
-  void onTextBoxUpdated();
+  //void onTextBoxUpdated();
 
 
 signals:

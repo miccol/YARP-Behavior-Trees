@@ -53,7 +53,7 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
     {
         if(lua_isnil(lua_state_,lua_gettop(lua_state_)))
         {
-            std::cout << "invalid return value" << std::endl;
+            std::cout << "ERROR: The script " << get_name()  << " returned NIL "<< std::endl;
         }
         else
         {

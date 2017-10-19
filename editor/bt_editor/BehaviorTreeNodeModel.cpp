@@ -144,6 +144,7 @@ QString BehaviorTreeNodeModel::get_line_edit()
 QString BehaviorTreeNodeModel::get_text_edit()
 {
     return _text_edit->toPlainText();
+
 }
 
 
