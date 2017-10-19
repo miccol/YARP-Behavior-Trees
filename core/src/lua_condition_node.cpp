@@ -33,6 +33,11 @@ void looptable(lua_State *L1, lua_State* L2)
 //            looptable(L1, L2);
 //            lua_settable(L2, -3);
         }
+//        lua_pushinteger();
+//        lua_pushnil();
+
+// TODO PUSH TABLE
+
         else if (lua_isboolean(L1, -1))
         {
             std::cout <<  lua_tostring(L1, -2)<< " is boolean. Value: "<<  lua_toboolean(L1, -1) << std::endl;
@@ -64,12 +69,10 @@ BT::ReturnStatus BT::LuaConditionNode::Tick()
 
 
 
-//    lua_state = lua_newthread(lua_state_);
     lua_state = luaL_newstate();
     luaL_openlibs(lua_state);
 
-//    xcopy(lua_state_, lua_state,2);
-    // load Lua libraries
+
 
 
     static const luaL_Reg lualibs[] =
@@ -86,18 +89,8 @@ BT::ReturnStatus BT::LuaConditionNode::Tick()
     }
 
 
-// lua_newtable(lua_state);
-//    lua_pushnumber(lua_state, 10);
-//   lua_setglobal(lua_state, "c");
-//    lua_settable(lua_state, -3);
-    //looptable(lua_state_, lua_state);
-
  looptable(lua_state_, lua_state);
 
-
-
-    //    lua_settable(lua_state_, -3);
-    //lua_setglobal(lua_state_, "arg");
 
     // run the Lua script
     luaL_dofile(lua_state, filename_.c_str());

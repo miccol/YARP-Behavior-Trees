@@ -7,7 +7,7 @@
 
 #include "NodeGeometry.hpp"
 #include "NodeState.hpp"
-#include <bt_editor/code_editor.h>
+#include <bt_editor/codeeditor.h>
 #include <bt_editor/code_editor_window.h>
 
 

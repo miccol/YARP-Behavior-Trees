@@ -21,7 +21,7 @@
 
 #include <bt_editor/BehaviorTreeNodeModel.hpp>
 #include <bt_editor/LuaNodeModel.h>
-#include <bt_editor/code_editor.h>
+#include <bt_editor/codeeditor.h>
 
 #include <QHoverEvent>
 

@@ -1,6 +1,6 @@
 #include <QtWidgets>
 
-#include "code_editor.h"
+#include "codeeditor.h"
 #include <iostream>
 #include <fstream>
 
