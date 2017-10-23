@@ -2,6 +2,7 @@
 #include <yarp/os/Network.h>
 #include <yarp/os/RFModule.h>
 #include <btyarpmodule.h>
+#include <black_board.h>
 
 class MyAction : public BTYARPAction
 {
@@ -29,16 +30,36 @@ public:
 
 int main(int argc, char * argv[])
 {
-    /* initialize yarp network */
-    yarp::os::Network yarp;
-    /* create your module */
-        MyAction module("WalkingModule");
-//    /* prepare and configure the resource finder */
-    yarp::os::ResourceFinder rf;
-    rf.configure(argc, argv);
-//    rf.setVerbose(true);
-//    cout << "Configuring and starting module. \n";
-    module.runModule(rf);   // This calls configure(rf) and, upon success, the module execution begins with a call to updateModule()
-//    cout<<"Main returning..."<<endl;
+//    /* initialize yarp network */
+//    yarp::os::Network yarp;
+//    /* create your module */
+//    MyAction module("WalkingModule");
+//    yarp::os::ResourceFinder rf;
+//    rf.configure(argc, argv);
+//    module.runModule(rf);
+
+    BlackBoard* bb = new BlackBoard();
+
+    bb->SetValue<int>("x", "int", 10);
+    bb->SetNew<bool>("y", "bool", true);
+
+    bb->PrintBlackBoard();
+
+    bb->SetValue<int>("x", "int", 15);
+
+    bb->PrintBlackBoard();
+
+    try
+    {
+        std::string x = bb->GetString("x");
+        std::cout << "The value of x is "<< x << std::endl;
+        std::cout << "DONE!" << std::endl;
+    }
+    catch( const std::exception & ex ) {
+        std::cerr << ex.what() << std::endl;
+    }
+
+
+
     return 0;
 }
