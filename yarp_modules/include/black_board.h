@@ -5,6 +5,7 @@
 #include<string>
 #include<vector>
 #include <typed_property.h>
+
 class BlackBoard
 {
 public:
@@ -59,7 +60,6 @@ public:
     template< typename T >
     T GetValueOf(std::string name)
     {
-
         for(std::shared_ptr<Property> p : content_)
         {
             if (name == p.get()->name())

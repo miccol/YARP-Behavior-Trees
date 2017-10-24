@@ -72,7 +72,7 @@ int BlackBoard::GetInt(std::string name)
             return ((TypedProperty<int>*)ptr)->data();
         }
     }
-    std::string error_message = "Cannot find variable " + name + "with type int";
+    std::string error_message = "Cannot find variable " + name + " with type int";
     throw std::invalid_argument(error_message.c_str());
 }
 
@@ -86,7 +86,7 @@ int16_t BlackBoard::GetI16(std::string name)
             return ((TypedProperty<int16_t>*)ptr)->data();
         }
     }
-    std::string error_message = "Cannot find variable " + name + "with type i16";
+    std::string error_message = "Cannot find variable " + name + " with type i16";
     throw std::invalid_argument(error_message.c_str());
 }
 
@@ -101,7 +101,7 @@ int32_t BlackBoard::GetI32(std::string name)
             return ((TypedProperty<int32_t>*)ptr)->data();
         }
     }
-    std::string error_message = "Cannot find variable " + name + "with type i32";
+    std::string error_message = "Cannot find variable " + name + " with type i32";
     throw std::invalid_argument(error_message.c_str());
 }
 
@@ -116,7 +116,7 @@ int64_t BlackBoard::GetI64(std::string name)
             return ((TypedProperty<int64_t>*)ptr)->data();
         }
     }
-    std::string error_message = "Cannot find variable " + name + "with type i64";
+    std::string error_message = "Cannot find variable " + name + " with type i64";
     throw std::invalid_argument(error_message.c_str());
 }
 
@@ -130,7 +130,7 @@ int8_t BlackBoard::GetByte(std::string name)
             return ((TypedProperty<int8_t>*)ptr)->data();
         }
     }
-    std::string error_message = "Cannot find variable " + name + "with type byte";
+    std::string error_message = "Cannot find variable " + name + " with type byte";
     throw std::invalid_argument(error_message.c_str());
 }
 
@@ -144,7 +144,7 @@ bool BlackBoard::GetBool(std::string name)
             return ((TypedProperty<bool>*)ptr)->data();
         }
     }
-    std::string error_message = "Cannot find variable " + name + "with type bool";
+    std::string error_message = "Cannot find variable " + name + " with type bool";
     throw std::invalid_argument(error_message.c_str());
 }
 
@@ -159,7 +159,7 @@ double BlackBoard::GetDouble(std::string name)
             return ((TypedProperty<double>*)ptr)->data();
         }
     }
-    std::string error_message = "Cannot find variable " + name + "with type double";
+    std::string error_message = "Cannot find variable " + name + " with type double";
     throw std::invalid_argument(error_message.c_str());
 }
 
