@@ -1,4 +1,4 @@
- print("State = ".. state)
+--print("State = ".. state)
 print("in substate OBSERVE, checking objects on the table!")
 empty_table_counter = yarp.Time_now()
 
@@ -78,9 +78,9 @@ while true do
 
      tooFarSaid = false
      state = "select_action"      -- select action given affordance
-     return true
+     --return true
 
-     go_home(0)
+     --go_home(0)
 
 
   end
