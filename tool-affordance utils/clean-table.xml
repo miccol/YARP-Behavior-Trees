@@ -1,24 +1,12 @@
 <root>
     <BehaviorTree>
         <SequenceWithMemory>
-            <Fallback>
-                <LuaCondition ID="ConditioninitDone.lua"/>
-                <SequenceWithMemory name="INIT">
-                    <LuaAction ID="ActionDDD.lua"/>
-                    <LuaAction ID="ActionDDD.lua"/>
-                    <LuaAction ID="ActionDDD.lua"/>
-                    <LuaAction ID="ActionDDD.lua"/>
-                    <LuaAction ID="ActionDDD.lua"/>
-                </SequenceWithMemory>
-            </Fallback>
-            <SequenceWithMemory>
-                <LuaAction ID="ActionDDD.lua"/>
-                <FallbackWithMemory>
-                    <LuaAction ID="ActionDDD.lua"/>
-                    <LuaAction ID="ActionDDD.lua"/>
-                </FallbackWithMemory>
-                <LuaAction ID="ActionDDD.lua"/>
-            </SequenceWithMemory>
+            <LuaAction ID="ActionSUB_OBSERVE.lua"/>
+            <FallbackWithMemory>
+                <LuaAction ID="ActionSUB_SELECTACT.lua"/>
+                <LuaAction ID="ActionSUB_GETTOOL.lua"/>
+            </FallbackWithMemory>
+            <LuaAction ID="ActionSUB_DOACTION.lua"/>
         </SequenceWithMemory>
     </BehaviorTree>
     <LooseNodes>

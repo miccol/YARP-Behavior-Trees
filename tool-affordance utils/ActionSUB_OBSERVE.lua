@@ -4,7 +4,7 @@ empty_table_counter = yarp.Time_now()
 
 
                while true do
-               repeat   -- (until true) - workaround to break loops (as continue)
+               while true do
 
                    -- Read blobs and update objects in memory and associate zones 
                     if update_object_list() == false then 
@@ -78,12 +78,12 @@ empty_table_counter = yarp.Time_now()
 
                    tooFarSaid = false
                    state = "select_action"      -- select action given affordance
-                   rfsm.send_events(fsm,'e_selectact')
+                   return true
 
                     go_home(0)
 
 
-                until true
+                end
                 --rfsm.yield(true)
                 end
 
