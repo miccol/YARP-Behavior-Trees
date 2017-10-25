@@ -34,6 +34,6 @@
                      -- rfsm.send_events(fsm,'e_gettool')
                  end
                  state = "observe"
-                 return false
+                 
                  go_home(0)
-is_action_done = false
+return false

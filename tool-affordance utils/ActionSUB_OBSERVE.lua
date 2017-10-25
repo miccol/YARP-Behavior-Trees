@@ -78,7 +78,7 @@ while true do
 
      tooFarSaid = false
      state = "select_action"      -- select action given affordance
-     --return true
+     return true
 
      --go_home(0)
 

@@ -13,7 +13,7 @@ void looptable(lua_State *L1, lua_State* L2)
 {
     //lua_createtable(L2, 0, 4);
     lua_newtable (L2);
-    lua_pushglobaltable(L1);       // Get global table
+    //lua_pushglobaltable(L1);       // Get global table
     lua_pushnil(L1);               // put a nil key on stack
     while (lua_next(L1,-2) != 0) { // key(-1) is replaced by the next key(-1) in table(-2)
        // std::cout << lua_tostring(L1,-2) << std::endl;  // Get key(-2) name
