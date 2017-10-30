@@ -1,11 +1,18 @@
-cmake_minimum_required(VERSION 2.8)
-project(BTpp)
+cmake_minimum_required(VERSION 3.0)
+project(YARPBTCore VERSION 1.0)
+
+#set(CMAKE_INCLUDE_CURRENT_DIR ON)
+#set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 set(CMAKE_BUILD_TYPE Release)
 add_definitions( -Wall -lgtest -std=c++11  -pthread -lrt )
 # Needed for using threads
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
+#set(YARPBTCORE_VERSION 3.4.1)
+
+
+#include(GenerateExportHeader)
 
 
 #########################################################
@@ -46,8 +53,7 @@ if(APPLE)
 endif()
 
 
-#file(GLOB_RECURSE BT_CORE_HEADERS ${PROJECT_SOURCE_DIR}/include/*.h)
-#uncomment the above if you want the include files to be shown in you IDE
+file(GLOB_RECURSE BT_CORE_HEADERS ${PROJECT_SOURCE_DIR}/include/*.h)
 
 
 set(BT_CORE_SOURCES
@@ -64,8 +70,8 @@ ${PROJECT_SOURCE_DIR}/src/sequence_node.cpp
 ${PROJECT_SOURCE_DIR}/src/fallback_node_with_memory.cpp
 ${PROJECT_SOURCE_DIR}/src/sequence_node_with_memory.cpp
 ${PROJECT_SOURCE_DIR}/src/tree_node.cpp
-${PROJECT_SOURCE_DIR}/src/yarp_nodes/yarp_action_node.cpp
-${PROJECT_SOURCE_DIR}/src/yarp_nodes/yarp_condition_node.cpp
+${PROJECT_SOURCE_DIR}/src/yarp_action_node.cpp
+${PROJECT_SOURCE_DIR}/src/yarp_condition_node.cpp
 ${PROJECT_SOURCE_DIR}/src/lua_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/lua_condition_node.cpp
 )
@@ -89,10 +95,28 @@ add_executable(example src/example.cpp ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURC
 target_link_libraries(example ${YARP_LIBRARIES} ${LUA_LIBRARIES})
 
 
-#######################################################
-## COMPILING LIBRARY
-#######################################################
-add_library(BT_CORE_LIBRARY ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURCES})
+########################################################
+### COMPILING LIBRARY
+########################################################
 
-target_include_directories (BT_CORE_LIBRARY PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(BT_CORE_LIBRARY ${LUA_LIBRARIES})
+
+
+add_library(YARPBTLIBRARY STATIC ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURCES})
+#target_include_directories (YARPBTLIBRARY PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(YARPBTLIBRARY ${LUA_LIBRARIES} ${YARP_LIBRARIES})
+
+## Install library
+#install(TARGETS YARPBTLIBRARY DESTINATION ${CMAKE_BINARY_DIR}/lib)
+
+## Install library headers
+#install(FILES ${BT_CORE_HEADERS} DESTINATION ${CMAKE_BINARY_DIR}/include)
+
+message("+++++++++++++" ${INSTALL_BIN_DIR})
+install(TARGETS YARPBTLIBRARY
+  # IMPORTANT: Add the foo library to the "export-set"
+  EXPORT YARPBTTargets
+  ARCHIVE DESTINATION "${PROJECT_BINARY_DIR}/arc"
+  RUNTIME DESTINATION "${PROJECT_BINARY_DIR}/bin" COMPONENT ${PROJECT_SOURCE_DIR}/bin
+  LIBRARY DESTINATION "${PROJECT_BINARY_DIR}/lib" COMPONENT ${PROJECT_SOURCE_DIR}/shlib
+  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/YARPBTCore"
+    COMPONENT dev)

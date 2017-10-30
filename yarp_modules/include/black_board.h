@@ -10,12 +10,6 @@ class BlackBoard
 {
 public:
     BlackBoard();
-    template< typename T >
-    void SetNew(const std::string& name,const std::string& type, const T& data)
-    {
-        std::shared_ptr<TypedProperty<T>> new_element (new TypedProperty<T>(name, type, data));
-        content_.push_back(new_element);
-    }
 
     template< typename T >
     void SetValue(const std::string& name,const std::string& type, const T& data)
@@ -33,8 +27,10 @@ public:
                     return;
                 }
                 else
-                {
-                    std::cout << "ERROR! The variable "<< name << " exists already as type" << type << std::endl;
+                {                    
+                    std::string error_message = "The variable " + name + " exists already as type" + type;
+                    throw std::invalid_argument(error_message.c_str());
+                    return;
                 }
             }
         }
@@ -84,6 +80,13 @@ public:
 
 private:
         std::vector< std::shared_ptr<Property> > content_;
+        template< typename T >
+        void SetNew(const std::string& name,const std::string& type, const T& data) //used by SetValue is variable is new
+        {
+            std::shared_ptr<TypedProperty<T>> new_element (new TypedProperty<T>(name, type, data));
+            content_.push_back(new_element);
+        }
+
 };
 
 

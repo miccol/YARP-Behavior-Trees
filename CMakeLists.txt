@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 
 project(BTYARP)
 
+#########################################################
 # Enable C++11
+#########################################################
 include(CheckCXXCompilerFlag)
 unset(CXX11_FLAGS)
 check_cxx_compiler_flag("-std=c++11" CXX_HAS_STD_CXX11)
@@ -28,13 +30,75 @@ endif()
 
 find_package(YARP REQUIRED)
 INCLUDE_DIRECTORIES(${YARP_INCLUDE_DIRS})
- ADD_DEFINITIONS(${YARP_DEFINES}) # optional
+ADD_DEFINITIONS(${YARP_DEFINES}) # optional
 
- # pick up YARP find scripts
- SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${YARP_MODULE_PATH})
+# pick up YARP find scripts
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${YARP_MODULE_PATH})
+
+# Offer the user the choice of overriding the installation directories
+set(INSTALL_LIB_DIR ${PROJECT_BINARY_DIR}/lib CACHE PATH "Installation directory for libraries")
+set(INSTALL_BIN_DIR ${PROJECT_BINARY_DIR}/bin CACHE PATH "Installation directory for executables")
+set(INSTALL_INCLUDE_DIR ${PROJECT_BINARY_DIR}/include CACHE PATH
+  "Installation directory for header files")
+if(WIN32 AND NOT CYGWIN)
+  set(DEF_INSTALL_CMAKE_DIR ${PROJECT_BINARY_DIR}/CMake)
+else()
+  set(DEF_INSTALL_CMAKE_DIR ${PROJECT_BINARY_DIR}/lib/CMake/FooBar)
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+  "Installation directory for CMake files")
+
+# Make relative paths absolute (needed later on)
+foreach(p LIB BIN INCLUDE CMAKE)
+  set(var INSTALL_${p}_DIR)
+  if(NOT IS_ABSOLUTE "${${var}}")
+    set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+  endif()
+endforeach()
+
 
 add_subdirectory(yarp_modules)
 
 add_subdirectory(core)
 
-add_subdirectory(editor)
+
+set(INSTALL_CMAKE_DIR ${PROJECT_BINARY_DIR}/install)
+
+# The interesting stuff goes here
+# ===============================
+
+# Add all targets to the build-tree export set
+export(TARGETS YARPBTLIBRARY
+  FILE "${PROJECT_BINARY_DIR}/YARPBTCoreTargets.cmake")
+
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+export(PACKAGE BTYARP)
+message("********************************" ${INSTALL_CMAKE_DIR})
+
+# Create the FooBarConfig.cmake and FooBarConfigVersion files
+file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
+   "${INSTALL_INCLUDE_DIR}")
+# ... for the build tree
+
+
+set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/core/include" "${PROJECT_BINARY_DIR}")
+configure_file(conf/YARPBTCoreConfig.cmake.in
+  "${PROJECT_BINARY_DIR}/YARPBTCoreConfig.cmake" @ONLY)
+# ... for the install tree
+set(CONF_INCLUDE_DIRS "\${BTYARP_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+configure_file(conf/YARPBTCoreConfig.cmake.in
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/YARPBTCoreConfig.cmake" @ONLY)
+# ... for both
+configure_file(conf/YARPBTCoreConfigVersion.cmake.in
+  "${PROJECT_BINARY_DIR}/YARPBTCoreConfigVersion.cmake" @ONLY)
+
+# Install the FooBarConfig.cmake and FooBarConfigVersion.cmake
+install(FILES
+  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/YARPBTCoreConfig.cmake"
+  "${PROJECT_BINARY_DIR}/YARPBTCoreConfigVersion.cmake"
+  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
+
+# Install the export set for use with the install-tree
+install(EXPORT YARPBTTargets DESTINATION
+  "${INSTALL_CMAKE_DIR}" COMPONENT dev)
