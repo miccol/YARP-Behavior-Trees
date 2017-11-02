@@ -32,46 +32,34 @@ set(YARP_BT_NODES_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ PARENT_SCOPE
 
 set(YARP_BT_NODES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BTCmd.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/btyarpmodule.cpp PARENT_SCOPE)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/bt_yarp_module.cpp PARENT_SCOPE)
 
 set(YARP_BT_NODES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/BTCmd.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/btyarpmodule.h PARENT_SCOPE)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/bt_yarp_module.h PARENT_SCOPE)
 
 
 set(MYYARP_BT_NODES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BTCmd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardCmd.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardServer.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/btyarpmodule.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/black_board.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard_server.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/bt_yarp_module.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard.cpp)
 
 set(MYYARP_BT_NODES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/BTCmd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/BlackBoardCmd.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/BlackBoardServer.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/btyarpmodule.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/black_board.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard_server.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/bt_yarp_module.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard.h)
 
 
 #####################################################
 #COMPILING RTF Tests
 #####################################################
 if(RTF_FOUND)
-    add_executable(gtests_blackboard src/gtest_blackboard.cpp ${BTSrcLibrary} ${BTHeadLibrary} ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS} )
-    target_link_libraries(gtests_blackboard ${RTF_LIBRARIES} ${YARP_LIBRARIES})
-
-# add the source codes to build the plugin library
-#add_library(gtests_blackboard MODULE ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS} include/gtest_blackboard.h src/gtest_blackboard.cpp)
-## add required libraries
-#target_link_libraries(gtests_blackboard ${RTF_LIBRARIES}
-#                                     ${YARP_LIBRARIES}
-#                                     )
-# set the installation options
-install(TARGETS ${PROJECTNAME}
-        EXPORT ${PROJECTNAME}
-        COMPONENT runtime
-        LIBRARY DESTINATION lib)
+    add_executable(tests_blackboard src/test_blackboard.cpp ${BTSrcLibrary} ${BTHeadLibrary} ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS} )
+    target_link_libraries(tests_blackboard ${RTF_LIBRARIES} ${YARP_LIBRARIES})
 endif(RTF_FOUND)
 
 

@@ -4,8 +4,7 @@
 #include<memory> // for shared_ptr
 #include<string>
 #include<vector>
-#include <typed_property.h>
-#include <yarp/os/Property.h> // the blabkboard is a yarp property
+#include <yarp/os/Property.h> // the blackboard is a yarp property
 
 class BlackBoard
 {

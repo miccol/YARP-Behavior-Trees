@@ -1,4 +1,4 @@
-#include "blackboardserver.h"
+#include "blackboard_server.h"
 
 
 //TODO add try-catch clause

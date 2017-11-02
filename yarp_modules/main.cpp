@@ -1,9 +1,9 @@
 #include <iostream>
 #include <yarp/os/Network.h>
 #include <yarp/os/Time.h>
-#include <btyarpmodule.h>
-#include <black_board.h>
-#include <BlackBoardServer.h>
+#include <bt_yarp_module.h>
+#include <blackboard.h>
+#include <blackboard_server.h>
 
 int main(int argc, char * argv[])
 {

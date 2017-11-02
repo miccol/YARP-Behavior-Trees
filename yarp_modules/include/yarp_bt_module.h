@@ -1,5 +1,5 @@
-#ifndef BTYARPMODULE_H
-#define BTYARPMODULE_H
+#ifndef YARPBTModule_H
+#define YARPBTModule_H
 #include "BTCmd.h"
 
 #include "yarp/os/RFModule.h"
@@ -7,10 +7,10 @@
 
 #include <mutex>
 
-class BTYARPModule : public BTCmd, public yarp::os::RFModule
+class YARPBTModule : public BTCmd, public yarp::os::RFModule
 {
 public:
-    BTYARPModule(std::string name);
+    YARPBTModule(std::string name);
     bool attach(yarp::os::Port &source);
     bool configure( yarp::os::ResourceFinder &rf );
     bool updateModule();
@@ -35,20 +35,20 @@ private:
 };
 
 
-class BTYARPAction : public BTYARPModule
+class BTYARPAction : public YARPBTModule
 {
 public:
-    BTYARPAction(std::string name) : BTYARPModule(name)   {}
+    BTYARPAction(std::string name) : YARPBTModule(name)   {}
     virtual int tick() = 0;
 
     virtual void halt() = 0;
 
 };
 
-class BTYARPCondition : public BTYARPModule
+class BTYARPCondition : public YARPBTModule
 {
 public:
-    BTYARPCondition(std::string name) : BTYARPModule(name) {}
+    BTYARPCondition(std::string name) : YARPBTModule(name) {}
     virtual int tick() = 0;
 
     void halt()
@@ -60,4 +60,4 @@ public:
 
 
 
-#endif // BTYARPMODULE_H
+#endif // YARPBTModule_H

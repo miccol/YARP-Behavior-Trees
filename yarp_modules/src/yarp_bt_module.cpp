@@ -1,18 +1,17 @@
-#include "btyarpmodule.h"
+#include "yarp_bt_module.h"
 
 
-BTYARPModule::BTYARPModule(std::string name) : BTCmd(), RFModule()
+YARPBTModule::YARPBTModule(std::string name) : BTCmd(), RFModule()
 {
     module_name_ = name;
 
 }
 
-
-bool BTYARPModule::attach(yarp::os::Port &source)
+bool YARPBTModule::attach(yarp::os::Port &source)
 {
     return this->yarp().attachAsServer(source);
 }
-bool BTYARPModule::configure( yarp::os::ResourceFinder &rf )
+bool YARPBTModule::configure( yarp::os::ResourceFinder &rf )
 {
 
     std::string slash="/";
@@ -26,36 +25,36 @@ bool BTYARPModule::configure( yarp::os::ResourceFinder &rf )
     }
     return true;
 }
-bool BTYARPModule::updateModule()
+bool YARPBTModule::updateModule()
 {
     return true;
 }
-bool BTYARPModule::close()
+bool YARPBTModule::close()
 {
     cmd_port_.close();
     return true;
 }
 
-int32_t BTYARPModule::request_tick()
+int32_t YARPBTModule::request_tick()
 {
     set_is_halted(false);
     tick();
     return 1;
 }
 
-void BTYARPModule::request_halt()
+void YARPBTModule::request_halt()
 {
     set_is_halted(true); // set is_halted BEFORE calling halt(), the halt routine must be the last thing a BT node is doing
     halt();
 }
 
-bool BTYARPModule::is_halted()
+bool YARPBTModule::is_halted()
 {
     std::lock_guard<std::mutex> lock(is_halted_mutex_);
     return is_halted_;
 }
 
-void BTYARPModule::set_is_halted(bool is_halted)
+void YARPBTModule::set_is_halted(bool is_halted)
 {
     std::lock_guard<std::mutex> lock(is_halted_mutex_);
 

@@ -1,4 +1,4 @@
-#include "black_board.h"
+#include "blackboard.h"
 #include <iostream>
 
 BlackBoard::BlackBoard()
@@ -109,7 +109,6 @@ double BlackBoard::GetDouble(std::string name)
     return value.asDouble();
 
 }
-
 
 std::string BlackBoard::GetString(std::string name)
 {
