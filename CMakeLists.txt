@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(BTYARP)
+project(YARPBT)
 
 #########################################################
 # Enable C++11
@@ -48,7 +48,11 @@ endif()
 set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
   "Installation directory for CMake files")
 
+
+#########################################################
 # Make relative paths absolute (needed later on)
+#########################################################
+
 foreach(p LIB BIN INCLUDE CMAKE)
   set(var INSTALL_${p}_DIR)
   if(NOT IS_ABSOLUTE "${${var}}")
@@ -64,8 +68,11 @@ add_subdirectory(core)
 
 set(INSTALL_CMAKE_DIR ${PROJECT_BINARY_DIR}/install)
 
-# The interesting stuff goes here
-# ===============================
+
+
+#########################################################
+# INSTALLATION OF THE LIBRARY
+#########################################################
 
 # Add all targets to the build-tree export set
 export(TARGETS YARPBTLIBRARY
@@ -73,8 +80,7 @@ export(TARGETS YARPBTLIBRARY
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
-export(PACKAGE BTYARP)
-message("********************************" ${INSTALL_CMAKE_DIR})
+export(PACKAGE YARPBT)
 
 # Create the FooBarConfig.cmake and FooBarConfigVersion files
 file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
@@ -86,14 +92,14 @@ set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/core/includ
 configure_file(conf/YARPBTCoreConfig.cmake.in
   "${PROJECT_BINARY_DIR}/YARPBTCoreConfig.cmake" @ONLY)
 # ... for the install tree
-set(CONF_INCLUDE_DIRS "\${BTYARP_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+set(CONF_INCLUDE_DIRS "\${YARPBT_CMAKE_DIR}/${REL_INCLUDE_DIR}")
 configure_file(conf/YARPBTCoreConfig.cmake.in
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/YARPBTCoreConfig.cmake" @ONLY)
 # ... for both
 configure_file(conf/YARPBTCoreConfigVersion.cmake.in
   "${PROJECT_BINARY_DIR}/YARPBTCoreConfigVersion.cmake" @ONLY)
 
-# Install the FooBarConfig.cmake and FooBarConfigVersion.cmake
+# Install the YARPBTCoreConfig.cmake and YARPBTCoreConfigVersion.cmake
 install(FILES
   "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/YARPBTCoreConfig.cmake"
   "${PROJECT_BINARY_DIR}/YARPBTCoreConfigVersion.cmake"

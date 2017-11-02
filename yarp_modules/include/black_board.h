@@ -5,37 +5,60 @@
 #include<string>
 #include<vector>
 #include <typed_property.h>
+#include <yarp/os/Property.h> // the blabkboard is a yarp property
 
 class BlackBoard
 {
 public:
     BlackBoard();
 
-    template< typename T >
-    void SetValue(const std::string& name,const std::string& type, const T& data)
+    //template< typename T >
+    //void SetValue(const std::string& name,const std::string& type, const T& data)
+    void SetValue(const std::string& name,const std::string& type, yarp::os::Value data)
     {
-        for(std::shared_ptr<Property> p : content_)
-        {
-            /*Finds the variable in the blackboard. If exists, it checks that the type is correct.
-            If it does not exists, it creates the new variable in the blackboard*/
-            if (name == p.get()->name())
-            {
-                if (p.get()->type() == type)
-                {
-                    Property* ptr = p.get();
-                    ((TypedProperty<T>*)ptr)->set_data(data);
-                    return;
-                }
-                else
-                {                    
-                    std::string error_message = "The variable " + name + " exists already as type" + type;
-                    throw std::invalid_argument(error_message.c_str());
-                    return;
-                }
-            }
-        }
+//        for(std::shared_ptr<Property> p : content_)
+//        {
+//            /*Finds the variable in the blackboard. If exists, it checks that the type is correct.
+//            If it does not exists, it creates the new variable in the blackboard*/
+//            if (name == p.get()->name())
+//            {
+//                if (p.get()->type() == type)
+//                {
+//                    Property* ptr = p.get();
+//                    ((TypedProperty<T>*)ptr)->set_data(data);
+//                    return;
+//                }
+//                else
+//                {
+//                    std::string error_message = "The variable " + name + " exists already as type" + type;
+//                    throw std::invalid_argument(error_message.c_str());
+//                    return;
+//                }
+//            }
+//        }
+
+
+        //TODO check
         //the variable is new
-        SetNew(name,type,data);
+        yarp::os::Value value = content_2.find(name);
+        /*Finds the variable in the blackboard. If exists, it checks that the type is correct.
+                    If it does not exists, it creates the new variable in the blackboard*/
+        if(value.isNull())
+        {
+            std::cout << "setting new variable " << name<< "Value: " << data.asString()<< std::endl;
+            content_2.put(name,data);
+            std::cout << content_2.toString() << std::endl;
+
+
+
+        }
+        else
+        {
+            std::cout << "setting existing variable" << std::endl;
+
+            content_2.unput(name);
+            content_2.put(name,data);
+        }
     }
 
     //void PrintContent();
@@ -78,14 +101,19 @@ public:
     std::string GetString(std::string name);
 
 
+
 private:
-        std::vector< std::shared_ptr<Property> > content_;
-        template< typename T >
-        void SetNew(const std::string& name,const std::string& type, const T& data) //used by SetValue is variable is new
-        {
-            std::shared_ptr<TypedProperty<T>> new_element (new TypedProperty<T>(name, type, data));
-            content_.push_back(new_element);
-        }
+    //std::vector< std::shared_ptr<Property> > content_;
+    yarp::os::Property content_2;
+    //template< typename T >
+    //void SetNew(const std::string& name,const std::string& type, const T& value) //used by SetValue is variable is new
+    void SetNew(const std::string& name, yarp::os::Value value) //used by SetValue is variable is new
+
+    {
+        //            std::shared_ptr<TypedProperty<T>> new_element (new TypedProperty<T>(name, type, data));
+        //            content_.push_back(new_element);
+        content_2.put(name,value);
+    }
 
 };
 

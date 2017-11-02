@@ -45,7 +45,9 @@ void BlackBoardServer::SetI16(const std::string &name, const int16_t data)
 {
     try
     {
-        content_->SetValue(name,"i16",data);
+        yarp::os::Value value = data;
+
+        content_->SetValue(name, "i16", value);
     }
     catch( const std::invalid_argument & ex )
     {
@@ -57,7 +59,9 @@ void BlackBoardServer::SetI32(const std::string &name, const int32_t data)
 {
     try
     {
-        content_->SetValue(name,"i32",data);
+        yarp::os::Value value = data;
+
+        content_->SetValue(name, "i32", value);
     }
     catch( const std::exception & ex )
     {
@@ -68,7 +72,7 @@ void BlackBoardServer::SetI32(const std::string &name, const int32_t data)
 void BlackBoardServer::SetI64(const std::string &name, const long long data)
 {    try
      {
-        content_->SetValue(name,"i64",data);
+        content_->SetValue(name, "i64", (int)data); //loosing data here but a yarp value does not have .makeInt64()
      }
      catch( const std::invalid_argument & ex )
     {
@@ -91,6 +95,8 @@ void BlackBoardServer::SetByte(const std::string &name, const int8_t data)
 void BlackBoardServer::SetDouble(const std::string &name, const double data)
 {    try
      {
+        yarp::os::Value value;
+        value.makeDouble(data);
         content_->SetValue(name,"double",data);
      }
      catch( const std::invalid_argument & ex )
@@ -103,7 +109,7 @@ void BlackBoardServer::SetDouble(const std::string &name, const double data)
 void BlackBoardServer::SetBool(const std::string &name, const double data)
 {    try
      {
-        content_->SetValue(name,"bool",data);
+        content_->SetValue(name, "bool", data);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -115,7 +121,9 @@ void BlackBoardServer::SetBool(const std::string &name, const double data)
 void BlackBoardServer::SetString(const std::string &name, const std::string &data)
 {    try
      {
-        content_->SetValue(name,"string",data);
+        yarp::os::Value value;
+        value.makeString(data);
+        content_->SetValue(name,"string", *value.makeString(data));
      }
      catch( const std::invalid_argument & ex )
     {
