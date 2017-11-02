@@ -1,7 +1,7 @@
 #include <iostream>
 #include <yarp/os/Network.h>
 #include <yarp/os/Time.h>
-#include <bt_yarp_module.h>
+#include <yarp_bt_module.h>
 #include <blackboard.h>
 #include <blackboard_server.h>
 

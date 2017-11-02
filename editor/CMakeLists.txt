@@ -27,6 +27,11 @@ ELSE(Lua_FOUND)
 message(WARNING "Lua not found!")
 ENDIF(Lua_FOUND)
 
+
+include(YarpInstallationHelpers)
+add_definitions(${YARP_DEFINES})   # add yarp definitions - this contains also -D_REENTRANT
+
+
 INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
 find_package( Threads )
 
@@ -55,7 +60,7 @@ file(GLOB_RECURSE APP_CPPS  ./bt_editor/*.cpp )
 qt5_add_resources(RESOURCES ./qt_nodeditor/resources/resources.qrc)
 
 
-set(Qt5Core_DIR "C:/Qt/5.9.1/mingw53_32/lib/cmake/Qt5Core")
+set(Qt5Core_DIR "C:/Qt/5.9.1/mingw53_32/lib/cmake/Qt5Core") ##TODO FIX THIS
 
 
 # Tell CMake to create the helloworld executable
@@ -71,9 +76,7 @@ QT5_WRAP_UI(FORMS_HEADERS
   ./bt_editor/code_editor_window.ui)
 
 
-
-#add_executable(behavior_tree_editor WIN32 ${APP_CPPS} ${FORMS_HEADERS} )
 add_executable(behavior_tree_editor ${APP_CPPS} ${FORMS_HEADERS} )
-target_link_libraries(behavior_tree_editor LINK_PUBLIC YARPBTCoreLibrary qt_node_editor ${CMAKE_THREAD_LIBS_INIT} ${YARP_LIBRARIES})
+target_link_libraries(behavior_tree_editor LINK_PUBLIC YARPBTLIBRARY qt_node_editor ${CMAKE_THREAD_LIBS_INIT} ${YARP_LIBRARIES})
 
 

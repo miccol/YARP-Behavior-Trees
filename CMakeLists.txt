@@ -65,6 +65,8 @@ add_subdirectory(yarp_modules)
 
 add_subdirectory(core)
 
+add_subdirectory(editor)
+
 
 set(INSTALL_CMAKE_DIR ${PROJECT_BINARY_DIR}/install)
 
@@ -74,37 +76,4 @@ set(INSTALL_CMAKE_DIR ${PROJECT_BINARY_DIR}/install)
 # INSTALLATION OF THE LIBRARY
 #########################################################
 
-# Add all targets to the build-tree export set
-export(TARGETS YARPBTLIBRARY
-  FILE "${PROJECT_BINARY_DIR}/YARPBTCoreTargets.cmake")
 
-# Export the package for use from the build-tree
-# (this registers the build-tree with a global CMake-registry)
-export(PACKAGE YARPBT)
-
-# Create the FooBarConfig.cmake and FooBarConfigVersion files
-file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}"
-   "${INSTALL_INCLUDE_DIR}")
-# ... for the build tree
-
-
-set(CONF_INCLUDE_DIRS "${PROJECT_SOURCE_DIR}" "${PROJECT_SOURCE_DIR}/core/include" "${PROJECT_BINARY_DIR}")
-configure_file(conf/YARPBTCoreConfig.cmake.in
-  "${PROJECT_BINARY_DIR}/YARPBTCoreConfig.cmake" @ONLY)
-# ... for the install tree
-set(CONF_INCLUDE_DIRS "\${YARPBT_CMAKE_DIR}/${REL_INCLUDE_DIR}")
-configure_file(conf/YARPBTCoreConfig.cmake.in
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/YARPBTCoreConfig.cmake" @ONLY)
-# ... for both
-configure_file(conf/YARPBTCoreConfigVersion.cmake.in
-  "${PROJECT_BINARY_DIR}/YARPBTCoreConfigVersion.cmake" @ONLY)
-
-# Install the YARPBTCoreConfig.cmake and YARPBTCoreConfigVersion.cmake
-install(FILES
-  "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/YARPBTCoreConfig.cmake"
-  "${PROJECT_BINARY_DIR}/YARPBTCoreConfigVersion.cmake"
-  DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
-
-# Install the export set for use with the install-tree
-install(EXPORT YARPBTTargets DESTINATION
-  "${INSTALL_CMAKE_DIR}" COMPONENT dev)

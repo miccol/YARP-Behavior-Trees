@@ -5,6 +5,13 @@
 #include <node_editor/FlowScene>
 #include <bt_editor/ActionNodeModel.hpp>
 
+extern "C"
+{
+# include "lua.h"
+# include "lauxlib.h"
+# include "lualib.h"
+}
+
 std::vector<QtNodes::Node*> findRoots(const QtNodes::FlowScene &scene);
 
 std::vector<QtNodes::Node*> getChildren(const QtNodes::FlowScene &scene,

@@ -32,25 +32,25 @@ set(YARP_BT_NODES_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include/ PARENT_SCOPE
 
 set(YARP_BT_NODES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BTCmd.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/bt_yarp_module.cpp PARENT_SCOPE)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/yarp_bt_module.cpp PARENT_SCOPE)
 
 set(YARP_BT_NODES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/BTCmd.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/bt_yarp_module.h PARENT_SCOPE)
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/yarp_bt_module.h PARENT_SCOPE)
 
 
 set(MYYARP_BT_NODES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BTCmd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardCmd.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard_server.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/bt_yarp_module.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/yarp_bt_module.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard.cpp)
 
 set(MYYARP_BT_NODES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/BTCmd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/BlackBoardCmd.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard_server.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/bt_yarp_module.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/yarp_bt_module.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard.h)
 
 
