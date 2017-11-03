@@ -623,13 +623,13 @@ void runTree(QtNodes::FlowScene* scene)
     luaL_openlibs(lua_state);
 
     /* register our function */
-    lua_register(lua_state, "is_halted", lua_is_halted);
+//    lua_register(lua_state, "is_halted", lua_is_halted);
 
     lua_createtable(lua_state, 1, 0);
 
     QtNodes::Node* lua_preamble = LuaPreamble(scene);
 
-    if(lua_preamble !=NULL)
+    if(lua_preamble != NULL)
     {
         //has a preamble, execute this before the tree
         RunPreamble(lua_state, (LuaPreambleNodeModel*)lua_preamble->nodeDataModel());
@@ -649,7 +649,7 @@ void runTree(QtNodes::FlowScene* scene)
     }
 
     std::cout << "Finalizing the BT" << std::endl;
-    bt_root->Halt();
+    //bt_root->Halt();
     bt_root->Finalize();
     std::cout << "Closing the Lua state" << std::endl;
     lua_close(lua_state);

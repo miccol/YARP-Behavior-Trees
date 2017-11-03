@@ -7,57 +7,94 @@ extern "C" {
 
 
 
-BT::LuaActionNode::LuaActionNode(std::string name, std::string filename, lua_State *lua_state) : BT::ActionNode::ActionNode(name)
+BT::LuaActionNode::LuaActionNode(std::string name, std::string filename, lua_State *lua_state, BlackBoardCmd* blackboard_cmd) : BT::ActionNode::ActionNode(name)
 {
     filename_ = filename;
     lua_state_ = lua_state;
+    blackboard_cmd_ = blackboard_cmd;
+
+    luaL_dofile(lua_state_, filename_.c_str());
+
+
+    // call the lua function init
+
+     lua_getglobal(lua_state_, "init");
+
+    // does the call, 0 input, 1 output (fourth argument has error-handling use)
+
+    if (lua_pcall(lua_state_, 0, 1, 0) != 0)
+    {
+            std::cout << "ERROR:  error running function init()" <<
+                     lua_tostring(lua_state_, -1) << std::endl;
+    }
+
+     bool lua_return = lua_toboolean(lua_state_, -1);
+
+
+     if(!lua_isboolean(lua_state_, -1))
+     {
+
+         if(lua_isnil(lua_state_, -1))
+         {
+             // the script returned NIL. Probably the user forgot to return a value
+             std::cout << "ERROR: The script " << get_name()  << " returned NIL in " <<
+                          "init() (did you forget to return true or false?)"<< std::endl;
+         }
+         else
+         {
+             // the script returned a generic error message
+             std::cout  << lua_tostring(lua_state_, -1) << std::endl;
+         }
+         std::cout << "Something went wrong in the intialization of " << get_name() << std::endl;
+     }
+     else
+     {
+        // lua_return is boolean
+         if(!lua_return)
+         {
+             std::cout << "WARNING: " << get_name() << " did not initialize correcly "<< std::endl;
+         }
+     }
+
+
 }
 
 BT::ReturnStatus BT::LuaActionNode::Tick()
 {
-
-    // create new Lua state
-    //lua_State *lua_state;
-    //lua_state = luaL_newstate();
-
-  //  lua_sethook(lua_state_, &BT::LuaActionNode::LineHookFunc, LUA_MASKLINE, 0);
+    set_status(BT::RUNNING);
 
 
-
-    // load Lua libraries
-    static const luaL_Reg lualibs[] =
-    {
-        { "base", luaopen_base },
-        { NULL, NULL}
-    };
-
-    const luaL_Reg *lib = lualibs;
-    for(; lib->func != NULL; lib++)
-    {
-        lib->func(lua_state_);
-        lua_settop(lua_state_, 0);
-    }
-
-
-    lua_createtable(lua_state_, 1, 0);
-
-    // run the Lua script
     luaL_dofile(lua_state_, filename_.c_str());
-    bool lua_return = lua_toboolean(lua_state_, lua_gettop(lua_state_));
+
+    // call the lua function tick
+    lua_getglobal(lua_state_, "tick");
+
+    // does the call, 0 input, 1 output (fourth argument has error-handling use)
+
+    if (lua_pcall(lua_state_, 0, 1, 0) != 0)
+    {
+            std::cout << "ERROR:  error running function tick()" <<
+                     lua_tostring(lua_state_, -1) << std::endl;
+    }
+    // retrieveing the return status
+    bool lua_return = lua_toboolean(lua_state_, -1);
     set_lua_script_done(true);
 
 
     // if the return is not a boolean, the Lua script returned somethig else, either nil (error in the return value)
     //or a generic error message
-    if(!lua_isboolean(lua_state_,lua_gettop(lua_state_)))
+    if(!lua_isboolean(lua_state_, -1))
     {
-        if(lua_isnil(lua_state_,lua_gettop(lua_state_)))
+
+        if(lua_isnil(lua_state_, -1))
         {
-            std::cout << "ERROR: The script " << get_name()  << " returned NIL "<< std::endl;
+            // the script returned NIL. Probably the user forgot to return a value
+            std::cout << "ERROR: The script " << get_name()  << " returned NIL (did you forget to return true or false?)"<< std::endl;
         }
         else
         {
-            std::cout  << lua_tostring(lua_state_, lua_gettop(lua_state_)) << std::endl;
+            // the script returned a generic error message
+            std::cout  << lua_tostring(lua_state_, -1) << std::endl;
         }
         std::cout << "Something went wrong in" << get_name() << std::endl;
         return BT::FAILURE;
@@ -67,18 +104,45 @@ BT::ReturnStatus BT::LuaActionNode::Tick()
 
         if(lua_return)
         {
+            set_status(BT::SUCCESS);
             return BT::SUCCESS;
         }
         else
         {
+            set_status(BT::FAILURE);
             return BT::FAILURE;
         }
     }
 
 }
 
+void BT::LuaActionNode::Finalize()
+{
+    Halt();
+    while (!lua_script_done())
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+
+}
+
 void BT::LuaActionNode::Halt()
 {
+//For know the lua script is atomic.
+//    std::cout << "Halting " << get_name() << std::endl;
+
+//    // call the lua function init
+
+//     lua_getglobal(lua_state_, "halt");
+
+//    // does the call, 0 input, 1 output (fourth argument has error-handling use)
+
+//    if (lua_pcall(lua_state_, 0, 0, 0) != 0)
+//    {
+//            std::cout << "ERROR:  error running function halt()" <<
+//                     lua_tostring(lua_state_, -1) << std::endl;
+//    }
+
     set_status(BT::HALTED);
     while (!lua_script_done());
     {
@@ -103,6 +167,12 @@ int BT::LuaActionNode::lua_is_halted(lua_State* L)
 {
     lua_pushboolean(L, is_halted());
     return 1; //number of returning values
+}
+
+
+void BT::LuaActionNode::LuaWriteToBlackboard(lua_State* L, std::string name, std::string type, yarp::os::Value value)
+{
+
 }
 
 

@@ -464,8 +464,6 @@ void MainWindow::on_actionAdd_Action_triggered()
     if (ok && !text.isEmpty())
     {
 
-
-
         if(filename.find(".")!=std::string::npos)
         {
             //has extension, checking that the extension is .lua
@@ -507,6 +505,20 @@ void MainWindow::on_actionAdd_Action_triggered()
 
         std::ofstream outfile (filename);
         outfile << "--script created with BT GUI" << std::endl;
+        outfile << "function init()" << std::endl;
+        outfile << " --initialization function. Called once the first time the tree is run" << std::endl;
+        outfile << "  return true" << std::endl;
+        outfile << "end" << std::endl;
+        outfile << "" << std::endl;
+        outfile << "function tick()" << std::endl;
+        outfile << " --tick function. Called whenever the node is ticked" << std::endl;
+        outfile << "  return true" << std::endl;
+        outfile << "end" << std::endl;
+        outfile << "" << std::endl;
+        outfile << "function halt()" << std::endl;
+        outfile << " --halt function. Called whenever the node is halted" << std::endl;
+        outfile << "  return true" << std::endl;
+        outfile << "end" << std::endl;
         outfile.close();
 
         std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("LuaAction");
@@ -576,6 +588,16 @@ void MainWindow::on_actionAdd_Condition_triggered()
 
         std::ofstream outfile (filename);
         outfile << "--script created with BT GUI" << std::endl;
+        outfile << "function init()" << std::endl;
+        outfile << " --initialization function. Called once the first time the tree is run" << std::endl;
+        outfile << "  return true" << std::endl;
+        outfile << "end" << std::endl;
+        outfile << "" << std::endl;
+        outfile << "function tick()" << std::endl;
+        outfile << " --tick function. Called whenever the node is ticked" << std::endl;
+        outfile << "  return true" << std::endl;
+        outfile << "end" << std::endl;
+        outfile << "" << std::endl;
         outfile.close();
 
         std::unique_ptr<NodeDataModel> dataModel = _main_scene->registry().create("LuaCondition");

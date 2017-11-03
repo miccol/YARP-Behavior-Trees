@@ -19,6 +19,7 @@ public:
     LuaConditionNode(std::string name, std::string filename, lua_State *lua_state);
     ~LuaConditionNode();
     BT::ReturnStatus Tick();
+    void Finalize();
 private:
     std::string filename_;
     lua_State *lua_state_;

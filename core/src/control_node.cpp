@@ -48,6 +48,8 @@ unsigned int BT::ControlNode::GetChildrenNumber()
 
 void BT::ControlNode::Halt()
 {
+    std::cout << "HALTING" << get_name() << std::endl;
+
     DEBUG_STDOUT("HALTING: "<< get_name());
     HaltChildren(0);
     set_status(BT::HALTED);
@@ -79,6 +81,8 @@ void BT::ControlNode::Finalize()
 
 void BT::ControlNode::HaltChildren(int i)
 {
+    //std::cout << "HALTING children of " << get_name() << std::endl;
+
     for (unsigned int j=i; j < children_nodes_.size(); j++)
     {
         if (children_nodes_[j]->get_type() == BT::CONDITION_NODE)
@@ -96,6 +100,7 @@ void BT::ControlNode::HaltChildren(int i)
             {
                 DEBUG_STDOUT("NO NEED TO HALT " << children_nodes_[j]-> get_name()
                              << "STATUS" << children_nodes_[j]->get_status());
+
             }
         }
     }
@@ -169,6 +174,11 @@ BT::ReturnStatus BT::RootNode::Tick()
         children_nodes_[0]->set_status(child_i_status_);
     }
 
+
+    if (child_i_status_ != BT::SUCCESS || child_i_status_ != BT::FAILURE)
+    {
+        children_nodes_[0]->set_status(BT::IDLE);
+    }
 
     return child_i_status_;
 

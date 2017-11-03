@@ -41,8 +41,6 @@ Node(std::unique_ptr<NodeDataModel> && dataModel)
 void Node::linkBTNode(BT::TreeNode *bt_node)
 {
     _bt_node = bt_node;
-    std::cout << "linked" << bt_node->get_name() << std::endl;
-
 }
 
 BT::TreeNode* Node::BTNode()
