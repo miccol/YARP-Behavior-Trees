@@ -1,4 +1,6 @@
 
+
+NOTE: This is a work-in-progress library. Stable Version coming soon.
 ====
 A behavior tree library in `YARP`.
 
@@ -11,6 +13,7 @@ DEPENDENCIES
 
 * [YARP](https://www.yarp.it/)
 * [LUA](https://www.lua.org/)
+* [Qt5](https://doc.qt.io/)
 
 
 
@@ -28,110 +31,51 @@ BT NODES SUPPORT
 
 **Condition:** A Condition node determines if a desired condition `c` has been met. Conditions are technically a subset of the Actions, but are given a separate category and graphical symbol to improve readability of the BT and emphasize the fact that they never return running and do not change any internal states/variables of the BT.
 
-A user manual is available in the project folder ([BTppUserManual.pdf](https://github.com/miccol/Behavior-Tree/blob/master/BTppUserManual.pdf)).
+## Setup
+Download and build the repository
+This will create the editor binary at <build-directory>/behavior_tree_editor
+Open the editor. A window similar to the following should appear.
 
-SETUP
------------
-
-The first step to use BT++ is to retrieve its source code. You can either download it 
-here (https://github.com/miccol/Behavior-Tree) or clone the repository:
-
-`$ cd /path/to/folder` <br/>
-`$ git clone https://github.com/miccol/Behavior−Tree.git`
-
-Once you have the repository, compile the library:
-
-`$ cd /path/to/folder/` <br/>
-`$ mkdir ./build` <br/>
-`$ cd build` <br/>
-`$ cmake ..` <br/>
-`$ make` <br/>
-
-
-CREATE YOUR OWN ACTION NODE
-------
-1) Implement your action node class extending the abstract class `BT::ActionNode`.
-2) Implement the method `BT::ReturnStatus Tick()` with the code you want to execute while the action is running. Use the method `is_halted()` to check if the action has been prempted. When the execution of your action finished, return `BT::SUCCESS` or `BT::FAILURE` accordingly.  
-3) Implement the method `void Halt()` with the code you want to execute when the action gets preempted (halted).
-See the file `src/example.cpp` for an example.
-
-CREATE YOUR OWN CONDITION NODE
-------
-1) Implement your condition node class extending the abstract class `BT::ConditionNode`.
-2) Implement the method `BT::ReturnStatus Tick()` with the code you want to execute to check the condition. Return `BT::SUCCESS` or `BT::FAILURE` accordingly.  
-See the file `src/example.cpp` for an example.
-
-### Set up an Behavior Tree's action in YARP
-The file templates/yarp_bt_action_template.cpp is a template on how the your YARP BT action should look like, it performs and action (it is an action n in the Behavior Tree).
-Your action is the Server and does stuff. The Behavior Tree is the Client and tells to all the Server which ones have to start (TICK) and which have to stop (HALT).
-
-in your module you should implement two functions: bool Exec() and void Halt()
-
-
-In the function bool Exec() you must write the code to be executed when the module needs to be run. The function it must return true if the execution of the action has succeeded and false if it has failed.
-To allow preemption to your action, it is preferable to check whenever possible if the action has been halted checking the function is_halted().
-
-For example:
-
-
-
-    bool Exec()
-    {
-        if (!is_halted())
-        {
-            std::cout << "Doing Something" << std::endl;
-        }
-        return true;
-    }
-
-
-In the function Halt() you must write the code to be executed when the module need to be stopped (e.g. when stopping a walking module we would like to have to robot stop in a home position).
-For Example:
-
-
-    void Halt()
-    {
-            std::cout << "Halting the Action" << std::endl;
-    }
+![alt tag](https://github.com/miccol/.jpg)
 
 
 
 
 
-
-Then set a name for your module. The name has the be unique. It will be used bt the behavior tree to recognize it. For example if you created a class called MyBTModule
-
-     MyBTModule* action_module = new MyBTModule("/your_bt_action_name");
-
-
-The file src/walking_module.cpp gives an example of a BT action node in YARP.
-
-### Set up an Behavior Tree's condition in YARP
-The procedure is similar to the one for the action node, with the only difference that you don't need to implement the function Halt().
-
-The file templates/yarp_bt_condition_template.cpp gives an example of a BT conditon node in YARP.
-
-    
-
-### Test your YARP Action or Condition
-
-You can also test if your YARP Module (Action or Condition) works properly without running the BT. 
-
-in one terminal run your module:
-
-     cd build
-     ./your_module
-
-and in another terminal run the progrem "test_your_module" specifing the port of your module.
-
-     cd build
-     ./test_your_module port_name
-
-Follow the instruction in the program
-Press: 1 to start the execution; 2 to halt the execution and 3 to terminate the program.
+## Using the editor
+---
+### Create a new action in Lua
+1) In the Toolbar: Lua Scripts->Create Action Script. A dialog windows will appear.
+2) Write the name of your new action node and press OK. This will create a Action<name>.lua file in the executable's folder and the corresping node will apper in the scene.
+3) Double click the on new node.
+4) Implement the functions init(), tick() and halt().
+   
+### Create a new condition in Lua
+1) In the Toolbar: Lua Scripts->Create Condition Script. A dialog windows will appear.
+2) Write the name of your new action node and press OK. This will create a Condition<name>.lua file in the executable's folder and the corresping node will apper in the scene.
+3) Implement the functions init() and tick().
 
 
 
+### Add a node in the scene
+1) Right click on the scene
+2) Select the corresponding node
+
+
+### Run the Behavior Tree
+1) Make sure that the tree has a root node
+2) Press the Play button.
+
+
+## Note for yarp nodes
+If you have implemented some nodes as external RFModules you can use them in the Behavior Tree by adding a YARP action/condition in the scene and writing the name of the module in the textfield.
+Instructions on how to implement an external Behavior Tree action in YARP avaliable here (link here)
+
+
+ACKNOWLEDGMENTS
+-------
+The Behavior Tree core is taken from a fork of https://github.com/miccol/Behavior-Tree </br>
+The Behavior Tree editor is a modified version of https://github.com/Eurecat/BehaviorTree.CPP, which is based on https://github.com/paceholder/nodeeditor
 
 LICENSE
 -------
