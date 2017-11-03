@@ -645,6 +645,16 @@ void runTree(QtNodes::FlowScene* scene)
         bt_root->Tick();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        scene->update();
+
+
+
+        for (auto& it: scene->nodes() )
+        {
+            QtNodes::Node* node = it.second.get();
+            node->nodeGraphicsObject().update();
+        }
+
 
     }
 

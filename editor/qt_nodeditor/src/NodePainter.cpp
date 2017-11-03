@@ -78,6 +78,7 @@ drawNodeRect(QPainter* painter,
             ? nodeStyle.SelectedBoundaryColor
             : nodeStyle.NormalBoundaryColor;
 
+
     //if the BT is running and the node is linked (it could be a loose node), color it.
     if(getMode() == 1 && node.BTNode() !=NULL)
     {
