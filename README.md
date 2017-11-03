@@ -60,6 +60,12 @@ Open the editor. A window similar to the following should appear.
 1) Right click on the scene
 2) Select the corresponding node
 
+
+### Run the Behavior Tree
+1) Make sure that the tree has a root node
+2) Press the Play button.
+
+
 ## Note for yarp nodes
 If you have implemented some nodes as external RFModules you can use them in the Behavior Tree by adding a YARP action/condition in the scene and writing the name of the module in the textfield.
 Instructions on how to implement an external Behavior Tree action in YARP avaliable here (link here)
