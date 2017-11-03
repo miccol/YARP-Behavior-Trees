@@ -67,7 +67,7 @@ Instructions on how to implement an external Behavior Tree action in YARP avalia
 
 ACKNOWLEDGMENTS
 -------
-The Behavior Tree core is taken from a fork of https://github.com/miccol/Behavior-Tree 
+The Behavior Tree core is taken from a fork of https://github.com/miccol/Behavior-Tree </br>
 The Behavior Tree editor is a modified version of https://github.com/Eurecat/BehaviorTree.CPP, which is based on https://github.com/paceholder/nodeeditor
 
 LICENSE
