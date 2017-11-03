@@ -65,6 +65,10 @@ If you have implemented some nodes as external RFModules you can use them in the
 Instructions on how to implement an external Behavior Tree action in YARP avaliable here (link here)
 
 
+ACKNOWLEDGMENTS
+-------
+The Behavior Tree core is taken from a fork of https://github.com/miccol/Behavior-Tree 
+The Behavior Tree editor is a modified version of https://github.com/Eurecat/BehaviorTree.CPP, which is based on https://github.com/paceholder/nodeeditor
 
 LICENSE
 -------
