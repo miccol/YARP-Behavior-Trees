@@ -31,9 +31,17 @@ BT NODES SUPPORT
 
 **Condition:** A Condition node determines if a desired condition `c` has been met. Conditions are technically a subset of the Actions, but are given a separate category and graphical symbol to improve readability of the BT and emphasize the fact that they never return running and do not change any internal states/variables of the BT.
 
+## Setup
+Download and build the repository
+This will create the editor binary at <build-directory>/behavior_tree_editor
+Open the editor. A window similar to the following should appear.
 
 
-## Using the executable
+
+
+
+
+## Using the editor
 ---
 ### Create a new action in Lua
 1) In the Toolbar: Lua Scripts->Create Action Script. A dialog windows will appear.
