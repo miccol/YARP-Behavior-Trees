@@ -64,7 +64,7 @@ Open the editor. A window similar to the following should appear.
 
 ### Run the Behavior Tree
 1) Make sure that the tree has a root node.
-2) Press the Play <img src="https://github.com/miccol/YARP-Behavior-Trees/blob/master/editor/bt_editor/qt_nodeditor/resources/play.png" width="15" height="15"> button. <br/>
+2) Press the Play <img src="https://github.com/miccol/YARP-Behavior-Trees/blob/master/editor/qt_nodeditor/resources/play.png" width="15" height="15"> button. <br/>
 3) Enjoy.
 ![alt tag](https://github.com/miccol/YARP-Behavior-Trees/blob/master/YARPBTRun.JPG)
 
