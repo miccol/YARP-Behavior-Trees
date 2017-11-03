@@ -36,7 +36,7 @@ Download and build the repository
 This will create the editor binary at <build-directory>/behavior_tree_editor
 Open the editor. A window similar to the following should appear.
 
-![alt tag](https://github.com/miccol/.jpg)
+![alt tag](https://github.com/miccol/YARP-Behavior-Trees/blob/master/YARPBT.JPG)
 
 
 
@@ -65,6 +65,9 @@ Open the editor. A window similar to the following should appear.
 ### Run the Behavior Tree
 1) Make sure that the tree has a root node
 2) Press the Play button.
+
+
+![alt tag](https://github.com/miccol/YARP-Behavior-Trees/blob/master/YARPBTRun.JPG)
 
 
 ## Note for yarp nodes
