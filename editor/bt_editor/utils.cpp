@@ -647,15 +647,11 @@ void runTree(QtNodes::FlowScene* scene)
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         scene->update();
 
-
-
         for (auto& it: scene->nodes() )
         {
             QtNodes::Node* node = it.second.get();
             node->nodeGraphicsObject().update();
         }
-
-
     }
 
     std::cout << "Finalizing the BT" << std::endl;
