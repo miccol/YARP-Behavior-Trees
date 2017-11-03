@@ -36,6 +36,7 @@ Download and build the repository
 This will create the editor binary at <build-directory>/behavior_tree_editor
 Open the editor. A window similar to the following should appear.
 
+![alt tag](https://github.com/miccol/.jpg)
 
 
 
