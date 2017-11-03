@@ -1,6 +1,6 @@
 
 
-**NOTE: This is a work-in-progress library. Stable Version coming soon.
+NOTE: This is a work-in-progress library. Stable Version coming soon.
 ====
 A behavior tree library in `YARP`.
 
@@ -33,19 +33,19 @@ BT NODES SUPPORT
 
 
 
-### Using the executable
+## Using the executable
 ---
-## Create a new action in Lua
+### Create a new action in Lua
 1) In the Toolbar: Lua Scripts->Create Action Script. A dialog windows will appear.
 2) Write the name of your new action node and press OK. This will create a Action<name>.lua file in the executable's folder.
    
-## Create a new condition in Lua
+### Create a new condition in Lua
 1) In the Toolbar: Lua Scripts->Create Condition Script. A dialog windows will appear.
 2) Write the name of your new action node and press OK. This will create a Condition<name>.lua file in the executable's folder.
 
 
 
-## Add a node in the scene
+### Add a node in the scene
 1) Right click on the scene
 2) Select the corresponding node
 
