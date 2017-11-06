@@ -31,6 +31,11 @@ BT NODES SUPPORT
 
 **Condition:** A Condition node determines if a desired condition `c` has been met. Conditions are technically a subset of the Actions, but are given a separate category and graphical symbol to improve readability of the BT and emphasize the fact that they never return running and do not change any internal states/variables of the BT.
 
+**Nodes with memory**
+There is the memory version of the Sequence and Fallback node. Memory nodes 
+always tick the same child until this returns success or
+failure, ignoring its status after that.
+
 ## Setup
 Download and build the repository
 This will create the editor binary at <build-directory>/behavior_tree_editor
@@ -69,7 +74,7 @@ Open the editor. A window similar to the following should appear.
 ![alt tag](https://github.com/miccol/YARP-Behavior-Trees/blob/master/YARPBTRun.JPG)
 
 
-## Note for yarp nodes
+## Note for YARP nodes
 If you have implemented some nodes as external RFModules you can use them in the Behavior Tree by adding a YARP action/condition in the scene and writing the name of the module in the textfield.
 Instructions on how to implement an external Behavior Tree action in YARP avaliable here (link here)
 
