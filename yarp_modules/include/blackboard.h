@@ -1,11 +1,11 @@
 #ifndef BLACK_BOARD_H
 #define BLACK_BOARD_H
 
-#include<memory> // for shared_ptr
-#include<string>
-#include<vector>
+#include <memory> // for shared_ptr
+#include <string>
+#include <vector>
 #include <yarp/os/Property.h> // the blackboard is a yarp property
-
+#include <cmath> //double_t, int_t etc
 class BlackBoard
 {
 public:
@@ -64,29 +64,29 @@ public:
     template< typename T >
     void PrintContent()
     {
-        for(std::shared_ptr<Property> p : content_)
-        {
-            std::string name = p.get()->name();
-            Property* ptr = p.get();
-            T value = ((TypedProperty<T>*)ptr)->data();
-            std::cout << name << " Has Value " << value <<std::endl;
-        }
+//        for(std::shared_ptr<Property> p : content_)
+//        {
+//            std::string name = p.get()->name();
+//            Property* ptr = p.get();
+//            T value = ((TypedProperty<T>*)ptr)->data();
+//            std::cout << name << " Has Value " << value <<std::endl;
+//        }
     }
 
     void PrintBlackBoard();
     //    void DeclareVariable(std::string name, std::string type);
-    template< typename T >
-    T GetValueOf(std::string name)
-    {
-        for(std::shared_ptr<Property> p : content_)
-        {
-            if (name == p.get()->name())
-            {
-                Property* ptr = p.get();
-                return ((TypedProperty<T>*)ptr)->data();
-            }
-        }
-    }
+//    template< typename T >
+//    T GetValueOf(std::string name)
+//    {
+//        for(std::shared_ptr<Property> p : content_)
+//        {
+//            if (name == p.get()->name())
+//            {
+//                Property* ptr = p.get();
+//                return ((TypedProperty<T>*)ptr)->data();
+//            }
+//        }
+//    }
 
 
 public:
