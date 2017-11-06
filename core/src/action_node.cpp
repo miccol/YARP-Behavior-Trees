@@ -37,7 +37,16 @@ void BT::ActionNode::WaitForTick()
         // Running state
         set_status(BT::RUNNING);
         BT::ReturnStatus status = Tick();
-        set_status(status);
+        if (is_halt_requested())
+        {
+            Halt();
+            set_status(BT::HALTED);
+            halt_requested(false);
+        }
+        else
+        {
+            set_status(status);
+        }
     }
 }
 

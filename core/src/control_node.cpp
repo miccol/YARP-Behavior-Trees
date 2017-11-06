@@ -94,13 +94,13 @@ void BT::ControlNode::HaltChildren(int i)
             if (children_nodes_[j]->get_status() == BT::RUNNING)
             {
                 DEBUG_STDOUT("SENDING HALT TO CHILD " << children_nodes_[j]-> get_name());
-                children_nodes_[j]->Halt();
+                //children_nodes_[j]->Halt();
+                children_nodes_[j]->halt_requested(true);
             }
             else
             {
                 DEBUG_STDOUT("NO NEED TO HALT " << children_nodes_[j]-> get_name()
                              << "STATUS" << children_nodes_[j]->get_status());
-
             }
         }
     }

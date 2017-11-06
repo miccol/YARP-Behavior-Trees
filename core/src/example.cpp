@@ -42,32 +42,32 @@ BT::ReturnStatus MyAction::Tick()
 {
     std::cout << "The Action is doing some operations" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    if (is_halted())
+    if (is_halt_requested())
     {
         return BT::HALTED;
     }
 
     std::cout << "The Action is doing some others operations" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    if (is_halted())
+    if (is_halt_requested())
     {
         return BT::HALTED;
     }
 
     std::cout << "The Action is doing more operations" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(5));
-    if (is_halted())
+    if (is_halt_requested())
     {
         return BT::HALTED;
     }
 
-    std::cout << "The Action has succeeded" << std::endl;
     return BT::SUCCESS;
 }
 
+
 void MyAction::Halt()
 {
-
+std::cout << "The Action is performing its Halt routine" << std::endl;
 }
 
 

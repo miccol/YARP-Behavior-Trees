@@ -128,21 +128,6 @@ void BT::LuaActionNode::Finalize()
 
 void BT::LuaActionNode::Halt()
 {
-//For know the lua script is atomic.
-//    std::cout << "Halting " << get_name() << std::endl;
-
-//    // call the lua function init
-
-//     lua_getglobal(lua_state_, "halt");
-
-//    // does the call, 0 input, 1 output (fourth argument has error-handling use)
-
-//    if (lua_pcall(lua_state_, 0, 0, 0) != 0)
-//    {
-//            std::cout << "ERROR:  error running function halt()" <<
-//                     lua_tostring(lua_state_, -1) << std::endl;
-//    }
-
     set_status(BT::HALTED);
     while (!lua_script_done());
     {
@@ -165,7 +150,7 @@ void BT::LuaActionNode::set_lua_script_done(bool lua_script_done)
 
 int BT::LuaActionNode::lua_is_halted(lua_State* L)
 {
-    lua_pushboolean(L, is_halted());
+    lua_pushboolean(L, is_halt_requested());
     return 1; //number of returning values
 }
 
@@ -180,6 +165,6 @@ void BT::LuaActionNode::LuaWriteToBlackboard(lua_State* L, std::string name, std
 void BT::LuaActionNode::LineHookFunc(lua_State *L, lua_Debug *ar)
 {
     if(ar->event == LUA_HOOKLINE)
-        if(is_halted() == true)
+        if(is_halt_requested() == true)
             luaL_error(L, "HALTED");
 }

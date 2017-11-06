@@ -101,10 +101,14 @@ namespace BT
     protected:
         // The node state that must be treated in a thread-safe way
         bool is_state_updated_;
+        bool is_halt_requested_;
+
         ReturnStatus status_;
         ReturnStatus color_status_;
 
 
+
+        std::mutex is_halt_requested_mutex_;
         std::mutex state_mutex_;
         std::mutex color_state_mutex_;
         std::condition_variable state_condition_variable_;
@@ -147,7 +151,7 @@ namespace BT
         virtual int DrawType() = 0;
         virtual void ResetColorState() = 0;
         virtual int Depth() = 0;
-        bool is_halted();
+        //bool is_halted();
 
 
         //Getters and setters
@@ -169,6 +173,9 @@ namespace BT
         NodeType get_type();
 
         virtual void Finalize();
+        //void RequestHalt();
+        bool is_halt_requested();
+        void halt_requested(bool is_halt_requested);
     };
 }
 

@@ -13,7 +13,6 @@
 #include <tree_node.h>
 #include <string>
 
-
 BT::TreeNode::TreeNode(std::string name) : tick_engine(0)
 {
     // Initialization
@@ -100,13 +99,30 @@ BT::NodeType BT::TreeNode::get_type()
     return type_;
 }
 
-bool BT::TreeNode::is_halted()
-{
-    return get_status() == BT::HALTED;
-}
+//bool BT::TreeNode::is_halted()
+//{
+//    return get_status() == BT::HALTED;
+//}
 
 
 void BT::TreeNode::Finalize()
 {
 
+}
+
+//void BT::TreeNode::RequestHalt()
+//{
+
+//}
+
+bool BT::TreeNode::is_halt_requested()
+{
+    std::lock_guard<std::mutex> LockGuard(is_halt_requested_mutex_);
+    return is_halt_requested_;
+}
+
+void BT::TreeNode::halt_requested(bool is_halt_requested)
+{
+    std::lock_guard<std::mutex> LockGuard(is_halt_requested_mutex_);
+    is_halt_requested_ = is_halt_requested;
 }
