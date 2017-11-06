@@ -69,7 +69,7 @@ void BlackBoardServer::SetI32(const std::string &name, const int32_t data)
     }
 }
 
-void BlackBoardServer::SetI64(const std::string &name, const long long data)
+void BlackBoardServer::SetI64(const std::string &name, const YARP_INT64 data)
 {    try
      {
         content_->SetValue(name, "i64", (int)data); //loosing data here but a yarp value does not have .makeInt64()
@@ -155,7 +155,7 @@ int32_t BlackBoardServer::GetI32(const std::string &name)
     }
 }
 
-long long BlackBoardServer::GetI64(const std::string &name)
+YARP_INT64 BlackBoardServer::GetI64(const std::string &name)
 {    try
      {
         return content_->GetI64(name);
