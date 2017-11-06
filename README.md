@@ -31,8 +31,8 @@ BT NODES SUPPORT
 
 **Condition:** A Condition node determines if a desired condition `c` has been met. Conditions are technically a subset of the Actions, but are given a separate category and graphical symbol to improve readability of the BT and emphasize the fact that they never return running and do not change any internal states/variables of the BT.
 
-**Nodes with memory**
-There is the memory version of the Sequence and Fallback node. Memory nodes 
+**Nodes with memory:**
+There exists the memory version of the Sequence and Fallback node. Memory nodes 
 always tick the same child until this returns success or
 failure, ignoring its status after that.
 
