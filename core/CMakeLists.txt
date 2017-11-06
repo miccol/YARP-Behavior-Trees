@@ -49,7 +49,7 @@ if(APPLE)
 endif()
 
 
-file(GLOB_RECURSE BT_CORE_HEADERS ${PROJECT_SOURCE_DIR}/include/*.h)
+file(GLOB_RECURSE BT_CORE_HEADERS ${PROJECT_SOURCE_DIR}/include/*.h ${PROJECT_SOURCE_DIR}/gtest/include/*.h)
 
 
 set(BT_CORE_SOURCES
@@ -70,6 +70,9 @@ ${PROJECT_SOURCE_DIR}/src/yarp_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/yarp_condition_node.cpp
 ${PROJECT_SOURCE_DIR}/src/lua_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/lua_condition_node.cpp
+${PROJECT_SOURCE_DIR}/gtest/src/action_test_node.cpp
+${PROJECT_SOURCE_DIR}/gtest/src/condition_test_node.cpp
+
 )
 
 
@@ -83,8 +86,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 # COMPILING GTEST
 #######################################################
 if(GTEST_FOUND)
-    add_executable(btpp_gtest gtest/gtest_tree.cpp ${BT_CORE_SOURCES} ${BT_CORE_HEADERS})
-    target_link_libraries(btpp_gtest ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+    add_executable(btpp_gtest gtest/gtest_tree.cpp ${BT_CORE_SOURCES} ${BT_CORE_HEADERS} ${YARP_BT_NODES_SOURCES})
+    target_link_libraries(btpp_gtest ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES} ${YARP_LIBRARIES} ${LUA_LIBRARIES})
 endif(GTEST_FOUND)
 
 add_executable(example src/example.cpp ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURCES})

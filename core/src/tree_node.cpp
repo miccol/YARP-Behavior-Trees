@@ -18,6 +18,7 @@ BT::TreeNode::TreeNode(std::string name) : tick_engine(0)
     // Initialization
     name_ = name;
     is_state_updated_ = false;
+    is_halt_requested_ = false;
     set_status(BT::IDLE);
 }
 

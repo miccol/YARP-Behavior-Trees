@@ -5,6 +5,7 @@
 #include <yarp/os/idl/WireTypes.h>
 
 
+
 class BlackBoardCmd_SetI16 : public yarp::os::Portable {
 public:
   std::string name;

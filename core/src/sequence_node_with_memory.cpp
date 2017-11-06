@@ -73,6 +73,12 @@ BT::ReturnStatus BT::SequenceNodeWithMemory::Tick()
                 while (child_i_status_ != BT::RUNNING && child_i_status_ != BT::SUCCESS
                        && child_i_status_ != BT::FAILURE);
             }
+            else
+            {
+            DEBUG_STDOUT(get_name() << "DOES NOT NEED TO TICK " << children_nodes_[current_child_idx_]->get_name());
+
+            }
+
         }
         else
         {
@@ -83,10 +89,12 @@ BT::ReturnStatus BT::SequenceNodeWithMemory::Tick()
 
         }
 
-        if (child_i_status_ == BT::SUCCESS ||child_i_status_ == BT::FAILURE )
+        if (child_i_status_ == BT::SUCCESS || child_i_status_ == BT::FAILURE )
         {
              // the child goes in idle if it has returned success or failure.
+           // children_nodes_[current_child_idx_]->set_status(BT::IDLE);
             children_nodes_[current_child_idx_]->set_status(BT::IDLE);
+
         }
 
         if (child_i_status_ != BT::SUCCESS)
@@ -106,15 +114,18 @@ BT::ReturnStatus BT::SequenceNodeWithMemory::Tick()
             // If the  child status is success, continue to the next child
             // (if any, hence if(current_child_ != N_of_children_ - 1) ) in the for loop (if any).
             current_child_idx_++;
+            DEBUG_STDOUT("the node: " << get_name() << " has increased the  current_child_idx_ to " << current_child_idx_);
         }
         else
         {
             // if it the last child.
             if (child_i_status_ == BT::SUCCESS)
             {
-                // if it the last child and it has returned SUCCESS, reset the memory
+                // if it the last child and it has returned SUCCESS, reset the memory and all the child are now in IDLE
                 current_child_idx_ = 0;
             }
+            DEBUG_STDOUT("the node: " << get_name() << " is returning "<< child_i_status_);
+
             set_status(child_i_status_);
             return child_i_status_;
         }
