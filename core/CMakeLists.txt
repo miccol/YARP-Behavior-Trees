@@ -18,11 +18,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 #########################################################
 # FIND GTest
 #########################################################
-#find_package(GTest)
-#include_directories(${GTEST_INCLUDE_DIRS})
-#if(NOT GTEST_FOUND)
-#    message(WARNING " GTest not found!")
-#endif(NOT GTEST_FOUND)
+find_package(GTest)
+include_directories(${GTEST_INCLUDE_DIRS})
+if(NOT GTEST_FOUND)
+    message(WARNING " GTest not found!")
+endif(NOT GTEST_FOUND)
 
 
 #########################################################
@@ -82,10 +82,10 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 ######################################################
 # COMPILING GTEST
 #######################################################
-#if(GTEST_FOUND)
-#    add_executable(btpp_gtest gtest/gtest_tree.cpp ${BTSrcLibrary} ${BTHeadLibrary})
-#    target_link_libraries(btpp_gtest ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
-#endif(GTEST_FOUND)
+if(GTEST_FOUND)
+    add_executable(btpp_gtest gtest/gtest_tree.cpp ${BTSrcLibrary} ${BTHeadLibrary})
+    target_link_libraries(btpp_gtest ${GTEST_LIBRARIES} ${GTEST_MAIN_LIBRARIES})
+endif(GTEST_FOUND)
 
 add_executable(example src/example.cpp ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURCES})
 target_link_libraries(example ${YARP_LIBRARIES} ${LUA_LIBRARIES})
