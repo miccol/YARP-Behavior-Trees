@@ -39,6 +39,8 @@ void BT::ActionNode::WaitForTick()
         BT::ReturnStatus status = Tick();
         if (is_halt_requested())
         {
+            DEBUG_STDOUT(get_name() << " HALT REQUESTED");
+
             Halt();
             set_status(BT::HALTED);
             halt_requested(false);

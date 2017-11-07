@@ -48,8 +48,6 @@ unsigned int BT::ControlNode::GetChildrenNumber()
 
 void BT::ControlNode::Halt()
 {
-    std::cout << "HALTING" << get_name() << std::endl;
-
     DEBUG_STDOUT("HALTING: "<< get_name());
     HaltChildren(0);
     set_status(BT::HALTED);
@@ -81,8 +79,6 @@ void BT::ControlNode::Finalize()
 
 void BT::ControlNode::HaltChildren(int i)
 {
-    //std::cout << "HALTING children of " << get_name() << std::endl;
-
     for (unsigned int j=i; j < children_nodes_.size(); j++)
     {
         if (children_nodes_[j]->get_type() == BT::CONDITION_NODE)
@@ -96,6 +92,13 @@ void BT::ControlNode::HaltChildren(int i)
                 DEBUG_STDOUT("SENDING HALT TO CHILD " << children_nodes_[j]-> get_name());
                 //children_nodes_[j]->Halt();
                 children_nodes_[j]->halt_requested(true);
+                //wait for the child j to be halted
+                do
+                {
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                }
+                while (children_nodes_[j]->get_status() != BT::HALTED );
+
             }
             else
             {
