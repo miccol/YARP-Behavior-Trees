@@ -378,11 +378,6 @@ TEST_F(SimpleSequenceTest, ConditionTurnToFalse)
 
     state = root->Tick();
     ASSERT_EQ(BT::FAILURE, state);
-    ASSERT_EQ(BT::RUNNING, action->get_status());
-    ASSERT_EQ(true, action->is_halt_requested());
-
-    ASSERT_EQ(BT::RUNNING, action->get_status());
-    std::this_thread::sleep_for(std::chrono::milliseconds(1100)); // actions test node is blocking for 1 second, so is still in RUNNING for at most one second while the halt is requested 
     ASSERT_EQ(BT::HALTED, action->get_status());
 
     root->Halt();
@@ -402,9 +397,6 @@ TEST_F(ComplexSequenceTest, ComplexSequenceConditionsTrue)
 TEST_F(ComplexSequence2ActionsTest, ConditionsTrue)
 {
     BT::ReturnStatus state = root->Tick();
-
-    state = root->Tick();
-
 
     ASSERT_EQ(BT::RUNNING, state);
     ASSERT_EQ(BT::RUNNING, action_1->get_status());
@@ -427,9 +419,9 @@ TEST_F(ComplexSequenceTest, ComplexSequenceConditions1ToFalse)
     state = root->Tick();
 
     ASSERT_EQ(BT::FAILURE, state);
-    ASSERT_EQ(true, action_1->is_halt_requested());
-    ASSERT_EQ(BT::RUNNING, action_1->get_status());
-    std::this_thread::sleep_for(std::chrono::milliseconds(1100)); // actions test node is blocking for 1 second, so is still in RUNNING for at most one second while the halt is requested 
+    // ASSERT_EQ(true, action_1->is_halt_requested());
+    // ASSERT_EQ(BT::RUNNING, action_1->get_status());
+    // std::this_thread::sleep_for(std::chrono::milliseconds(1100)); // actions test node is blocking for 1 second, so is still in RUNNING for at most one second while the halt is requested 
     ASSERT_EQ(BT::HALTED, action_1->get_status());
     root->Halt();
 }
@@ -443,9 +435,6 @@ TEST_F(ComplexSequenceTest, ComplexSequenceConditions2ToFalse)
     state = root->Tick();
 
     ASSERT_EQ(BT::FAILURE, state);
-    ASSERT_EQ(true, action_1->is_halt_requested());
-    ASSERT_EQ(BT::RUNNING, action_1->get_status());
-    std::this_thread::sleep_for(std::chrono::milliseconds(1100)); // actions test node is blocking for 1 second, so is still in RUNNING for at most one second while the halt is requested 
     ASSERT_EQ(BT::HALTED, action_1->get_status());
     root->Halt();
 }
@@ -454,7 +443,6 @@ TEST_F(ComplexSequenceTest, ComplexSequenceConditions2ToFalse)
 
 TEST_F(SimpleFallbackTest, ConditionTrue)
 {
-    std::cout << "Ticking the root node !" << std::endl << std::endl;
     // Ticking the root node
     condition->set_boolean_value(true);
     BT::ReturnStatus state = root->Tick();
@@ -465,23 +453,33 @@ TEST_F(SimpleFallbackTest, ConditionTrue)
 }
 
 
-TEST_F(SimpleFallbackTest, ConditionToFalse)
+TEST_F(SimpleFallbackTest, ConditionFalse)
 {
     condition->set_boolean_value(false);
 
     BT::ReturnStatus state = root->Tick();
+
+    ASSERT_EQ(BT::RUNNING, action->get_status());
+    ASSERT_EQ(BT::RUNNING, state);
+    root->Halt();
+}
+
+TEST_F(SimpleFallbackTest, ConditionToTrue)
+{
+    condition->set_boolean_value(false);
+
+    BT::ReturnStatus state = root->Tick();
+    ASSERT_EQ(BT::RUNNING, action->get_status());
     condition->set_boolean_value(true);
 
 
     state = root->Tick();
 
     ASSERT_EQ(BT::SUCCESS, state);
-    ASSERT_EQ(true, action->is_halt_requested());
-    ASSERT_EQ(BT::RUNNING, action->get_status());
-    std::this_thread::sleep_for(std::chrono::milliseconds(1100)); // actions test node is blocking for 1 second, so is still in RUNNING for at most one second while the halt is requested 
     ASSERT_EQ(BT::HALTED, action->get_status());
     root->Halt();
 }
+
 
 
 TEST_F(ComplexFallbackTest, Condition1ToTrue)
@@ -496,9 +494,7 @@ TEST_F(ComplexFallbackTest, Condition1ToTrue)
     state = root->Tick();
 
     ASSERT_EQ(BT::SUCCESS, state);
-    ASSERT_EQ(true, action_1->is_halt_requested());
-    action_1->Tick();
-    //ASSERT_EQ(BT::HALTED, action_1->get_status());
+    ASSERT_EQ(BT::HALTED, action_1->get_status());
     root->Halt();
 }
 
@@ -514,9 +510,6 @@ TEST_F(ComplexFallbackTest, Condition2ToTrue)
     state = root->Tick();
 
     ASSERT_EQ(BT::SUCCESS, state);
-    ASSERT_EQ(true, action_1->is_halt_requested());
-    ASSERT_EQ(BT::RUNNING, action_1->get_status());
-    std::this_thread::sleep_for(std::chrono::milliseconds(1100)); // actions test node is blocking for 1 second, so is still in RUNNING for at most one second while the halt is requested 
     ASSERT_EQ(BT::HALTED, action_1->get_status());
     root->Halt();
 }
@@ -806,10 +799,6 @@ TEST_F(SimpleParallelTest, Threshold_3)
     ASSERT_EQ(BT::IDLE, condition_1->get_status());
     ASSERT_EQ(BT::IDLE, condition_2->get_status());
     ASSERT_EQ(BT::IDLE, action_1->get_status());
-    ASSERT_EQ(true, action_2->is_halt_requested());
-
-    ASSERT_EQ(BT::RUNNING, action_2->get_status());
-    std::this_thread::sleep_for(std::chrono::milliseconds(1100)); // actions test node is blocking for 1 second 
     ASSERT_EQ(BT::HALTED, action_2->get_status());
     ASSERT_EQ(BT::SUCCESS, state);
 
@@ -888,9 +877,8 @@ TEST_F(ComplexParallelTest, Condition3FalseAction1Done)
 
     ASSERT_EQ(BT::IDLE, action_1->get_status());
     ASSERT_EQ(BT::IDLE, parallel_1->get_status());
-    ASSERT_EQ(true, action_2->is_halt_requested());
-    action_2->Tick();
-    //ASSERT_EQ(BT::HALTED, action_2->get_status()); re-check this
+
+    ASSERT_EQ(BT::HALTED, action_2->get_status()); 
     ASSERT_EQ(BT::RUNNING, action_3->get_status());
     ASSERT_EQ(BT::RUNNING, parallel_2->get_status());
     ASSERT_EQ(BT::RUNNING, state);
