@@ -170,6 +170,31 @@ struct BehaviorTreeTest : testing::Test
     }
 };
 
+struct ComplexBehaviorTreeTest : testing::Test
+{
+    BT:: SequenceNode* root;
+    BT::ActionTestNode* action_1;
+    BT::ActionTestNode* action_2;
+    BT::ConditionTestNode* condition_1;
+
+    BT:: FallbackNode* fallback;
+
+    ComplexBehaviorTreeTest()
+    {
+        action_1 = new BT::ActionTestNode("action 1");
+        action_2 = new BT::ActionTestNode("action 2");
+        condition_1 = new BT::ConditionTestNode("condition 1");
+        fallback = new BT::FallbackNode("fallback_conditions");
+
+        fallback->AddChild(condition_1);
+        fallback->AddChild(action_1);
+
+        root = new BT::SequenceNode("root");
+        root->AddChild(fallback);
+        root->AddChild(action_2);
+    }
+};
+
 
 
 
@@ -538,6 +563,28 @@ TEST_F(BehaviorTreeTest, Condition2ToFalseCondition1True)
 
     ASSERT_EQ(BT::RUNNING, state);
     ASSERT_EQ(BT::RUNNING, action_1->get_status());
+
+    root->Halt();
+}
+
+TEST_F(ComplexBehaviorTreeTest, BlockingHaltTest)
+{
+    condition_1->set_boolean_value(false);
+
+    BT::ReturnStatus state = root->Tick();
+
+    ASSERT_EQ(BT::RUNNING, state);
+    ASSERT_EQ(BT::RUNNING, action_1->get_status());
+
+    condition_1->set_boolean_value(true);
+
+    state = root->Tick();
+
+    ASSERT_EQ(BT::RUNNING, state);
+    ASSERT_EQ(BT::HALTED, action_1->get_status());
+    ASSERT_EQ(BT::RUNNING, action_2->get_status());
+
+
 
     root->Halt();
 }
