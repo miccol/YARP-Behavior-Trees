@@ -8,6 +8,7 @@
 
 class BTCmd_request_tick : public yarp::os::Portable {
 public:
+  int32_t _return;
   void init();
   virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
   virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
@@ -38,10 +39,15 @@ bool BTCmd_request_tick::write(yarp::os::ConnectionWriter& connection) {
 bool BTCmd_request_tick::read(yarp::os::ConnectionReader& connection) {
   yarp::os::idl::WireReader reader(connection);
   if (!reader.readListReturn()) return false;
+  if (!reader.readI32(_return)) {
+    reader.fail();
+    return false;
+  }
   return true;
 }
 
 void BTCmd_request_tick::init() {
+  _return = 0;
 }
 
 bool BTCmd_request_status::write(yarp::os::ConnectionWriter& connection) {
@@ -84,13 +90,15 @@ void BTCmd_request_halt::init() {
 BTCmd::BTCmd() {
   yarp().setOwner(*this);
 }
-void BTCmd::request_tick() {
+int32_t BTCmd::request_tick() {
+  int32_t _return = 0;
   BTCmd_request_tick helper;
   helper.init();
   if (!yarp().canWrite()) {
-    yError("Missing server method '%s'?","void BTCmd::request_tick()");
+    yError("Missing server method '%s'?","int32_t BTCmd::request_tick()");
   }
-  yarp().write(helper,helper);
+  bool ok = yarp().write(helper,helper);
+  return ok?helper._return:_return;
 }
 int32_t BTCmd::request_status() {
   int32_t _return = 0;
@@ -121,10 +129,12 @@ bool BTCmd::read(yarp::os::ConnectionReader& connection) {
   while (!reader.isError()) {
     // TODO: use quick lookup, this is just a test
     if (tag == "request_tick") {
-      request_tick();
+      int32_t _return;
+      _return = request_tick();
       yarp::os::idl::WireWriter writer(reader);
       if (!writer.isNull()) {
-        if (!writer.writeListHeader(0)) return false;
+        if (!writer.writeListHeader(1)) return false;
+        if (!writer.writeI32(_return)) return false;
       }
       reader.accept();
       return true;
@@ -190,7 +200,7 @@ std::vector<std::string> BTCmd::help(const std::string& functionName) {
   }
   else {
     if (functionName=="request_tick") {
-      helpString.push_back("void request_tick() ");
+      helpString.push_back("int32_t request_tick() ");
     }
     if (functionName=="request_status") {
       helpString.push_back("int32_t request_status() ");

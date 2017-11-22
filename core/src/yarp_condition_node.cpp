@@ -51,8 +51,8 @@ BT::YARPConditionNode::~YARPConditionNode()
 BT::ReturnStatus BT::YARPConditionNode::Tick()
 {
 
-    condition_server_.request_tick();
-    switch(1)
+    int status = condition_server_.request_tick();
+    switch(status)
     {
     case BT::SUCCESS:
         set_status(BT::SUCCESS);

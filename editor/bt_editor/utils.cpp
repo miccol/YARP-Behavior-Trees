@@ -657,9 +657,9 @@ void runTree(QtNodes::FlowScene* scene)
         }
     }
 
-    std::cout << "Halting the BT" << std::endl;
+    std::cout << "Finalizing the BT" << std::endl;
     bt_root->Halt();
-    //bt_root->Finalize();
+    bt_root->Finalize();
     std::cout << "Closing the Lua state" << std::endl;
     lua_close(lua_state);
 

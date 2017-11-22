@@ -20,7 +20,8 @@ public:
 
 private:
     yarp::os::Network yarp_;
-    yarp::os::Port port_;
+    yarp::os::Port port_tick_;
+    yarp::os::Port port_halt_;
     const char* client_name_;
     const char* server_name_;
 

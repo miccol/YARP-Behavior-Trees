@@ -35,11 +35,11 @@ bool YARPBTModule::close()
     return true;
 }
 
-void YARPBTModule::request_tick()
+int32_t YARPBTModule::request_tick()
 {
     set_is_halted(false);
     tick();
-    //return 1;
+    return 1;
 }
 
 int32_t YARPBTModule::request_status()

@@ -19,13 +19,22 @@ using namespace yarp::os;
 BT::YARPActionNode::YARPActionNode(std::string name, std::string server_name) : BT::ActionNode::ActionNode(name)
 {
     type_ = YARP_ACTION_NODE;
-    std::string client_name_ = "/" + name;
-    port_.open(client_name_);
+    std::string tick_client_name_ = "/" + name + "/tick";
+    std::string halt_client_name_ = "/" + name + "/halt";
+
+    port_tick_.open(tick_client_name_);
+    port_halt_.open(halt_client_name_);
 
     std::cout << "Waiting for the module port name "<< server_name << " to start." << std::endl;
 
     yarp_.sync("/" + server_name + "/cmd");//waits for the port
-    if(!yarp_.connect(client_name_, "/" + server_name + "/cmd"))
+    if(!yarp_.connect(tick_client_name_, "/" + server_name + "/cmd"))
+    {
+       std::cout << "Error! Could not connect to module " << server_name << std::endl;
+       return;
+    }
+
+    if(!yarp_.connect(halt_client_name_, "/" + server_name + "/cmd"))
     {
        std::cout << "Error! Could not connect to module " << server_name << std::endl;
        return;
@@ -34,8 +43,8 @@ BT::YARPActionNode::YARPActionNode(std::string name, std::string server_name) : 
 
     std::cout << "Module "<< server_name << " has started." << std::endl;
 
-    action_tick_server_.yarp().attachAsClient(port_);
-    action_halt_server_.yarp().attachAsClient(port_);
+    action_tick_server_.yarp().attachAsClient(port_tick_);
+    action_halt_server_.yarp().attachAsClient(port_halt_);
 
 
     std::cout << "Module "<< server_name << " attached." << std::endl;
@@ -89,8 +98,8 @@ void BT::YARPActionNode::Halt()
 
 void BT::YARPActionNode::Finalize()
 {
-     Halt();
-     port_.close();
+     port_halt_.close();
+     port_tick_.close();
      std::cout << "port closed" << std::endl;
 }
 
