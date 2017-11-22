@@ -195,26 +195,24 @@ void MainWindow::recursivelyCreateXml(QDomDocument& doc, QDomElement& parent_ele
     const QtNodes::NodeDataModel* node_model = node->nodeDataModel();
     const QString model_name = node_model->name();
     QDomElement element = doc.createElement( model_name );
+
+    std::cout << "model name is " << model_name.toStdString() << std::endl;
+
     if( model_name == "LuaAction" || model_name == "LuaCondition" || model_name == "YARPAction" || model_name == "YARPCondition" |model_name == "YARPAction" || model_name == "LuaPreamble")
     {
-        const LuaNodeModel* action_node = dynamic_cast<const LuaNodeModel*>(node_model);
-        if( action_node )
+        if( model_name == "LuaAction" || model_name == "LuaCondition" )
         {
+            const LuaNodeModel* action_node = dynamic_cast<const LuaNodeModel*>(node_model);
+
             element.setAttribute("ID", action_node->type() );
         }
-        auto parameters = action_node->getCurrentParameters();
-        for(const auto& param: parameters)
+        else
         {
-            element.setAttribute( param.first, param.second );
+            element.setAttribute("ID", node_model->caption() );
         }
     }
 
-    if( element.attribute("ID") != node_model->caption())
-    {
-        element.setAttribute("name", node_model->caption() );
-    }
     parent_element.appendChild( element );
-
 
     auto node_children = getChildren(*_main_scene, *node );
     for(QtNodes::Node* child : node_children)

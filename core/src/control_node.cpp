@@ -48,6 +48,8 @@ unsigned int BT::ControlNode::GetChildrenNumber()
 
 void BT::ControlNode::Halt()
 {
+    std::cout << "HALTING: " << get_name() << std::endl;
+
     DEBUG_STDOUT("HALTING: "<< get_name());
     HaltChildren(0);
     set_status(BT::HALTED);
@@ -91,6 +93,7 @@ void BT::ControlNode::HaltChildren(int i)
             {
                 DEBUG_STDOUT("SENDING HALT TO CHILD " << children_nodes_[j]-> get_name());
                 //children_nodes_[j]->Halt();
+                std::cout << "SENDING HALT TO CHILD " << children_nodes_[j]-> get_name() << std::endl;
             if(children_nodes_[j]->get_type() == BT::ACTION_NODE){
                 // if it is an action, i need to halt using the halt_request 
                 children_nodes_[j]->halt_requested(true);
@@ -103,13 +106,17 @@ void BT::ControlNode::HaltChildren(int i)
                 while (children_nodes_[j]->get_status() != BT::HALTED  && children_nodes_[j]->get_status() != BT::IDLE );
             }
             else
-            { // is a control flow node
+            { // is a control flow node (or yarp action)
                 children_nodes_[j]->Halt();
+                std::cout << "SENDING HALT TO CHILD " << children_nodes_[j]-> get_name() << std::endl;
+
             }
 
             }
             else
             {
+                std::cout << "NO NEED TO HALT XXX" << children_nodes_[j]-> get_name()
+                          << "STATUS" << children_nodes_[j]->get_status() << std::endl;
                 DEBUG_STDOUT("NO NEED TO HALT " << children_nodes_[j]-> get_name()
                              << "STATUS" << children_nodes_[j]->get_status());
             }
@@ -156,7 +163,7 @@ BT::ReturnStatus BT::RootNode::Tick()
 
     }
 
-    if (children_nodes_[0]->get_type() == BT::ACTION_NODE)
+    if (children_nodes_[0]->get_type() == BT::ACTION_NODE || children_nodes_[0]->get_type() == BT::YARP_ACTION_NODE)
     {
         // 1) If the child i is an action, read its state.
         child_i_status_ = children_nodes_[0]->get_status();
@@ -186,10 +193,10 @@ BT::ReturnStatus BT::RootNode::Tick()
     }
 
 
-    if (child_i_status_ != BT::SUCCESS || child_i_status_ != BT::FAILURE)
-    {
-        children_nodes_[0]->set_status(BT::IDLE);
-    }
+//    if (child_i_status_ != BT::SUCCESS || child_i_status_ != BT::FAILURE)
+//    {
+//        children_nodes_[0]->set_status(BT::IDLE);
+//    }
 
     return child_i_status_;
 

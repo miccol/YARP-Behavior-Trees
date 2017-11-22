@@ -13,7 +13,8 @@ class BTCmd;
 class BTCmd : public yarp::os::Wire {
 public:
   BTCmd();
-  virtual int32_t request_tick();
+  virtual void request_tick();
+  virtual int32_t request_status();
   virtual void request_halt();
   virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
   virtual std::vector<std::string> help(const std::string& functionName="--all");

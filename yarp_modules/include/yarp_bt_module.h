@@ -16,7 +16,8 @@ public:
     bool updateModule();
     bool close();
 
-    int32_t request_tick();
+    void request_tick();
+    int32_t request_status();
     void request_halt();
 
 

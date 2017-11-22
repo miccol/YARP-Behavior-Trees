@@ -75,7 +75,7 @@ class YARPActionNodeModel : public YARPNodeModel
 {
 public:
     YARPActionNodeModel():
-        YARPNodeModel("Action", NodeFactory::get().getActionParameterModel() )
+        YARPNodeModel("YARPAction", NodeFactory::get().getActionParameterModel() )
     { }
     int BTType()
     {

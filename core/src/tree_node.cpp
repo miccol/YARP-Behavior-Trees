@@ -26,6 +26,8 @@ BT::TreeNode::~TreeNode() {}
 
 void BT::TreeNode::set_status(ReturnStatus new_status)
 {
+
+
     if (new_status != BT::IDLE)
     {
         set_color_status(new_status);
@@ -33,6 +35,7 @@ void BT::TreeNode::set_status(ReturnStatus new_status)
 
     // Lock acquistion
     std::unique_lock<std::mutex> UniqueLock(state_mutex_);
+    std::cout << get_name() << " is setting its status to " << new_status <<std::endl;
 
     // state_ update
     status_ = new_status;
@@ -41,9 +44,11 @@ void BT::TreeNode::set_status(ReturnStatus new_status)
 BT::ReturnStatus BT::TreeNode::get_status()
 {
     // Lock acquistion
-    DEBUG_STDOUT(get_name() << " is setting its status to " << status_);
+
+
 
     std::lock_guard<std::mutex> LockGuard(state_mutex_);
+    std::cout << get_name() << " status is " << status_ <<std::endl;
 
     return status_;
 }

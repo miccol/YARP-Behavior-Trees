@@ -32,7 +32,7 @@ BT::ReturnStatus BT::FallbackNode::Tick()
                     Hence we cannot just call the method Tick() from the action as doing so will block the execution of the tree.
                     For this reason if a child of this node is an action, then we send the tick using the tick engine. Otherwise we call the method Tick() and wait for the response.
             */
-            if (children_nodes_[i]->get_type() == BT::ACTION_NODE)
+            if (children_nodes_[i]->get_type() == BT::ACTION_NODE || children_nodes_[i]->get_type() == BT::YARP_ACTION_NODE)
             {
                 // 1) If the child i is an action, read its state.
                 child_i_status_ = children_nodes_[i]->get_status();

@@ -46,7 +46,7 @@ BT::ReturnStatus BT::FallbackNodeWithMemory::Tick()
                 For this reason if a child of this node is an action, then we send the tick using the tick engine. Otherwise we call the method Tick() and wait for the response.
         */
 
-        if (children_nodes_[current_child_idx_]->get_type() == BT::ACTION_NODE)
+        if (children_nodes_[current_child_idx_]->get_type() == BT::ACTION_NODE || children_nodes_[current_child_idx_]->get_type() == BT::YARP_ACTION_NODE )
         {
             // 1) If the child i is an action, read its state.
             // Action nodes runs in another thread, hence you cannot retrieve the status just by executing it.

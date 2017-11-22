@@ -36,7 +36,7 @@ BT::ReturnStatus BT::SequenceNode::Tick()
         */
       //  std::cout << get_name() << "is checking " << children_nodes_[i]->get_name() << std::endl;
 
-        if (children_nodes_[i]->get_type() == BT::ACTION_NODE)
+        if (children_nodes_[i]->get_type() == BT::ACTION_NODE || children_nodes_[i]->get_type() == BT::YARP_ACTION_NODE)
         {
             // 1) If the child i is an action, read its state.
             child_i_status_ = children_nodes_[i]->get_status();
@@ -51,10 +51,12 @@ BT::ReturnStatus BT::SequenceNode::Tick()
                 do
                 {
                     child_i_status_ = children_nodes_[i]->get_status();
+                    std::cout << "waiting for return status" << std::endl;
                     std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 }
                 while (child_i_status_ != BT::RUNNING && child_i_status_ != BT::SUCCESS
                        && child_i_status_ != BT::FAILURE);
+
             }
             else
             {
@@ -84,6 +86,7 @@ BT::ReturnStatus BT::SequenceNode::Tick()
 
             HaltChildren(i+1);
             set_status(child_i_status_);
+            std::cout << get_name() <<" return status" << child_i_status_ << std::endl;
             return child_i_status_;
         }
         else
@@ -96,6 +99,7 @@ BT::ReturnStatus BT::SequenceNode::Tick()
                 // If the  child status is success, and it is the last child to be ticked,
                 // then the sequence has succeeded.
                 set_status(BT::SUCCESS);
+                std::cout << " return status success " << std::endl;
                 return BT::SUCCESS;
             }
         }

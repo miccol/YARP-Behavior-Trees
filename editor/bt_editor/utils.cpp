@@ -609,6 +609,7 @@ static int lua_is_halted(lua_State* L)
 {
     int mode = getMode();
     lua_pushboolean(L, mode == 0);
+
     return 1; //number of returning values
 }
 
@@ -639,12 +640,14 @@ void runTree(QtNodes::FlowScene* scene)
 
     while (getMode() == 1)
     {
-        //std::cout <<"Ticking the root node !"<< std::endl;
+        std::cout <<"Ticking the root node !"<< std::endl;
 
         // Ticking the root node
         bt_root->Tick();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+
         scene->update();
 
         for (auto& it: scene->nodes() )
@@ -654,9 +657,9 @@ void runTree(QtNodes::FlowScene* scene)
         }
     }
 
-    std::cout << "Finalizing the BT" << std::endl;
-    //bt_root->Halt();
-    bt_root->Finalize();
+    std::cout << "Halting the BT" << std::endl;
+    bt_root->Halt();
+    //bt_root->Finalize();
     std::cout << "Closing the Lua state" << std::endl;
     lua_close(lua_state);
 

@@ -18,6 +18,7 @@ using namespace yarp::os;
 
 BT::YARPActionNode::YARPActionNode(std::string name, std::string server_name) : BT::ActionNode::ActionNode(name)
 {
+    type_ = YARP_ACTION_NODE;
     std::string client_name_ = "/" + name;
     port_.open(client_name_);
 
@@ -30,12 +31,11 @@ BT::YARPActionNode::YARPActionNode(std::string name, std::string server_name) : 
        return;
     }
 
-   // BTCmd action_server;
 
-    //action_server_ = action_server;
     std::cout << "Module "<< server_name << " has started." << std::endl;
 
-    action_server_.yarp().attachAsClient(port_);
+    action_tick_server_.yarp().attachAsClient(port_);
+    action_halt_server_.yarp().attachAsClient(port_);
 
 
     std::cout << "Module "<< server_name << " attached." << std::endl;
@@ -47,22 +47,31 @@ BT::YARPActionNode::~YARPActionNode()
 }
 
 
-
 BT::ReturnStatus BT::YARPActionNode::Tick()
 {
+    std::cout << "requesting tick" << std::endl;
 
-    int status = action_server_.request_tick();
-    switch(status)
+    set_status(BT::RUNNING);
+
+
+    action_tick_server_.request_tick();
+    std::cout << "tick requested" << std::endl;
+
+    return BT::RUNNING;
+    switch(1)
     {
     case BT::SUCCESS:
+        std::cout << "SUCCESS" << std::endl;
         set_status(BT::SUCCESS);
         return BT::SUCCESS;
         break;
     case BT::FAILURE:
+        std::cout << "FAILURE" << std::endl;
         set_status(BT::FAILURE);
         return BT::FAILURE;
         break;
     default:
+        std::cout << "RUNNING" << std::endl;
         set_status(BT::RUNNING);
         return BT::RUNNING;
     }
@@ -70,13 +79,17 @@ BT::ReturnStatus BT::YARPActionNode::Tick()
 
 void BT::YARPActionNode::Halt()
 {
-    action_server_.request_halt();
+    std::cout << "requesting halt" << std::endl;
+    action_halt_server_.request_halt();
+    std::cout << "halt requested" << std::endl;
+
 }
 
 
 
 void BT::YARPActionNode::Finalize()
 {
+     Halt();
      port_.close();
      std::cout << "port closed" << std::endl;
 }

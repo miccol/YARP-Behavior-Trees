@@ -58,7 +58,7 @@ namespace BT
 {
     // Enumerates the possible types of a node, for drawinf we have do discriminate whoich control node it is:
 
-    enum NodeType {ACTION_NODE, CONDITION_NODE, CONTROL_NODE};
+enum NodeType {ACTION_NODE, CONDITION_NODE, CONTROL_NODE, YARP_ACTION_NODE};
     enum DrawNodeType {PARALLEL, SELECTOR, SEQUENCE, SEQUENCESTAR, SELECTORSTAR, ACTION, CONDITION,DECORATOR, ROOT, SUBTREE};
     // Enumerates the states every node can be in after execution during a particular
     // time step:
