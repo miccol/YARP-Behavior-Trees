@@ -51,20 +51,28 @@ BT::YARPConditionNode::~YARPConditionNode()
 BT::ReturnStatus BT::YARPConditionNode::Tick()
 {
 
-    int status = condition_server_.request_tick();
-    switch(status)
-    {
-    case BT::SUCCESS:
-        set_status(BT::SUCCESS);
-        return BT::SUCCESS;
-        break;
-    case BT::FAILURE:
-        set_status(BT::FAILURE);
-        return BT::FAILURE;
-        break;
-    default:
-       //error
-        return BT::EXIT;
-    }
+    int32_t status = condition_server_.request_tick();
+    std::cout << "tick requested" << std::endl;
+
+    //set_status((BT::ReturnStatus)status);
+    return (BT::ReturnStatus)status;
+
+//    switch(status)
+//    {
+//    case BT::SUCCESS:
+//        std::cout << "SUCCESS" << std::endl;
+//        set_status(BT::SUCCESS);
+//        return BT::SUCCESS;
+//        break;
+//    case BT::FAILURE:
+//        std::cout << "FAILURE" << std::endl;
+//        set_status(BT::FAILURE);
+//        return BT::FAILURE;
+//        break;
+//    default:
+//        std::cout << "RUNNING" << std::endl;
+//        set_status(BT::RUNNING);
+//        return BT::RUNNING;
+//    }
 }
 

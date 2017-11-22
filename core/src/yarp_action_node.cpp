@@ -63,27 +63,28 @@ BT::ReturnStatus BT::YARPActionNode::Tick()
     set_status(BT::RUNNING);
 
 
-    action_tick_server_.request_tick();
+    int32_t status = action_tick_server_.request_tick();
     std::cout << "tick requested" << std::endl;
 
-    return BT::RUNNING;
-    switch(1)
-    {
-    case BT::SUCCESS:
-        std::cout << "SUCCESS" << std::endl;
-        set_status(BT::SUCCESS);
-        return BT::SUCCESS;
-        break;
-    case BT::FAILURE:
-        std::cout << "FAILURE" << std::endl;
-        set_status(BT::FAILURE);
-        return BT::FAILURE;
-        break;
-    default:
-        std::cout << "RUNNING" << std::endl;
-        set_status(BT::RUNNING);
-        return BT::RUNNING;
-    }
+    set_status((BT::ReturnStatus)status);
+    return (BT::ReturnStatus)status;
+//    switch(status)
+//    {
+//    case BT::SUCCESS:
+//        std::cout << "SUCCESS" << std::endl;
+//        set_status(BT::SUCCESS);
+//        return BT::SUCCESS;
+//        break;
+//    case BT::FAILURE:
+//        std::cout << "FAILURE" << std::endl;
+//        set_status(BT::FAILURE);
+//        return BT::FAILURE;
+//        break;
+//    default:
+//        std::cout << "RUNNING" << std::endl;
+//        set_status(BT::RUNNING);
+//        return BT::RUNNING;
+//    }
 }
 
 void BT::YARPActionNode::Halt()
