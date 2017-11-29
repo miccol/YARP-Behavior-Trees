@@ -76,3 +76,8 @@ BT::ReturnStatus BT::YARPConditionNode::Tick()
 //    }
 }
 
+void BT::YARPConditionNode::Finalize()
+{
+     port_.close();
+     std::cout << "port closed" << std::endl;
+}

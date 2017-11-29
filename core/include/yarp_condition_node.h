@@ -15,6 +15,8 @@ public:
     YARPConditionNode(std::string name, std::string server_name);
     ~YARPConditionNode();
     BT::ReturnStatus Tick();
+    void Finalize();
+
 private:
     yarp::os::Network yarp_;
     yarp::os::Port port_;
