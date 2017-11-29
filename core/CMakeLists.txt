@@ -62,6 +62,7 @@ ${PROJECT_SOURCE_DIR}/src/leaf_node.cpp
 ${PROJECT_SOURCE_DIR}/src/tick_engine.cpp
 ${PROJECT_SOURCE_DIR}/src/parallel_node.cpp
 ${PROJECT_SOURCE_DIR}/src/fallback_node.cpp
+${PROJECT_SOURCE_DIR}/src/parallel_node.cpp
 ${PROJECT_SOURCE_DIR}/src/sequence_node.cpp
 ${PROJECT_SOURCE_DIR}/src/fallback_node_with_memory.cpp
 ${PROJECT_SOURCE_DIR}/src/sequence_node_with_memory.cpp

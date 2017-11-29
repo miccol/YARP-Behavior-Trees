@@ -96,7 +96,7 @@ bool BlackBoard::GetBool(std::string name)
 }
 
 
-double BlackBoard::GetDouble(std::string name)
+double_t BlackBoard::GetDouble(std::string name)
 {
     yarp::os::Value value =content_2.find(name);
 

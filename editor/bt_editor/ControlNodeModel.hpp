@@ -181,6 +181,7 @@ public:
 };
 
 
+
 class FallbackWithMemoryModel: public ControlNodeModelBase<FallbackWithMemoryModel>
 {
 public:
@@ -192,6 +193,22 @@ public:
     virtual ~FallbackWithMemoryModel() {}
     static QString staticName() { return QString("FallbackWithMemory"); }
 };
+
+
+
+class ParallelModel: public ControlNodeModelBase<ParallelModel>
+{
+public:
+    ParallelModel(): ControlNodeModelBase() { }
+    int BTType()
+    {
+        return QtNodes::PARALLEL;
+    }
+    virtual ~ParallelModel() {}
+    static QString staticName() { return QString("Parallel"); }
+};
+
+
 
 //class IfThenElseModel: public  ControlNodeModelBase<IfThenElseModel>
 //{

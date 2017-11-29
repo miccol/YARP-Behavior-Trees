@@ -556,6 +556,21 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         return bt_node;
         break;
     }
+    case QtNodes::PARALLEL:
+    {
+        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+
+        BT::ParallelNode* bt_node = new BT::ParallelNode("ParallelNode", children.size());
+
+        for(int i = 0; i < children.size(); i++)
+
+        {
+            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+        }
+        node.linkBTNode(bt_node);
+        return bt_node;
+        break;
+    }
     case QtNodes::ROOT:
     {
         BT::RootNode* bt_node = new BT::RootNode();

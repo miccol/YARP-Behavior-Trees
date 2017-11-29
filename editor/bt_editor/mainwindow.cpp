@@ -53,6 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ret->registerModel<RootNodeModel>("Root");
     ret->registerModel<SequenceModel>("Control");
     ret->registerModel<FallbackWithMemoryModel>("Control");
+    ret->registerModel<ParallelModel>("Control");
     ret->registerModel<SequenceWithMemoryModel>("Control");
     ret->registerModel<SelectorModel>("Control");
 
