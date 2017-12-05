@@ -13,6 +13,7 @@
 #include <yarp/os/Port.h>
 #include <yarp_action_node.h>
 #include <string>
+
 using namespace yarp::os;
 
 
@@ -45,7 +46,6 @@ BT::YARPActionNode::YARPActionNode(std::string name, std::string server_name) : 
 
     action_tick_server_.yarp().attachAsClient(port_tick_);
     action_halt_server_.yarp().attachAsClient(port_halt_);
-
 
     std::cout << "Module "<< server_name << " attached." << std::endl;
 }
