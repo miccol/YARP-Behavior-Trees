@@ -11,8 +11,8 @@ public:
   std::string name;
   int16_t data;
   void init(const std::string& name, const int16_t data);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_SetI32 : public yarp::os::Portable {
@@ -20,8 +20,8 @@ public:
   std::string name;
   int32_t data;
   void init(const std::string& name, const int32_t data);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_SetI64 : public yarp::os::Portable {
@@ -29,8 +29,8 @@ public:
   std::string name;
   YARP_INT64 data;
   void init(const std::string& name, const YARP_INT64 data);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_SetByte : public yarp::os::Portable {
@@ -38,8 +38,8 @@ public:
   std::string name;
   int8_t data;
   void init(const std::string& name, const int8_t data);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_SetDouble : public yarp::os::Portable {
@@ -47,8 +47,8 @@ public:
   std::string name;
   double data;
   void init(const std::string& name, const double data);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_SetBool : public yarp::os::Portable {
@@ -56,8 +56,8 @@ public:
   std::string name;
   double data;
   void init(const std::string& name, const double data);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_SetString : public yarp::os::Portable {
@@ -65,8 +65,8 @@ public:
   std::string name;
   std::string data;
   void init(const std::string& name, const std::string& data);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_GetI16 : public yarp::os::Portable {
@@ -74,8 +74,8 @@ public:
   std::string name;
   int16_t _return;
   void init(const std::string& name);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_GetI32 : public yarp::os::Portable {
@@ -83,8 +83,8 @@ public:
   std::string name;
   int32_t _return;
   void init(const std::string& name);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_GetI64 : public yarp::os::Portable {
@@ -92,8 +92,8 @@ public:
   std::string name;
   YARP_INT64 _return;
   void init(const std::string& name);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_GetByte : public yarp::os::Portable {
@@ -101,8 +101,8 @@ public:
   std::string name;
   int8_t _return;
   void init(const std::string& name);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_GetDouble : public yarp::os::Portable {
@@ -110,8 +110,8 @@ public:
   std::string name;
   double _return;
   void init(const std::string& name);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_GetBool : public yarp::os::Portable {
@@ -119,8 +119,8 @@ public:
   std::string name;
   bool _return;
   void init(const std::string& name);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BlackBoardCmd_GetString : public yarp::os::Portable {
@@ -128,8 +128,8 @@ public:
   std::string name;
   std::string _return;
   void init(const std::string& name);
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 bool BlackBoardCmd_SetI16::write(yarp::os::ConnectionWriter& connection) {

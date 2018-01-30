@@ -10,23 +10,23 @@ class BTCmd_request_tick : public yarp::os::Portable {
 public:
   int32_t _return;
   void init();
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BTCmd_request_status : public yarp::os::Portable {
 public:
   int32_t _return;
   void init();
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 class BTCmd_request_halt : public yarp::os::Portable {
 public:
   void init();
-  virtual bool write(yarp::os::ConnectionWriter& connection) YARP_OVERRIDE;
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool write(yarp::os::ConnectionWriter& connection) override;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
 };
 
 bool BTCmd_request_tick::write(yarp::os::ConnectionWriter& connection) {
