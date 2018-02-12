@@ -8,7 +8,6 @@ DEPENDENCIES
 
 
 * [YARP](https://www.yarp.it/)
-* [LUA](https://www.lua.org/)
 * [Qt5](https://doc.qt.io/)
 
 
@@ -44,19 +43,6 @@ Open the editor. A window similar to the following should appear.
 
 
 ## Using the editor
----
-### Create a new action in Lua
-1) In the Toolbar: Lua Scripts->Create Action Script. A dialog windows will appear.
-2) Write the name of your new action node and press OK. This will create a Action<name>.lua file in the executable's folder and the corresping node will apper in the scene.
-3) Double click the on new node.
-4) Implement the functions init(), tick() and halt().
-   
-### Create a new condition in Lua
-1) In the Toolbar: Lua Scripts->Create Condition Script. A dialog windows will appear.
-2) Write the name of your new action node and press OK. This will create a Condition<name>.lua file in the executable's folder and the corresping node will apper in the scene.
-3) Implement the functions init() and tick().
-
-
 
 ### Add a node in the scene
 1) Right click on the scene
@@ -84,7 +70,7 @@ LICENSE
 -------
 The MIT License (MIT)
 
-Copyright (c) 2017 Michele Colledanchise
+Copyright (c) 2017-2018 Michele Colledanchise
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
