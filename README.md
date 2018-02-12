@@ -1,8 +1,4 @@
-
-
-NOTE: This is a work-in-progress library. Stable Version coming soon.
-====
-A behavior tree library in `YARP`.
+A Lua-free behavior tree library in `YARP`.
 
 
 
