@@ -6,6 +6,7 @@
 #include <vector>
 #include <yarp/os/Property.h> // the blackboard is a yarp property
 #include <cmath> //double_t, int_t etc
+#include <iostream>
 class BlackBoard
 {
 public:

@@ -27,7 +27,7 @@ public:
   virtual double GetDouble(const std::string& name);
   virtual bool GetBool(const std::string& name);
   virtual std::string GetString(const std::string& name);
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
   virtual std::vector<std::string> help(const std::string& functionName="--all");
 };
 

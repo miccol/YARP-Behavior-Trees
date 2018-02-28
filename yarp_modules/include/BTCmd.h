@@ -16,7 +16,7 @@ public:
   virtual int32_t request_tick();
   virtual int32_t request_status();
   virtual void request_halt();
-  virtual bool read(yarp::os::ConnectionReader& connection) YARP_OVERRIDE;
+  virtual bool read(yarp::os::ConnectionReader& connection) override;
   virtual std::vector<std::string> help(const std::string& functionName="--all");
 };
 
