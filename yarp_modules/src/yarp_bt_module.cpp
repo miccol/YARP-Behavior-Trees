@@ -1,6 +1,6 @@
 #include <iostream>
 #include "yarp_bt_module.h"
-
+#include <iostream>
 
 YARPBTModule::YARPBTModule(std::string name) : BTCmd(), RFModule()
 {
