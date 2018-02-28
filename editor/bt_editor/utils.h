@@ -5,12 +5,7 @@
 #include <node_editor/FlowScene>
 #include <bt_editor/ActionNodeModel.hpp>
 
-extern "C"
-{
-# include "lua.h"
-# include "lauxlib.h"
-# include "lualib.h"
-}
+
 
 std::vector<QtNodes::Node*> findRoots(const QtNodes::FlowScene &scene);
 
@@ -34,10 +29,7 @@ int getMode();
 
 bool is_BT_valid(QtNodes::FlowScene* scene);
 bool has_root(QtNodes::FlowScene* scene);
-bool has_lua_preable(QtNodes::FlowScene* scene);
 bool has_yarp(QtNodes::FlowScene* scene);
-QtNodes::Node* LuaPreamble(QtNodes::FlowScene* scene);
-void RunPreamble(lua_State *lua_state, LuaPreambleNodeModel* lua_preamble_node);
 QtNodes::Node* BTRoot(QtNodes::FlowScene* scene);
 
 #endif // NODE_UTILS_H

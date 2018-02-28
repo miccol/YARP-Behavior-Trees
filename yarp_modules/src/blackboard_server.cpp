@@ -151,7 +151,7 @@ int32_t BlackBoardServer::GetI32(const std::string &name)
      catch( const std::invalid_argument & ex )
     {
         std::cout << ex.what() << std::endl;
-        return NULL;
+        return 0;
     }
 }
 
