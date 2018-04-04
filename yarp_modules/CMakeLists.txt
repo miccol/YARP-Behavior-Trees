@@ -58,8 +58,8 @@ set(MYYARP_BT_NODES_HEADERS
 #COMPILING RTF Tests
 #####################################################
 if(RTF_FOUND)
-    add_executable(tests_blackboard src/test_blackboard.cpp ${BTSrcLibrary} ${BTHeadLibrary} ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS} )
-    target_link_libraries(tests_blackboard ${RTF_LIBRARIES} ${YARP_LIBRARIES})
+#    add_executable(tests_blackboard src/test_blackboard.cpp ${BTSrcLibrary} ${BTHeadLibrary} ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS} )
+#    target_link_libraries(tests_blackboard ${RTF_LIBRARIES} ${YARP_LIBRARIES})
 endif(RTF_FOUND)
 
 

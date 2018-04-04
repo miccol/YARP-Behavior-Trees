@@ -21,18 +21,18 @@ find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL Xml)
 #########################################################
 # FIND Lua
 #########################################################
-find_package(Lua REQUIRED)
-IF(Lua_FOUND)
-ELSE(Lua_FOUND)
-message(WARNING "Lua not found!")
-ENDIF(Lua_FOUND)
+# find_package(Lua REQUIRED)
+# IF(Lua_FOUND)
+# ELSE(Lua_FOUND)
+# message(WARNING "Lua not found!")
+# ENDIF(Lua_FOUND)
 
 
 include(YarpInstallationHelpers)
 add_definitions(${YARP_DEFINES})   # add yarp definitions - this contains also -D_REENTRANT
 
 
-INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
+#INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
 find_package( Threads )
 
 
@@ -76,7 +76,7 @@ QT5_WRAP_UI(FORMS_HEADERS
   ./bt_editor/code_editor_window.ui)
 
 
-add_executable(behavior_tree_editor ${APP_CPPS} ${FORMS_HEADERS} )
+add_executable(behavior_tree_editor ${APP_CPPS} ${FORMS_HEADERS}  )
 target_link_libraries(behavior_tree_editor LINK_PUBLIC YARPBTLIBRARY qt_node_editor ${CMAKE_THREAD_LIBS_INIT} ${YARP_LIBRARIES})
 
 

@@ -1,6 +1,6 @@
 #include "ActionNodeModel.hpp"
 #include "ConditionNodeModel.hpp"
-#include "PythonNodeModel.h"
+#include "LuaNodeModel.h"
 #include <QTextEdit>
 #include <QBoxLayout>
 #include <QFormLayout>
@@ -22,14 +22,14 @@
 
 #include <fstream>
 
-QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, std::string type)
+QStringList PythonNodeModel::get_all_files_names_within_folder(std::string folder, std::string type)
 {
 
     QStringList names;
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
     //OS is windows
-    std::string search_path = folder + "/"+type+"*.lua";
+    std::string search_path = folder + "/"+type+"*.py";
     WIN32_FIND_DATA fd;
     HANDLE hFind = ::FindFirstFile(search_path.c_str(), &fd);
     if(hFind != INVALID_HANDLE_VALUE) {
@@ -46,29 +46,13 @@ QStringList LuaNodeModel::get_all_files_names_within_folder(std::string folder, 
 #else
     //OS is unix
 
-    DIR *dir;
-    struct dirent *ent;
-    std::regex txt_regex("["+type+"]+[a-zA-Z]+\\.lua");
-    if ((dir = opendir (folder.c_str())) != NULL) {
-        /* print all the files and directories within directory */
-        while ((ent = readdir (dir)) != NULL) {
-            if(std::regex_match(ent->d_name, txt_regex))
-            {
-                names.push_back(QString(ent->d_name));
-            }
-        }
-        closedir (dir);
-    } else {
-        /* could not open directory */
-        perror ("");
-    }
 #endif
     return names;
 }
 
 
 
-LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& parameter_model):
+PythonNodeModel::PythonNodeModel(QString name, const NodeFactory::ParametersModel& parameter_model):
     BehaviorTreeNodeModel(name, parameter_model), _parameter_model(parameter_model)
 {
 
@@ -149,16 +133,16 @@ LuaNodeModel::LuaNodeModel(QString name, const NodeFactory::ParametersModel& par
 
 
 
-QString LuaNodeModel::caption() const {
+QString PythonNodeModel::caption() const {
     return type();
 }
 
-QString LuaNodeModel::type() const
+QString PythonNodeModel::type() const
 {
     return _ID_selection_combobox->currentText();
 }
 
-QString LuaNodeModel::get_line_edit()
+QString PythonNodeModel::get_line_edit()
 {
     return _line_edit->text();
 }
@@ -169,18 +153,18 @@ QString LuaNodeModel::get_line_edit()
 //    return _text_edit->toPlainText();
 //}
 
-QString LuaNodeModel::get_source_code()
+QString PythonNodeModel::get_source_code()
 {
     return source_code_;
 }
 
-void LuaNodeModel::lastComboItem()
+void PythonNodeModel::lastComboItem()
 {
 _ID_selection_combobox->setCurrentIndex(3);
 }
 
 
-std::vector<std::pair<QString, QString>> LuaNodeModel::getCurrentParameters() const
+std::vector<std::pair<QString, QString>> PythonNodeModel::getCurrentParameters() const
 {
     std::vector<std::pair<QString, QString>> out;
 
@@ -207,7 +191,7 @@ std::vector<std::pair<QString, QString>> LuaNodeModel::getCurrentParameters() co
     return out;
 }
 
-QJsonObject LuaNodeModel::save() const
+QJsonObject PythonNodeModel::save() const
 {
     QJsonObject nodeJson;
     nodeJson["type"] = type();
@@ -215,7 +199,7 @@ QJsonObject LuaNodeModel::save() const
     return nodeJson;
 }
 
-void LuaNodeModel::restore(std::map<QString,QString> attributes)
+void PythonNodeModel::restore(std::map<QString,QString> attributes)
 {
     // we expect to find at least two attributes, "name" and "ID".
     // Other nodes represent parameters.
@@ -291,7 +275,7 @@ void LuaNodeModel::restore(std::map<QString,QString> attributes)
     }
 }
 
-void LuaNodeModel::restore(const QJsonObject &nodeJson)
+void PythonNodeModel::restore(const QJsonObject &nodeJson)
 {
     std::map<QString,QString> attributes;
     for(auto it = nodeJson.begin(); it != nodeJson.end(); it++ )
@@ -301,14 +285,14 @@ void LuaNodeModel::restore(const QJsonObject &nodeJson)
     restore(attributes);
 }
 
-void LuaNodeModel::lock(bool locked)
+void PythonNodeModel::lock(bool locked)
 {
     _ID_selection_combobox->setEnabled( !locked );
     //_text_edit->setEnabled(!locked);
 
 }
 
-void LuaNodeModel::onComboBoxUpdated(QString item_text)
+void PythonNodeModel::onComboBoxUpdated(QString item_text)
 {
     std::ifstream file(item_text.toStdString());
     std::string str;
@@ -323,7 +307,7 @@ void LuaNodeModel::onComboBoxUpdated(QString item_text)
 
 }
 
-void LuaNodeModel::onCodeUpdated()
+void PythonNodeModel::onCodeUpdated()
 {
     std::ifstream file(filename().c_str());
     std::string str;
@@ -338,7 +322,7 @@ void LuaNodeModel::onCodeUpdated()
 }
 
 
-std::string LuaNodeModel::filename()
+std::string PythonNodeModel::filename()
 {
     return _ID_selection_combobox->currentText().toStdString();
 }

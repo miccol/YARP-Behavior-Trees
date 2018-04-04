@@ -2,6 +2,7 @@
 
 #include "BehaviorTreeNodeModel.hpp"
 #include "LuaNodeModel.h"
+#include "PythonNodeModel.h"
 #include "YARPNodeModel.h"
 
 
@@ -36,6 +37,7 @@ public:
     int BTType()
     {
         return QtNodes::LUAACTION;
+        
     }
     virtual ~LuaActionNodeModel() {}
 
@@ -46,6 +48,27 @@ public:
     { return  std::unique_ptr<NodeDataModel>( new LuaActionNodeModel ); }
 
     virtual QString name() const override { return QString("LuaAction"); }
+};
+
+
+class PythonActionNodeModel : public PythonNodeModel
+{
+public:
+    PythonActionNodeModel(): PythonNodeModel("Action", NodeFactory::get().getActionParameterModel() )
+    { }
+    int BTType()
+    {
+        return QtNodes::PTYHONACTION;
+    }
+    virtual ~PythonActionNodeModel() {}
+
+    virtual unsigned int  nPorts(PortType portType) const override
+    { return (portType==PortType::In) ? 1:0; }
+
+    virtual std::unique_ptr<NodeDataModel> clone() const override
+    { return  std::unique_ptr<NodeDataModel>( new PythonActionNodeModel ); }
+
+    virtual QString name() const override { return QString("PythonAction"); }
 };
 
 
@@ -75,7 +98,7 @@ class YARPActionNodeModel : public YARPNodeModel
 {
 public:
     YARPActionNodeModel():
-        YARPNodeModel("YARPAction", NodeFactory::get().getActionParameterModel() )
+        YARPNodeModel("YARP Action", NodeFactory::get().getActionParameterModel() )
     { }
     int BTType()
     {

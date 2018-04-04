@@ -52,7 +52,7 @@ class YARPConditionNodeModel : public YARPNodeModel
 {
 public:
     YARPConditionNodeModel():
-        YARPNodeModel("Condition", NodeFactory::get().getActionParameterModel() )
+        YARPNodeModel("YARP Condition", NodeFactory::get().getActionParameterModel() )
     { }
     int BTType()
     {

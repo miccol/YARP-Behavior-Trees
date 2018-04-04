@@ -28,8 +28,8 @@ endif(NOT GTEST_FOUND)
 #########################################################
 # FIND Lua
 #########################################################
-find_package(Lua REQUIRED)
-INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
+# find_package(Lua REQUIRED)
+# INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
 
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include/)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/icons/)
@@ -69,8 +69,8 @@ ${PROJECT_SOURCE_DIR}/src/sequence_node_with_memory.cpp
 ${PROJECT_SOURCE_DIR}/src/tree_node.cpp
 ${PROJECT_SOURCE_DIR}/src/yarp_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/yarp_condition_node.cpp
-${PROJECT_SOURCE_DIR}/src/lua_action_node.cpp
-${PROJECT_SOURCE_DIR}/src/lua_condition_node.cpp
+#${PROJECT_SOURCE_DIR}/src/lua_action_node.cpp
+#${PROJECT_SOURCE_DIR}/src/lua_condition_node.cpp
 ${PROJECT_SOURCE_DIR}/gtest/src/action_test_node.cpp
 ${PROJECT_SOURCE_DIR}/gtest/src/condition_test_node.cpp
 

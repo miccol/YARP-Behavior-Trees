@@ -57,16 +57,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ret->registerModel<SequenceWithMemoryModel>("Control");
     ret->registerModel<SelectorModel>("Control");
 
-    ret->registerModel<LuaActionNodeModel>("Action");
+    //ret->registerModel<LuaActionNodeModel>("Action");
     ret->registerModel<YARPActionNodeModel>("Action");
 
+    ret->registerModel<PythonActionNodeModel>("Action");
 
 
-    ret->registerModel<LuaConditionNodeModel>("Condition");
+   // ret->registerModel<LuaConditionNodeModel>("Condition");
     ret->registerModel<YARPConditionNodeModel>("Condition");
     ret->registerModel<DecoratorNodeModel>("Decorator");
 
-    ret->registerModel<LuaPreambleNodeModel>("Preamble");
+    //ret->registerModel<LuaPreambleNodeModel>("Preamble");
 
     //ret->registerModel<SubtreeNodeModel>("SubTree");
 
@@ -203,9 +204,9 @@ void MainWindow::recursivelyCreateXml(QDomDocument& doc, QDomElement& parent_ele
     {
         if( model_name == "LuaAction" || model_name == "LuaCondition" )
         {
-            const LuaNodeModel* action_node = dynamic_cast<const LuaNodeModel*>(node_model);
+            //const LuaNodeModel* action_node = dynamic_cast<const LuaNodeModel*>(node_model);
 
-            element.setAttribute("ID", action_node->type() );
+            //element.setAttribute("ID", action_node->type() );
         }
         else
         {

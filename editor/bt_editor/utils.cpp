@@ -15,11 +15,11 @@
 #include <behavior_tree.h>
 
 
-extern "C" {
-# include "lua.h"
-# include "lauxlib.h"
-# include "lualib.h"
-}
+// extern "C" {
+// # include "lua.h"
+// # include "lauxlib.h"
+// # include "lualib.h"
+// }
 
 std::vector<QtNodes::Node*> findRoots(const QtNodes::FlowScene &scene)
 {
@@ -455,30 +455,30 @@ void SubtreeReorder(QtNodes::FlowScene &scene, QtNodes::Node &root_node)
 }
 
 
-BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_State* lua_state )
+BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
 {
 
     int bt_type = node.nodeDataModel()->BTType();
     //std::cout << "The node is :" << bt_type << std::endl;
 
     switch (bt_type) {
-    case QtNodes::LUAACTION:
-    {
+    // case QtNodes::LUAACTION:
+    // {
 
-        std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
-        BT::LuaActionNode* bt_node = new BT::LuaActionNode(filename,filename, lua_state);
-        node.linkBTNode(bt_node);
-        return bt_node;
-        break;
-    }
-    case QtNodes::LUACONDITION:
-    {
-        std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
-        BT::LuaConditionNode* bt_node = new BT::LuaConditionNode(filename,filename,lua_state);
-        node.linkBTNode(bt_node);
-        return bt_node;
-        break;
-    }
+    //     std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
+    //     BT::LuaActionNode* bt_node = new BT::LuaActionNode(filename,filename,);
+    //     node.linkBTNode(bt_node);
+    //     return bt_node;
+    //     break;
+    // }
+    // case QtNodes::LUACONDITION:
+    // {
+    //     std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
+    //     BT::LuaConditionNode* bt_node = new BT::LuaConditionNode(filename,filename);
+    //     node.linkBTNode(bt_node);
+    //     return bt_node;
+    //     break;
+    // }
     case QtNodes::YARPACTION:
     {
         std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();
@@ -505,7 +505,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         for(int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+            bt_node->AddChild(getBTObject(scene,*children[i]));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -521,7 +521,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         for(int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+            bt_node->AddChild(getBTObject(scene,*children[i]));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -536,7 +536,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         for(int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+            bt_node->AddChild(getBTObject(scene,*children[i]));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -550,7 +550,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         for(int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+            bt_node->AddChild(getBTObject(scene,*children[i]));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -565,7 +565,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
         for(int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+            bt_node->AddChild(getBTObject(scene,*children[i]));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -578,7 +578,7 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, lua_St
 
         for(int i = 0; i < children.size(); i++)
         {
-            bt_node->AddChild(getBTObject(scene,*children[i],lua_state));
+            bt_node->AddChild(getBTObject(scene,*children[i]));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -612,21 +612,21 @@ int getMode()
 
 
 
-static int lua_get_mode(lua_State* L)
-{
-    int mode = getMode();
-    lua_pushnumber(L, mode);
+// static int lua_get_mode(lua_State* L)
+// {
+//     int mode = getMode();
+//     lua_pushnumber(L, mode);
 
-    return 1; //number of returning values
-}
+//     return 1; //number of returning values
+// }
 
-static int lua_is_halted(lua_State* L)
-{
-    int mode = getMode();
-    lua_pushboolean(L, mode == 0);
+// static int lua_is_halted(lua_State* L)
+// {
+//     int mode = getMode();
+//     lua_pushboolean(L, mode == 0);
 
-    return 1; //number of returning values
-}
+//     return 1; //number of returning values
+// }
 
 void runTree(QtNodes::FlowScene* scene)
 {
@@ -634,24 +634,22 @@ void runTree(QtNodes::FlowScene* scene)
 
     QtNodes::Node* root = BTRoot(scene);
 
-    lua_State *lua_state;
-    lua_state = luaL_newstate();
-    luaL_openlibs(lua_state);
+    // lua_State *lua_state;
+    // lua_state = luaL_newstate();
+    // luaL_openlibs(lua_state);
 
-    /* register our function */
-//    lua_register(lua_state, "is_halted", lua_is_halted);
 
-    lua_createtable(lua_state, 1, 0);
+    // lua_createtable(lua_state, 1, 0);
 
-    QtNodes::Node* lua_preamble = LuaPreamble(scene);
+    // QtNodes::Node* lua_preamble = LuaPreamble(scene);
 
-    if(lua_preamble != NULL)
-    {
-        //has a preamble, execute this before the tree
-        RunPreamble(lua_state, (LuaPreambleNodeModel*)lua_preamble->nodeDataModel());
-    }
+    // if(lua_preamble != NULL)
+    // {
+    //     //has a preamble, execute this before the tree
+    //     RunPreamble(lua_state, (LuaPreambleNodeModel*)lua_preamble->nodeDataModel());
+    // }
 
-    BT::TreeNode* bt_root = getBTObject(*scene, *root, lua_state);
+    BT::TreeNode* bt_root = getBTObject(*scene, *root);
 
     while (getMode() == 1)
     {
@@ -675,8 +673,8 @@ void runTree(QtNodes::FlowScene* scene)
     bt_root->Halt();
     std::cout << "Finalizing the BT" << std::endl;
     bt_root->Finalize();
-    std::cout << "Closing the Lua state" << std::endl;
-    lua_close(lua_state);
+    //std::cout << "Closing the Lua state" << std::endl;
+    // lua_close(lua_state);
 
 }
 
@@ -762,23 +760,23 @@ QtNodes::Node* LuaPreamble(QtNodes::FlowScene* scene)
 }
 
 
-void RunPreamble(lua_State *lua_state, LuaPreambleNodeModel *lua_preamble_node)
-{
-    lua_State *my_lua_state = lua_state;
-    std::string filename = lua_preamble_node->type().toStdString();
-    static const luaL_Reg lualibs[] =
-    {
-        { "base", luaopen_base },
-        { NULL, NULL}
-    };
+// void RunPreamble(lua_State *lua_state, LuaPreambleNodeModel *lua_preamble_node)
+// {
+//     lua_State *my_lua_state = lua_state;
+//     std::string filename = lua_preamble_node->type().toStdString();
+//     static const luaL_Reg lualibs[] =
+//     {
+//         { "base", luaopen_base },
+//         { NULL, NULL}
+//     };
 
-    const luaL_Reg *lib = lualibs;
-    for(; lib->func != NULL; lib++)
-    {
-        lib->func(my_lua_state);
-        lua_settop(my_lua_state, 0);
-    }
-    // run the Lua script
-    luaL_dofile(my_lua_state, filename.c_str());
-}
+//     const luaL_Reg *lib = lualibs;
+//     for(; lib->func != NULL; lib++)
+//     {
+//         lib->func(my_lua_state);
+//         lua_settop(my_lua_state, 0);
+//     }
+//     // run the Lua script
+//     luaL_dofile(my_lua_state, filename.c_str());
+// }
 
