@@ -21,6 +21,7 @@
 
 #include <bt_editor/BehaviorTreeNodeModel.hpp>
 #include <bt_editor/LuaNodeModel.h>
+#include <bt_editor/PythonNodeModel.h>
 #include <bt_editor/codeeditor.h>
 
 #include <QHoverEvent>
@@ -361,6 +362,12 @@ hoverEnterEvent(QGraphicsSceneHoverEvent * event)
       this->setToolTip(node_model->get_source_code());
   }
 
+    PythonNodeModel* python_node_model = dynamic_cast<PythonNodeModel*>(_node.nodeDataModel());
+  if(node_model)
+  {
+      this->setToolTip(python_node_model->get_source_code());
+  }
+
 }
 
 
@@ -407,6 +414,16 @@ mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
      CodeEditorWindow* cew = new CodeEditorWindow(node_model->filename(), node_model);
      cew->show();
    }
+   else if( _node.nodeDataModel()->BTType() == QtNodes::PTYHONACTION ||  _node.nodeDataModel()->BTType() == QtNodes::PTYHONACTION ||  _node.nodeDataModel()->BTType() == -1 )
+   {
+     PythonNodeModel* python_node_model = dynamic_cast<PythonNodeModel*>(_node.nodeDataModel());
+     CodeEditorWindow* cew = new CodeEditorWindow(python_node_model->filename(), python_node_model);
+     cew->show();
+   }
+
+
+
+
   QGraphicsItem::mouseDoubleClickEvent(event);
 
   _scene.nodeDoubleClicked(node());
