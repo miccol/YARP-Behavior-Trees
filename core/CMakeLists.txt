@@ -31,6 +31,26 @@ endif(NOT GTEST_FOUND)
 # find_package(Lua REQUIRED)
 # INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
 
+
+
+#########################################################
+# FIND Python
+#########################################################
+set(Python_ADDITIONAL_VERSIONS 3.6)
+FIND_PACKAGE(PythonInterp 3)
+
+find_package( PythonLibs 3 REQUIRED )
+
+# set(PYTHON_INCLUDE_DIRS "C:/Users/mcolledanchise/AppData/Local/Programs/Python/Python36-32/include/")
+set(PYTHON_LIBRARY "C:/Users/mcolledanchise/AppData/Local/Programs/Python/Python36-32/libs/")
+
+message(STATUS "print_all_variables------------------------------------------{")
+message(STATUS ${PYTHON_INCLUDE_DIRS})
+include_directories ( ${PYTHON_INCLUDE_DIRS} )
+link_directories ( ${PYTHON_LIBRARY} )
+
+
+
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include/)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/icons/)
 
@@ -71,6 +91,7 @@ ${PROJECT_SOURCE_DIR}/src/yarp_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/yarp_condition_node.cpp
 #${PROJECT_SOURCE_DIR}/src/lua_action_node.cpp
 #${PROJECT_SOURCE_DIR}/src/lua_condition_node.cpp
+${PROJECT_SOURCE_DIR}/src/python_action_node.cpp
 ${PROJECT_SOURCE_DIR}/gtest/src/action_test_node.cpp
 ${PROJECT_SOURCE_DIR}/gtest/src/condition_test_node.cpp
 
@@ -92,7 +113,7 @@ if(GTEST_FOUND)
 endif(GTEST_FOUND)
 
 add_executable(example src/example.cpp ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURCES})
-target_link_libraries(example ${YARP_LIBRARIES} ${LUA_LIBRARIES})
+target_link_libraries(example ${YARP_LIBRARIES} ${LUA_LIBRARIES} ${PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
 
 
 ########################################################
@@ -103,5 +124,5 @@ target_link_libraries(example ${YARP_LIBRARIES} ${LUA_LIBRARIES})
 
 add_library(YARPBTLIBRARY STATIC ${BT_CORE_SOURCES}  ${YARP_BT_NODES_SOURCES})
 #target_include_directories (YARPBTLIBRARY PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(YARPBTLIBRARY ${LUA_LIBRARIES} ${YARP_LIBRARIES})
+target_link_libraries(YARPBTLIBRARY ${LUA_LIBRARIES} ${YARP_LIBRARIES}  ${PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
 

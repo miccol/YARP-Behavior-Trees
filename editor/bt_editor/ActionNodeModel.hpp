@@ -58,7 +58,7 @@ public:
     { }
     int BTType()
     {
-        return QtNodes::PTYHONACTION;
+        return QtNodes::PYTHONACTION;
     }
     virtual ~PythonActionNodeModel() {}
 

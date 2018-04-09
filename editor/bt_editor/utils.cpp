@@ -5,6 +5,7 @@
 #include <node_editor/Node>
 #include <bt_editor/BehaviorTreeNodeModel.hpp>
 #include <bt_editor/YARPNodeModel.h>
+#include <bt_editor/PythonNodeModel.h>
 
 #include <iostream>
 #include <fstream>
@@ -479,6 +480,15 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
     //     return bt_node;
     //     break;
     // }
+
+    case QtNodes::PYTHONACTION:
+    {
+        std::string filename = ((PythonNodeModel*)node.nodeDataModel())->type().toStdString();
+        BT::PythonActionNode* bt_node = new BT::PythonActionNode(filename,filename);
+        node.linkBTNode(bt_node);
+        return bt_node;
+        break;
+    }
     case QtNodes::YARPACTION:
     {
         std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();

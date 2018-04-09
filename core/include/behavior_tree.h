@@ -22,6 +22,9 @@
 // #include <lua_action_node.h>
 // #include <lua_condition_node.h>
 
+#include <python_action_node.h>
+
+
 #include <sequence_node_with_memory.h>
 #include <fallback_node_with_memory.h>
 

@@ -414,7 +414,7 @@ mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
      CodeEditorWindow* cew = new CodeEditorWindow(node_model->filename(), node_model);
      cew->show();
    }
-   else if( _node.nodeDataModel()->BTType() == QtNodes::PTYHONACTION ||  _node.nodeDataModel()->BTType() == QtNodes::PTYHONACTION ||  _node.nodeDataModel()->BTType() == -1 )
+   else if( _node.nodeDataModel()->BTType() == QtNodes::PYTHONACTION ||  _node.nodeDataModel()->BTType() == QtNodes::PYTHONACTION ||  _node.nodeDataModel()->BTType() == -1 )
    {
      PythonNodeModel* python_node_model = dynamic_cast<PythonNodeModel*>(_node.nodeDataModel());
      CodeEditorWindow* cew = new CodeEditorWindow(python_node_model->filename(), python_node_model);
