@@ -489,6 +489,14 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
         return bt_node;
         break;
     }
+        case QtNodes::PYTHONCONDITION:
+    {
+        std::string filename = ((PythonNodeModel*)node.nodeDataModel())->type().toStdString();
+        BT::PythonConditionNode* bt_node = new BT::PythonConditionNode(filename,filename);
+        node.linkBTNode(bt_node);
+        return bt_node;
+        break;
+    }
     case QtNodes::YARPACTION:
     {
         std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();

@@ -407,22 +407,19 @@ void
 NodeGraphicsObject::
 mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-
+    // Shows the window editor if the node is  a scripts
    if ( _node.nodeDataModel()->BTType() == QtNodes::LUAACTION ||  _node.nodeDataModel()->BTType() == QtNodes::LUACONDITION ||  _node.nodeDataModel()->BTType() == -1 )
    {
      LuaNodeModel* node_model = dynamic_cast<LuaNodeModel*>(_node.nodeDataModel());
      CodeEditorWindow* cew = new CodeEditorWindow(node_model->filename(), node_model);
      cew->show();
    }
-   else if( _node.nodeDataModel()->BTType() == QtNodes::PYTHONACTION ||  _node.nodeDataModel()->BTType() == QtNodes::PYTHONACTION ||  _node.nodeDataModel()->BTType() == -1 )
+   else if( _node.nodeDataModel()->BTType() == QtNodes::PYTHONACTION ||  _node.nodeDataModel()->BTType() == QtNodes::PYTHONCONDITION||  _node.nodeDataModel()->BTType() == -1 )
    {
      PythonNodeModel* python_node_model = dynamic_cast<PythonNodeModel*>(_node.nodeDataModel());
      CodeEditorWindow* cew = new CodeEditorWindow(python_node_model->filename(), python_node_model);
      cew->show();
    }
-
-
-
 
   QGraphicsItem::mouseDoubleClickEvent(event);
 

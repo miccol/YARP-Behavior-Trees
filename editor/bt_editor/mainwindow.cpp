@@ -61,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ret->registerModel<YARPActionNodeModel>("Action");
 
     ret->registerModel<PythonActionNodeModel>("Action");
+    ret->registerModel<PythonConditionNodeModel>("Condition");
 
 
    // ret->registerModel<LuaConditionNodeModel>("Condition");

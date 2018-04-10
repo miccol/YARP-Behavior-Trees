@@ -1,10 +1,10 @@
-#include <python_action_node.h>
+#include <python_condition_node.h>
 #include <Python.h>
 
-PyObject *python_state_;
-PyObject *python_tick_fn_, *python_halt_fn_, *python_finalize_fn_; //TODO Figure out why if It cannot find Python.h in the header
+PyObject *python_state_condition_;
+PyObject *python_tick_fn_condition_, *python_finalize_fn_condition_; //TODO Figure out why if It cannot find Python.h in the header (that why I need different name _condition)
 
-BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, BlackBoardCmd *blackboard_cmd) : BT::ActionNode::ActionNode(name)
+BT::PythonConditionNode::PythonConditionNode(std::string name, std::string filename, BlackBoardCmd *blackboard_cmd) : BT::ConditionNode::ConditionNode(name)
 {
     filename_ = filename;
     //std::string filename_wout_extension = filename;
@@ -20,25 +20,24 @@ BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, B
 
     // creating python module. Needed to know from which script call the functions tick, halt, etc.
     PyObject *python_module = PyUnicode_FromString((char *)cstr);
-    python_state_ = PyImport_Import(python_module);
+    python_state_condition_ = PyImport_Import(python_module);
 
     // creating the PyObject related to the functions in the python script.
-    PyObject *python_init_fn = PyObject_GetAttrString(python_state_, (char *)"init");
-    python_tick_fn_ = PyObject_GetAttrString(python_state_, (char *)"tick");
-    python_halt_fn_ = PyObject_GetAttrString(python_state_, (char *)"halt");
-    python_finalize_fn_ = PyObject_GetAttrString(python_state_, (char *)"finalize");
+    PyObject *python_init_fn = PyObject_GetAttrString(python_state_condition_, (char *)"init");
+    python_tick_fn_condition_ = PyObject_GetAttrString(python_state_condition_, (char *)"tick");
+    python_finalize_fn_condition_ = PyObject_GetAttrString(python_state_condition_, (char *)"finalize");
 
     // calling the function init in the python script with empty argument
     PyObject *empty_args = PyTuple_New(0);
     PyObject_CallObject(python_init_fn, empty_args);
 }
 
-BT::ReturnStatus BT::PythonActionNode::Tick()
+BT::ReturnStatus BT::PythonConditionNode::Tick()
 {
     set_status(BT::RUNNING);
     // calling the function tick in the python script with empty argument
     PyObject *empty_args = PyTuple_New(0);
-    PyObject *python_result = PyObject_CallObject(python_tick_fn_, empty_args);
+    PyObject *python_result = PyObject_CallObject(python_tick_fn_condition_, empty_args);
 
     // parsing the final return from the python script. The python script has to return True (Success) or False (Failure).
     // The Running status is taken for granted while running the script
@@ -57,17 +56,11 @@ BT::ReturnStatus BT::PythonActionNode::Tick()
     }
 }
 
-void BT::PythonActionNode::Halt()
+void BT::PythonConditionNode::Finalize()
 {
     // calling the function finalize in the python script with empty argument
     PyObject *empty_args = PyTuple_New(0);
-    PyObject *python_result = PyObject_CallObject(python_halt_fn_, empty_args);
-}
-void BT::PythonActionNode::Finalize()
-{
-    // calling the function finalize in the python script with empty argument
-    PyObject *empty_args = PyTuple_New(0);
-    PyObject *python_result = PyObject_CallObject(python_finalize_fn_, empty_args);
+    PyObject *python_result = PyObject_CallObject(python_finalize_fn_condition_, empty_args);
 
     // Finalizing the python api
     Py_Finalize();

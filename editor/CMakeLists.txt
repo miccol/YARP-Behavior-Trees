@@ -32,6 +32,24 @@ include(YarpInstallationHelpers)
 add_definitions(${YARP_DEFINES})   # add yarp definitions - this contains also -D_REENTRANT
 
 
+
+
+#########################################################
+# FIND Python
+#########################################################
+set(Python_ADDITIONAL_VERSIONS 3.6)
+FIND_PACKAGE(PythonInterp 3)
+
+find_package( PythonLibs 3 REQUIRED )
+
+# set(PYTHON_INCLUDE_DIRS "C:/Users/mcolledanchise/AppData/Local/Programs/Python/Python36-32/include/")
+#set(PYTHON_LIBRARY "C:/Users/mcolledanchise/AppData/Local/Programs/Python/Python36/libs/")
+
+message(STATUS ${PYTHON_INCLUDE_DIRS})
+include_directories ( ${PYTHON_INCLUDE_DIRS} )
+#link_directories ( ${PYTHON_LIBRARY} )
+
+
 #INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
 find_package( Threads )
 
@@ -77,6 +95,6 @@ QT5_WRAP_UI(FORMS_HEADERS
 
 
 add_executable(behavior_tree_editor ${APP_CPPS} ${FORMS_HEADERS}  )
-target_link_libraries(behavior_tree_editor LINK_PUBLIC YARPBTLIBRARY qt_node_editor ${CMAKE_THREAD_LIBS_INIT} ${YARP_LIBRARIES})
+target_link_libraries(behavior_tree_editor LINK_PUBLIC YARPBTLIBRARY qt_node_editor ${CMAKE_THREAD_LIBS_INIT} ${YARP_LIBRARIES} ${PYTHON_LIBRARIES})
 
 
