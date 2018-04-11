@@ -1,19 +1,21 @@
 #include <python_condition_node.h>
 #include <Python.h>
+#include <yarp/os/Property.h> // the blackboard is a yarp property
 
 PyObject *python_state_condition_;
 PyObject *python_tick_fn_condition_, *python_finalize_fn_condition_; //TODO Figure out why if It cannot find Python.h in the header (that why I need different name _condition)
 
-BT::PythonConditionNode::PythonConditionNode(std::string name, std::string filename, BlackBoardCmd *blackboard_cmd) : BT::ConditionNode::ConditionNode(name)
+BT::PythonConditionNode::PythonConditionNode(std::string name, std::string filename, yarp::os::Property *blackboard) : BT::ConditionNode::ConditionNode(name)
 {
     filename_ = filename;
     //std::string filename_wout_extension = filename;
 
-    blackboard_cmd_ = blackboard_cmd;
+    //blackboard_cmd_ = blackboard_cmd;
 
     // Initializing the python api
     Py_Initialize();
-
+    std::cout << "Setting value to BB" << std::endl;    
+    blackboard->put("a", 10);    
     // PyUnicode_FromString wants the filename without extension .py
     std::string filename_wout_extension = filename.substr(0, filename.size() - 3);
     const char *cstr = filename_wout_extension.c_str();

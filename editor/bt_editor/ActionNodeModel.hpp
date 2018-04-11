@@ -4,7 +4,7 @@
 #include "LuaNodeModel.h"
 #include "PythonNodeModel.h"
 #include "YARPNodeModel.h"
-
+#include "BlackboardNodeModel.h"
 
 class ActionNodeModel : public BehaviorTreeNodeModel
 {
@@ -72,7 +72,49 @@ public:
 };
 
 
-class LuaPreambleNodeModel : public LuaNodeModel
+class YarpBlackboardNodeModel : public BlackboardNodeModel
+{
+public:
+    YarpBlackboardNodeModel(): BlackboardNodeModel("Blackboard", NodeFactory::get().getActionParameterModel() )
+    { }
+    int BTType()
+    {
+        return QtNodes::PYTHONACTION;
+    }
+    virtual ~YarpBlackboardNodeModel() {}
+
+    virtual unsigned int  nPorts(PortType portType) const override
+    { return 0; }
+
+    virtual std::unique_ptr<NodeDataModel> clone() const override
+    { return  std::unique_ptr<NodeDataModel>( new YarpBlackboardNodeModel ); }
+
+    virtual QString name() const override { return QString("Blackboard"); }
+};
+
+
+// class YarpBlackboardNodeModel : public BlackboardNodeModel // TODO consider to move this in a separate file
+// {
+// public:
+//     YarpBlackboardNodeModel(): BlackboardNodeModel("Blackboard", NodeFactory::get().getActionParameterModel() )
+//     { }
+//     int BTType()
+//     {
+//         return -1;
+//     }
+//     virtual ~YarpBlackboardNodeModel() {}
+
+//     virtual unsigned int  nPorts(PortType portType) const override
+//     { return 0; }
+
+//     virtual std::unique_ptr<NodeDataModel> clone() const override
+//     { return  std::unique_ptr<NodeDataModel>( new YarpBlackboardNodeModel ); }
+
+//     virtual QString name() const override { return QString("YARPBlackboard"); }
+// };
+
+
+class LuaPreambleNodeModel : public LuaNodeModel // TODO consider to remove this
 {
 public:
     LuaPreambleNodeModel(): LuaNodeModel("LuaPreamble", NodeFactory::get().getActionParameterModel() )

@@ -2,8 +2,9 @@
 #define PYTHON_CONDITION_NODE_H
 #include "condition_node.h"
 #include <mutex>
-#include <BlackBoardCmd.h>
+#include <blackboard.h>
 #include <yarp/os/Value.h>
+#include <yarp/os/Property.h> // the blackboard is a yarp property
 
 
 
@@ -13,7 +14,7 @@ namespace BT
 class PythonConditionNode : public BT::ConditionNode
 {
 public:
-    PythonConditionNode(std::string name, std::string filename, BlackBoardCmd* blackboard_cmd = NULL);
+    PythonConditionNode(std::string name, std::string filename, yarp::os::Property* blackboard = NULL);
     ~PythonConditionNode();
     BT::ReturnStatus Tick();
     void Finalize();
@@ -29,7 +30,7 @@ private:
     std::string filename_;
     //PyObject* python_state_;
     // PyObject* python_tick_fn_;
-    BlackBoardCmd* blackboard_cmd_;
+    // BlackBoardCmd* blackboard_cmd_;
 };
 }
 #endif // PYTHON_CONDITION_NODE_H

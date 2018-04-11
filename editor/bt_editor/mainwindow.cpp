@@ -18,7 +18,7 @@
 #include "ConditionNodeModel.hpp"
 #include "DecoratorNodeModel.hpp"
 #include "SubtreeNodeModel.hpp"
-
+//#include "BlackboardNodeModel.h"
 #include "utils.h"
 
 #include "QInputDialog"
@@ -61,14 +61,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ret->registerModel<YARPActionNodeModel>("Action");
 
     ret->registerModel<PythonActionNodeModel>("Action");
-    ret->registerModel<PythonConditionNodeModel>("Condition");
 
 
    // ret->registerModel<LuaConditionNodeModel>("Condition");
     ret->registerModel<YARPConditionNodeModel>("Condition");
-    ret->registerModel<DecoratorNodeModel>("Decorator");
 
-    //ret->registerModel<LuaPreambleNodeModel>("Preamble");
+    ret->registerModel<PythonConditionNodeModel>("Condition");
+
+
+    ret->registerModel<DecoratorNodeModel>("Decorator");
+            std::cout << "here" << std::endl;
+
+    ret->registerModel<YarpBlackboardNodeModel>("Blackboard");
+            std::cout << "here" << std::endl;
 
     //ret->registerModel<SubtreeNodeModel>("SubTree");
 

@@ -91,6 +91,7 @@ ${PROJECT_SOURCE_DIR}/src/yarp_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/yarp_condition_node.cpp
 #${PROJECT_SOURCE_DIR}/src/lua_action_node.cpp
 #${PROJECT_SOURCE_DIR}/src/lua_condition_node.cpp
+${PROJECT_SOURCE_DIR}/src/blackboard.cpp
 ${PROJECT_SOURCE_DIR}/src/python_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/python_condition_node.cpp
 ${PROJECT_SOURCE_DIR}/gtest/src/action_test_node.cpp

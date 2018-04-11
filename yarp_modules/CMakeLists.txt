@@ -41,17 +41,19 @@ set(YARP_BT_NODES_HEADERS
 
 set(MYYARP_BT_NODES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BTCmd.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardCmd.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard_server.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardCmd.cpp
+    # ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard_server.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/yarp_bt_module.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard.cpp)
+    # ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard.cpp
+    )
 
 set(MYYARP_BT_NODES_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/include/BTCmd.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/BlackBoardCmd.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard_server.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/include/BlackBoardCmd.h
+    # ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard_server.h
     ${CMAKE_CURRENT_SOURCE_DIR}/include/yarp_bt_module.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard.h)
+    # ${CMAKE_CURRENT_SOURCE_DIR}/include/blackboard.h
+    )
 
 
 #####################################################
@@ -63,5 +65,5 @@ if(RTF_FOUND)
 endif(RTF_FOUND)
 
 
-add_executable(yarp_module_example ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS})
-target_link_libraries(yarp_module_example ${YARP_LIBRARIES})
+# add_executable(yarp_module_example ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp ${MYYARP_BT_NODES_SOURCES} ${MYYARP_BT_NODES_HEADERS})
+# target_link_libraries(yarp_module_example ${YARP_LIBRARIES})

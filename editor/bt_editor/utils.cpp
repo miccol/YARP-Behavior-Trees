@@ -6,15 +6,16 @@
 #include <bt_editor/BehaviorTreeNodeModel.hpp>
 #include <bt_editor/YARPNodeModel.h>
 #include <bt_editor/PythonNodeModel.h>
+#include <yarp/os/Property.h> // the blackboard is a yarp property
 
 #include <iostream>
 #include <fstream>
 #include "RootNodeModel.hpp"
 
-
 #include <QThread>
 #include <behavior_tree.h>
 
+#include <blackboard.h>
 
 // extern "C" {
 // # include "lua.h"
@@ -22,83 +23,83 @@
 // # include "lualib.h"
 // }
 
-std::vector<QtNodes::Node*> findRoots(const QtNodes::FlowScene &scene)
+std::vector<QtNodes::Node *> findRoots(const QtNodes::FlowScene &scene)
 {
     std::set<QUuid> roots;
-    for (auto& it: scene.nodes() ){
-        roots.insert( it.first );
+    for (auto &it : scene.nodes())
+    {
+        roots.insert(it.first);
     }
 
-    for (auto it: scene.connections())
+    for (auto it : scene.connections())
     {
         std::shared_ptr<QtNodes::Connection> connection = it.second;
-        QtNodes::Node* child  = connection->getNode( QtNodes::PortType::In );
+        QtNodes::Node *child = connection->getNode(QtNodes::PortType::In);
 
-        if( child ) {
-            roots.erase( child->id() );
+        if (child)
+        {
+            roots.erase(child->id());
         }
     }
 
-    std::vector<QtNodes::Node*> sorted_roots;
-    for (auto uuid: roots)
+    std::vector<QtNodes::Node *> sorted_roots;
+    for (auto uuid : roots)
     {
-        sorted_roots.push_back( scene.nodes().find(uuid)->second.get() );
+        sorted_roots.push_back(scene.nodes().find(uuid)->second.get());
     }
 
-    auto CompareFunction = [&](const QtNodes::Node* a, const QtNodes::Node* b)
-    {
-        return scene.getNodePosition( *a ).y() <  scene.getNodePosition( *b ).y();
+    auto CompareFunction = [&](const QtNodes::Node *a, const QtNodes::Node *b) {
+        return scene.getNodePosition(*a).y() < scene.getNodePosition(*b).y();
     };
-    std::sort(sorted_roots.begin(), sorted_roots.end(), CompareFunction );
+    std::sort(sorted_roots.begin(), sorted_roots.end(), CompareFunction);
 
     return sorted_roots;
 }
 
-std::vector<QtNodes::Node*> getChildren(const QtNodes::FlowScene &scene,
-                                        const QtNodes::Node& parent_node)
+std::vector<QtNodes::Node *> getChildren(const QtNodes::FlowScene &scene,
+                                         const QtNodes::Node &parent_node)
 {
-    std::vector<QtNodes::Node*> children;
+    std::vector<QtNodes::Node *> children;
 
-    for (auto it: scene.connections())
+    for (auto it : scene.connections())
     {
         std::shared_ptr<QtNodes::Connection> connection = it.second;
 
-        QtNodes::Node* parent = connection->getNode( QtNodes::PortType::Out );
-        QtNodes::Node* child  = connection->getNode( QtNodes::PortType::In );
+        QtNodes::Node *parent = connection->getNode(QtNodes::PortType::Out);
+        QtNodes::Node *child = connection->getNode(QtNodes::PortType::In);
 
-        if( parent && child )
+        if (parent && child)
         {
-            if( parent->id() == parent_node.id())
+            if (parent->id() == parent_node.id())
             {
-                children.push_back( child );
+                children.push_back(child);
             }
         }
     }
 
-    auto CompareFunction = [&](const QtNodes::Node* a, const QtNodes::Node* b)
-    {
-        return scene.getNodePosition( *a ).x() <  scene.getNodePosition( *b ).x();
+    auto CompareFunction = [&](const QtNodes::Node *a, const QtNodes::Node *b) {
+        return scene.getNodePosition(*a).x() < scene.getNodePosition(*b).x();
     };
-    std::sort(children.begin(), children.end(), CompareFunction );
+    std::sort(children.begin(), children.end(), CompareFunction);
 
-   // std::cout << "Children are: " << children.size() << std::endl;
+    // std::cout << "Children are: " << children.size() << std::endl;
     return children;
 }
 
-QtNodes::Node* getParent(const QtNodes::FlowScene &scene,
-                         const QtNodes::Node& node)
+QtNodes::Node *getParent(const QtNodes::FlowScene &scene,
+                         const QtNodes::Node &node)
 {
 
-    for (auto it: scene.connections())
+    for (auto it : scene.connections())
     {
         std::shared_ptr<QtNodes::Connection> connection = it.second;
 
-        QtNodes::Node* parent = connection->getNode( QtNodes::PortType::Out );
-        QtNodes::Node* child  = connection->getNode( QtNodes::PortType::In );
+        QtNodes::Node *parent = connection->getNode(QtNodes::PortType::Out);
+        QtNodes::Node *child = connection->getNode(QtNodes::PortType::In);
 
-        if( parent && child )
+        if (parent && child)
         {
-            if( child->id() == node.id())
+            if (child->id() == node.id())
             {
                 return parent;
             }
@@ -106,221 +107,201 @@ QtNodes::Node* getParent(const QtNodes::FlowScene &scene,
     }
 
     return NULL;
-
 }
-
-
 
 //---------------------------------------------------
 void NodeReorderRecursive(QtNodes::FlowScene &scene,
-                             QtNodes::Node& node,
-                             QPointF cursor,
-                             int level,
-                             std::map<int, std::vector<QtNodes::Node*>>& nodes_by_level)
+                          QtNodes::Node &node,
+                          QPointF cursor,
+                          int level,
+                          std::map<int, std::vector<QtNodes::Node *>> &nodes_by_level)
 {
     const double vertical_spacing = 15;
-    std::vector<QtNodes::Node*> children = getChildren(scene, node );
+    std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
     double total_height = 0;
-    for (QtNodes::Node* child_node: children)
+    for (QtNodes::Node *child_node : children)
     {
         total_height += child_node->nodeGeometry().width() + vertical_spacing;
     }
 
-
-
     auto this_level_it = nodes_by_level.find(level);
-    auto next_level_it = nodes_by_level.find(level+1);
+    auto next_level_it = nodes_by_level.find(level + 1);
 
     double this_max_Y = 0;
     double next_max_Y = cursor.x();
 
-    if( next_level_it != nodes_by_level.end() )
+    if (next_level_it != nodes_by_level.end())
     {
-        QtNodes::Node& last_node_right = *(next_level_it->second.back()) ;
-        next_max_Y = vertical_spacing*3.0 +
-                scene.getNodePosition( last_node_right ).x() +
-                scene.getNodeSize( last_node_right ).width();
+        QtNodes::Node &last_node_right = *(next_level_it->second.back());
+        next_max_Y = vertical_spacing * 3.0 +
+                     scene.getNodePosition(last_node_right).x() +
+                     scene.getNodeSize(last_node_right).width();
     }
 
-    if( this_level_it != nodes_by_level.end() )
+    if (this_level_it != nodes_by_level.end())
     {
-        QtNodes::Node& last_node_right = *(this_level_it->second.back()) ;
-        this_max_Y = vertical_spacing*2.0 +
-                scene.getNodePosition( last_node_right ).x() +
-                scene.getNodeSize( last_node_right ).width();
+        QtNodes::Node &last_node_right = *(this_level_it->second.back());
+        this_max_Y = vertical_spacing * 2.0 +
+                     scene.getNodePosition(last_node_right).x() +
+                     scene.getNodeSize(last_node_right).width();
     }
 
     //---------------------------------------------
     // adjust cursor Y
-    cursor.setX( std::max( this_max_Y, next_max_Y) ) ;
+    cursor.setX(std::max(this_max_Y, next_max_Y));
 
-    scene.setNodePosition( node, cursor);
-    nodes_by_level[level].push_back( &node );
+    scene.setNodePosition(node, cursor);
+    nodes_by_level[level].push_back(&node);
     //---------------------------------------------
 
-    QPointF children_cursor( cursor.x(), cursor.y() + node.nodeGeometry().height() + 100 ) ;
+    QPointF children_cursor(cursor.x(), cursor.y() + node.nodeGeometry().height() + 100);
 
-    if( children.size() > 1){
-        children_cursor.setX( cursor.x() - total_height*0.5 );
+    if (children.size() > 1)
+    {
+        children_cursor.setX(cursor.x() - total_height * 0.5);
     }
 
-    for (int i=0; i< children.size(); i++)
+    for (int i = 0; i < children.size(); i++)
     {
-        QtNodes::Node* child_node = children[i];
+        QtNodes::Node *child_node = children[i];
         const double height = child_node->nodeGeometry().width();
-        NodeReorderRecursive( scene, *child_node, children_cursor, level+1, nodes_by_level  );
-        double child_x   =  children_cursor.x() + height + 2.0*vertical_spacing;
-        children_cursor.setX( child_x );
+        NodeReorderRecursive(scene, *child_node, children_cursor, level + 1, nodes_by_level);
+        double child_x = children_cursor.x() + height + 2.0 * vertical_spacing;
+        children_cursor.setX(child_x);
         //qDebug() << ".... cursor shifted " << prev_cursor << " to " << children_cursor;
     }
 
-    if( children.size() > 1)
+    if (children.size() > 1)
     {
-        double min_Y = scene.getNodePosition( *children.front() ).x() ;
-        double max_Y = scene.getNodePosition( *children.back() ).x() + scene.getNodeSize(*children.back()).width();
+        double min_Y = scene.getNodePosition(*children.front()).x();
+        double max_Y = scene.getNodePosition(*children.back()).x() + scene.getNodeSize(*children.back()).width();
 
-        QPointF temp_cursor(   (max_Y + min_Y) * 0.5 - node.nodeGeometry().width() / 2.0, scene.getNodePosition( *children.back() ).y() - node.nodeGeometry().height() -  80 );
-        if( temp_cursor.x() > cursor.x())
+        QPointF temp_cursor((max_Y + min_Y) * 0.5 - node.nodeGeometry().width() / 2.0, scene.getNodePosition(*children.back()).y() - node.nodeGeometry().height() - 80);
+        if (temp_cursor.x() > cursor.x())
         {
-            scene.setNodePosition( node, temp_cursor);
+            scene.setNodePosition(node, temp_cursor);
         }
     }
-    else if ( children.size() > 0)
+    else if (children.size() > 0)
     {
-        QPointF temp_cursor(   scene.getNodePosition( *children.front() ).x() + scene.getNodeSize(*children.front()).width() / 2.0 - node.nodeGeometry().width() / 2.0 , scene.getNodePosition( *children.front() ).y() - node.nodeGeometry().height() -  80 );
-        scene.setNodePosition( node, temp_cursor);
-
+        QPointF temp_cursor(scene.getNodePosition(*children.front()).x() + scene.getNodeSize(*children.front()).width() / 2.0 - node.nodeGeometry().width() / 2.0, scene.getNodePosition(*children.front()).y() - node.nodeGeometry().height() - 80);
+        scene.setNodePosition(node, temp_cursor);
     }
-
-
 }
 
-
-
-
-
-
 void SubtreeReorderRecursive(QtNodes::FlowScene &scene,
-                             QtNodes::Node& node,
-                             QtNodes::Node& root_node,
+                             QtNodes::Node &node,
+                             QtNodes::Node &root_node,
                              QPointF cursor,
                              int level,
-                             std::map<int, std::vector<QtNodes::Node*>>& nodes_by_level)
+                             std::map<int, std::vector<QtNodes::Node *>> &nodes_by_level)
 {
     const double vertical_spacing = 15;
-    std::vector<QtNodes::Node*> children = getChildren(scene, node );
+    std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
-    std::cout << "n of children " << children.size() <<std::endl;
+    std::cout << "n of children " << children.size() << std::endl;
 
     double total_height = 0;
-    for (QtNodes::Node* child_node: children)
+    for (QtNodes::Node *child_node : children)
     {
         total_height += child_node->nodeGeometry().width() + vertical_spacing;
     }
 
     auto this_level_it = nodes_by_level.find(level);
-    auto next_level_it = nodes_by_level.find(level+1);
+    auto next_level_it = nodes_by_level.find(level + 1);
 
     double this_max_Y = 0;
     double next_max_Y = cursor.x();
 
-    if( next_level_it != nodes_by_level.end() )
+    if (next_level_it != nodes_by_level.end())
     {
-        QtNodes::Node& last_node_right = *(next_level_it->second.back()) ;
-        next_max_Y = vertical_spacing*3.0 +
-                scene.getNodePosition( last_node_right ).x() +
-                scene.getNodeSize( last_node_right ).width();
+        QtNodes::Node &last_node_right = *(next_level_it->second.back());
+        next_max_Y = vertical_spacing * 3.0 +
+                     scene.getNodePosition(last_node_right).x() +
+                     scene.getNodeSize(last_node_right).width();
     }
 
-    if( this_level_it != nodes_by_level.end() )
+    if (this_level_it != nodes_by_level.end())
     {
-        QtNodes::Node& last_node_right = *(this_level_it->second.back()) ;
-        this_max_Y = vertical_spacing*2.0 +
-                scene.getNodePosition( last_node_right ).x() +
-                scene.getNodeSize( last_node_right ).width();
+        QtNodes::Node &last_node_right = *(this_level_it->second.back());
+        this_max_Y = vertical_spacing * 2.0 +
+                     scene.getNodePosition(last_node_right).x() +
+                     scene.getNodeSize(last_node_right).width();
     }
 
     //---------------------------------------------
     // adjust cursor Y
-    cursor.setX( std::max( this_max_Y, next_max_Y) ) ;
-
+    cursor.setX(std::max(this_max_Y, next_max_Y));
 
     //    qDebug() << "node: " << node.nodeDataModel()->caption()<< " id: "<<
-//                node.nodeDataModel()->name() << " pos: " << cursor;
+    //                node.nodeDataModel()->name() << " pos: " << cursor;
 
     if (node.id() != root_node.id())
     {
-        scene.setNodePosition( node, cursor);
+        scene.setNodePosition(node, cursor);
     }
-    nodes_by_level[level].push_back( &node );
+    nodes_by_level[level].push_back(&node);
     //---------------------------------------------
 
-    QPointF children_cursor( cursor.x(), cursor.y() + node.nodeGeometry().height() + 100 ) ;
+    QPointF children_cursor(cursor.x(), cursor.y() + node.nodeGeometry().height() + 100);
 
-    if( children.size() > 1){
-        children_cursor.setX( cursor.x() - total_height*0.5 );
+    if (children.size() > 1)
+    {
+        children_cursor.setX(cursor.x() - total_height * 0.5);
     }
 
-    for (int i=0; i< children.size(); i++)
+    for (int i = 0; i < children.size(); i++)
     {
-        QtNodes::Node* child_node = children[i];
+        QtNodes::Node *child_node = children[i];
         const double height = child_node->nodeGeometry().width();
-        SubtreeReorderRecursive( scene, *child_node, root_node, children_cursor, level+1, nodes_by_level  );
-        double child_x   =  children_cursor.x() + height + 2.0*vertical_spacing;
-        children_cursor.setX( child_x );
+        SubtreeReorderRecursive(scene, *child_node, root_node, children_cursor, level + 1, nodes_by_level);
+        double child_x = children_cursor.x() + height + 2.0 * vertical_spacing;
+        children_cursor.setX(child_x);
         //qDebug() << ".... cursor shifted " << prev_cursor << " to " << children_cursor;
     }
 
-    if( children.size() > 1)
+    if (children.size() > 1)
     {
-        double min_Y = scene.getNodePosition( *children.front() ).x() ;
-        double max_Y = scene.getNodePosition( *children.back() ).x() + scene.getNodeSize(*children.back()).width();
+        double min_Y = scene.getNodePosition(*children.front()).x();
+        double max_Y = scene.getNodePosition(*children.back()).x() + scene.getNodeSize(*children.back()).width();
 
-        QPointF temp_cursor(   (max_Y + min_Y) * 0.5 - node.nodeGeometry().width() / 2.0, scene.getNodePosition( *children.back() ).y() - node.nodeGeometry().height() -  80 );
-        if( temp_cursor.x() > cursor.x() && node.id() !=root_node.id())
+        QPointF temp_cursor((max_Y + min_Y) * 0.5 - node.nodeGeometry().width() / 2.0, scene.getNodePosition(*children.back()).y() - node.nodeGeometry().height() - 80);
+        if (temp_cursor.x() > cursor.x() && node.id() != root_node.id())
         {
-            scene.setNodePosition( node, temp_cursor);
+            scene.setNodePosition(node, temp_cursor);
         }
     }
-    else if ( children.size() > 0 && node.id() != root_node.id())
+    else if (children.size() > 0 && node.id() != root_node.id())
     {
-        QPointF temp_cursor(   scene.getNodePosition( *children.front() ).x() + scene.getNodeSize(*children.front()).width() / 2.0 - node.nodeGeometry().width() / 2.0 , scene.getNodePosition( *children.front() ).y() - node.nodeGeometry().height() -  80 );
-        scene.setNodePosition( node, temp_cursor);
-
+        QPointF temp_cursor(scene.getNodePosition(*children.front()).x() + scene.getNodeSize(*children.front()).width() / 2.0 - node.nodeGeometry().width() / 2.0, scene.getNodePosition(*children.front()).y() - node.nodeGeometry().height() - 80);
+        scene.setNodePosition(node, temp_cursor);
     }
-
-
 }
 
-
-
-
-
-
-void calculateForces(QtNodes::FlowScene* scene)
+void calculateForces(QtNodes::FlowScene *scene)
 {
 
     double speed = 500;
 
-    for (auto& it: scene->nodes() )
+    for (auto &it : scene->nodes())
     {
 
         // Sum up all forces pushing this node away
         qreal xvel = 0;
         qreal yvel = 0;
-        QtNodes::Node* node = it.second.get();
+        QtNodes::Node *node = it.second.get();
 
-        if(node->nodeGraphicsObject().isSelected())
+        if (node->nodeGraphicsObject().isSelected())
         {
             continue;
         }
 
         QPointF node_pos = scene->getNodePosition(*node);
 
-        for (auto& other_it: scene->nodes())
+        for (auto &other_it : scene->nodes())
         {
-            QtNodes::Node* other_node = other_it.second.get();
+            QtNodes::Node *other_node = other_it.second.get();
             if (node == other_node)
             {
                 continue;
@@ -331,10 +312,8 @@ void calculateForces(QtNodes::FlowScene* scene)
             QSizeF node_size = scene->getNodeSize(*node);
             QSizeF other_node_size = scene->getNodeSize(*other_node);
 
-
             qreal dx = node_pos.x() - other_node_pos.x();
             qreal dy = node_pos.y() - other_node_pos.y();
-
 
             xvel = 0;
             double l = 2.0 * (dx * dx + dy * dy);
@@ -342,20 +321,18 @@ void calculateForces(QtNodes::FlowScene* scene)
             xvel += (dx * speed) / l;
             yvel += (dy * speed) / l;
 
-
             qreal width_to_check = 0.0;
             qreal height_to_check = 0.0;
 
-            if (dx < 0 )
+            if (dx < 0)
             {
                 // node_pos on the left
 
-                width_to_check = node->nodeGeometry().width() + 30 ;
+                width_to_check = node->nodeGeometry().width() + 30;
             }
             else
             {
-                width_to_check = other_node->nodeGeometry().width() + 30 ;
-
+                width_to_check = other_node->nodeGeometry().width() + 30;
             }
 
             //std::cout << "width_to_check" << width_to_check << std::endl;
@@ -372,158 +349,149 @@ void calculateForces(QtNodes::FlowScene* scene)
 
             //std::cout << "height_to_check" << height_to_check << std::endl;
 
-            if (qAbs(dy) > (height_to_check) || qAbs(dx) > (width_to_check) )
+            if (qAbs(dy) > (height_to_check) || qAbs(dx) > (width_to_check))
             {
                 xvel = 0;
                 yvel = 0;
             }
 
             QPointF newPos = scene->getNodePosition(*node) + QPointF(xvel, yvel);
-            scene->setNodePosition(*node,newPos);
+            scene->setNodePosition(*node, newPos);
         }
     }
 }
 
-
-
-
-
-
-
 void NodeReorder(QtNodes::FlowScene &scene)
 {
-//return;
-  //   qDebug() << "--------------------------";
-    std::vector<QtNodes::Node*> roots = findRoots(scene);
-    std::map<int, std::vector<QtNodes::Node*>> nodes_by_level;
+    //return;
+    //   qDebug() << "--------------------------";
+    std::vector<QtNodes::Node *> roots = findRoots(scene);
+    std::map<int, std::vector<QtNodes::Node *>> nodes_by_level;
 
-    QPointF cursor(10,10);
+    QPointF cursor(10, 10);
 
-    for (QtNodes::Node* node: roots)
+    for (QtNodes::Node *node : roots)
     {
         NodeReorderRecursive(scene, *node, cursor, 0, nodes_by_level);
     }
 
-    double right   = 0;
-    double bottom  = 0;
+    double right = 0;
+    double bottom = 0;
 
-    for (auto& it: scene.nodes() )
+    for (auto &it : scene.nodes())
     {
-        QtNodes::Node* node = it.second.get();
+        QtNodes::Node *node = it.second.get();
         node->nodeGeometry().recalculateSize();
-        QPointF pos = scene.getNodePosition(*node) ;
-        QSizeF rect =  scene.getNodeSize(*node);
+        QPointF pos = scene.getNodePosition(*node);
+        QSizeF rect = scene.getNodeSize(*node);
 
-        right  = std::max( right,  pos.x() + rect.width() );
-        bottom = std::max( bottom, pos.y() + rect.height() );
+        right = std::max(right, pos.x() + rect.width());
+        bottom = std::max(bottom, pos.y() + rect.height());
     }
 
     scene.setSceneRect(-30, -30, right + 60, bottom + 60);
 }
-
 
 void SubtreeReorder(QtNodes::FlowScene &scene, QtNodes::Node &root_node)
 {
     std::cout << "--------------------------" << std::endl;
-    std::map<int, std::vector<QtNodes::Node*>> nodes_by_level;
+    std::map<int, std::vector<QtNodes::Node *>> nodes_by_level;
 
-    QPointF cursor(10,10);
+    QPointF cursor(10, 10);
 
-    std::vector<QtNodes::Node*> children = getChildren(scene, root_node);
+    std::vector<QtNodes::Node *> children = getChildren(scene, root_node);
 
-
-
-    for (QtNodes::Node* node: children)
+    for (QtNodes::Node *node : children)
     {
         SubtreeReorderRecursive(scene, *node, root_node, cursor, 0, nodes_by_level);
     }
 
-    double right   = 0;
-    double bottom  = 0;
+    double right = 0;
+    double bottom = 0;
 
-    for (auto& it: scene.nodes() )
+    for (auto &it : scene.nodes())
     {
-        QtNodes::Node* node = it.second.get();
+        QtNodes::Node *node = it.second.get();
         node->nodeGeometry().recalculateSize();
-        QPointF pos = scene.getNodePosition(*node) ;
-        QSizeF rect =  scene.getNodeSize(*node);
+        QPointF pos = scene.getNodePosition(*node);
+        QSizeF rect = scene.getNodeSize(*node);
 
-        right  = std::max( right,  pos.x() + rect.width() );
-        bottom = std::max( bottom, pos.y() + rect.height() );
+        right = std::max(right, pos.x() + rect.width());
+        bottom = std::max(bottom, pos.y() + rect.height());
     }
 
     scene.setSceneRect(-30, -30, right + 60, bottom + 60);
 }
 
-
-BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
+BT::TreeNode *getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node, yarp::os::Property *blackboard)
 {
 
     int bt_type = node.nodeDataModel()->BTType();
     //std::cout << "The node is :" << bt_type << std::endl;
 
-    switch (bt_type) {
-    // case QtNodes::LUAACTION:
-    // {
+    switch (bt_type)
+    {
+        // case QtNodes::LUAACTION:
+        // {
 
-    //     std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
-    //     BT::LuaActionNode* bt_node = new BT::LuaActionNode(filename,filename,);
-    //     node.linkBTNode(bt_node);
-    //     return bt_node;
-    //     break;
-    // }
-    // case QtNodes::LUACONDITION:
-    // {
-    //     std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
-    //     BT::LuaConditionNode* bt_node = new BT::LuaConditionNode(filename,filename);
-    //     node.linkBTNode(bt_node);
-    //     return bt_node;
-    //     break;
-    // }
+        //     std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
+        //     BT::LuaActionNode* bt_node = new BT::LuaActionNode(filename,filename,);
+        //     node.linkBTNode(bt_node);
+        //     return bt_node;
+        //     break;
+        // }
+        // case QtNodes::LUACONDITION:
+        // {
+        //     std::string filename = ((LuaNodeModel*)node.nodeDataModel())->type().toStdString();
+        //     BT::LuaConditionNode* bt_node = new BT::LuaConditionNode(filename,filename);
+        //     node.linkBTNode(bt_node);
+        //     return bt_node;
+        //     break;
+        // }
 
     case QtNodes::PYTHONACTION:
     {
-        std::string filename = ((PythonNodeModel*)node.nodeDataModel())->type().toStdString();
-        BT::PythonActionNode* bt_node = new BT::PythonActionNode(filename,filename);
+        std::string filename = ((PythonNodeModel *)node.nodeDataModel())->type().toStdString();
+        BT::PythonActionNode *bt_node = new BT::PythonActionNode(filename, filename, blackboard);
         node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
-        case QtNodes::PYTHONCONDITION:
+    case QtNodes::PYTHONCONDITION:
     {
-        std::string filename = ((PythonNodeModel*)node.nodeDataModel())->type().toStdString();
-        BT::PythonConditionNode* bt_node = new BT::PythonConditionNode(filename,filename);
+        std::string filename = ((PythonNodeModel *)node.nodeDataModel())->type().toStdString();
+        BT::PythonConditionNode *bt_node = new BT::PythonConditionNode(filename, filename, blackboard);
         node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
     case QtNodes::YARPACTION:
     {
-        std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();
+        std::string server_name = ((YARPNodeModel *)node.nodeDataModel())->type().toStdString();
 
-        BT::YARPActionNode* bt_node = new BT::YARPActionNode(server_name+"BTAction",server_name);
+        BT::YARPActionNode *bt_node = new BT::YARPActionNode(server_name + "BTAction", server_name);
         node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
     case QtNodes::YARPCONDITION:
     {
-        std::string server_name = ((YARPNodeModel*)node.nodeDataModel())->type().toStdString();
-        BT::YARPConditionNode* bt_node = new BT::YARPConditionNode(server_name+"BTCondition",server_name);
+        std::string server_name = ((YARPNodeModel *)node.nodeDataModel())->type().toStdString();
+        BT::YARPConditionNode *bt_node = new BT::YARPConditionNode(server_name + "BTCondition", server_name);
         node.linkBTNode(bt_node);
         return bt_node;
         break;
     }
     case QtNodes::SEQUENCE:
     {
-        BT::SequenceNode* bt_node = new BT::SequenceNode("Sequence");
+        BT::SequenceNode *bt_node = new BT::SequenceNode("Sequence");
 
-        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+        std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
-        for(int i = 0; i < children.size(); i++)
+        for (int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i]));
+            bt_node->AddChild(getBTObject(scene, *children[i], blackboard));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -531,15 +499,14 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
     }
     case QtNodes::SELECTOR:
     {
-        BT::FallbackNode* bt_node = new BT::FallbackNode("Fallback");
+        BT::FallbackNode *bt_node = new BT::FallbackNode("Fallback");
 
+        std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
-        std::vector<QtNodes::Node*> children = getChildren(scene, node );
-
-        for(int i = 0; i < children.size(); i++)
+        for (int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i]));
+            bt_node->AddChild(getBTObject(scene, *children[i], blackboard));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -547,14 +514,14 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
     }
     case QtNodes::SEQUENCESTAR:
     {
-        BT::SequenceNodeWithMemory* bt_node = new BT::SequenceNodeWithMemory("SequenceWithMemory");
+        BT::SequenceNodeWithMemory *bt_node = new BT::SequenceNodeWithMemory("SequenceWithMemory");
 
-        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+        std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
-        for(int i = 0; i < children.size(); i++)
+        for (int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i]));
+            bt_node->AddChild(getBTObject(scene, *children[i], blackboard));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -562,13 +529,13 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
     }
     case QtNodes::SELECTORSTAR:
     {
-        BT::FallbackNodeWithMemory* bt_node = new BT::FallbackNodeWithMemory("FallbackWithMemory");
-        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+        BT::FallbackNodeWithMemory *bt_node = new BT::FallbackNodeWithMemory("FallbackWithMemory");
+        std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
-        for(int i = 0; i < children.size(); i++)
+        for (int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i]));
+            bt_node->AddChild(getBTObject(scene, *children[i], blackboard));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -576,14 +543,14 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
     }
     case QtNodes::PARALLEL:
     {
-        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+        std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
-        BT::ParallelNode* bt_node = new BT::ParallelNode("ParallelNode", children.size());
+        BT::ParallelNode *bt_node = new BT::ParallelNode("ParallelNode", children.size());
 
-        for(int i = 0; i < children.size(); i++)
+        for (int i = 0; i < children.size(); i++)
 
         {
-            bt_node->AddChild(getBTObject(scene,*children[i]));
+            bt_node->AddChild(getBTObject(scene, *children[i], blackboard));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -591,12 +558,12 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
     }
     case QtNodes::ROOT:
     {
-        BT::RootNode* bt_node = new BT::RootNode();
-        std::vector<QtNodes::Node*> children = getChildren(scene, node );
+        BT::RootNode *bt_node = new BT::RootNode();
+        std::vector<QtNodes::Node *> children = getChildren(scene, node);
 
-        for(int i = 0; i < children.size(); i++)
+        for (int i = 0; i < children.size(); i++)
         {
-            bt_node->AddChild(getBTObject(scene,*children[i]));
+            bt_node->AddChild(getBTObject(scene, *children[i], blackboard));
         }
         node.linkBTNode(bt_node);
         return bt_node;
@@ -608,8 +575,6 @@ BT::TreeNode* getBTObject(QtNodes::FlowScene &scene, QtNodes::Node &node)
         break;
     }
     }
-
-
 }
 
 std::mutex mode_mutex;
@@ -618,7 +583,7 @@ int mode_;
 void setMode(int mode)
 {
     std::cout << "Setting mode: " << mode << std::endl;
-     std::lock_guard<std::mutex> lock(mode_mutex);
+    std::lock_guard<std::mutex> lock(mode_mutex);
     mode_ = mode;
 }
 
@@ -627,8 +592,6 @@ int getMode()
     std::lock_guard<std::mutex> lock(mode_mutex);
     return mode_;
 }
-
-
 
 // static int lua_get_mode(lua_State* L)
 // {
@@ -646,16 +609,14 @@ int getMode()
 //     return 1; //number of returning values
 // }
 
-void runTree(QtNodes::FlowScene* scene)
+void runTree(QtNodes::FlowScene *scene)
 {
 
-
-    QtNodes::Node* root = BTRoot(scene);
+    QtNodes::Node *root = BTRoot(scene);
 
     // lua_State *lua_state;
     // lua_state = luaL_newstate();
     // luaL_openlibs(lua_state);
-
 
     // lua_createtable(lua_state, 1, 0);
 
@@ -667,115 +628,164 @@ void runTree(QtNodes::FlowScene* scene)
     //     RunPreamble(lua_state, (LuaPreambleNodeModel*)lua_preamble->nodeDataModel());
     // }
 
-    BT::TreeNode* bt_root = getBTObject(*scene, *root);
+
+
+
+
+    yarp::os::Property *blackboard = new yarp::os::Property();
+
+
+    // has_blackboard(scene);
+    QtNodes::Node* blackboard_node = BlackboardNode(scene);
+
+
+
+    BT::TreeNode *bt_root = getBTObject(*scene, *root, blackboard);
+
+    if(blackboard_node != NULL)
+    {
+
+        ((YarpBlackboardNodeModel*)blackboard_node->nodeDataModel())->set_blackboard(blackboard);
+    }
+
+
 
     while (getMode() == 1)
     {
-        std::cout <<"Ticking the root node !"<< std::endl;
+        std::cout << "Ticking the root node !" << std::endl;
 
         // Ticking the root node
         bt_root->Tick();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-
         scene->update();
+       // ((YarpBlackboardNodeModel*)blackboard_node)->update_blackboard();
+                 ((YarpBlackboardNodeModel*)blackboard_node->nodeDataModel())->update_blackboard();
 
-        for (auto& it: scene->nodes() )
+        for (auto &it : scene->nodes())
         {
-            QtNodes::Node* node = it.second.get();
+            QtNodes::Node *node = it.second.get();
             node->nodeGraphicsObject().update();
         }
     }
     std::cout << "Halting the BT" << std::endl;
     bt_root->Halt();
-    std::cout << "Finalizing the BT" << std::endl;
-    bt_root->Finalize();
+    // std::cout << "Finalizing the BT" << std::endl;
+   // bt_root->Finalize();
     //std::cout << "Closing the Lua state" << std::endl;
     // lua_close(lua_state);
-
 }
 
-bool is_BT_valid(QtNodes::FlowScene* scene)
+bool is_BT_valid(QtNodes::FlowScene *scene)
 {
 
-    std::vector<QtNodes::Node*> roots = findRoots( *scene );
+    std::vector<QtNodes::Node *> roots = findRoots(*scene);
     bool valid_root = false;
-    for(int i = 0; i < roots.size(); i++)
+    for (int i = 0; i < roots.size(); i++)
 
     {
-       valid_root = valid_root || dynamic_cast<RootNodeModel*>(roots.front()->nodeDataModel());
+        valid_root = valid_root || dynamic_cast<RootNodeModel *>(roots.front()->nodeDataModel());
     }
-    return valid_root ;
+    return valid_root;
 }
 
-bool has_root(QtNodes::FlowScene* scene)
+bool has_root(QtNodes::FlowScene *scene)
 {
-    for(QtNodes::Node* root : findRoots( *scene ))
+    for (QtNodes::Node *root : findRoots(*scene))
     {
-       if(dynamic_cast<RootNodeModel*>(root->nodeDataModel()))
-       {
-           return true;
-       }
+        if (dynamic_cast<RootNodeModel *>(root->nodeDataModel()))
+        {
+            return true;
+        }
     }
-    return false ;
+    return false;
 }
 
-
-QtNodes::Node* BTRoot(QtNodes::FlowScene* scene)
+QtNodes::Node *BTRoot(QtNodes::FlowScene *scene)
 {
-    for(QtNodes::Node* root : findRoots( *scene ))
+    for (QtNodes::Node *root : findRoots(*scene))
     {
-       if(dynamic_cast<RootNodeModel*>(root->nodeDataModel()))
-       {
-           return root;
-       }
+        if (dynamic_cast<RootNodeModel *>(root->nodeDataModel()))
+        {
+            return root;
+        }
     }
 
-    return NULL ;
+    return NULL;
 }
 
-
-bool has_yarp(QtNodes::FlowScene* scene)
+bool has_yarp(QtNodes::FlowScene *scene)
 {
-    for(auto&it : scene->nodes())
+    for (auto &it : scene->nodes())
     {
-        QtNodes::Node* node = it.second.get();
-       if(dynamic_cast<YARPNodeModel*>(node->nodeDataModel()))
-       {
-           return true;
-       }
+        QtNodes::Node *node = it.second.get();
+        if (dynamic_cast<YARPNodeModel *>(node->nodeDataModel()))
+        {
+            return true;
+        }
     }
-    return false ;
+    return false;
 }
 
-
-bool has_lua_preable(QtNodes::FlowScene* scene)
+bool has_lua_preable(QtNodes::FlowScene *scene)
 {
-    for(auto &it : scene->nodes())
+    for (auto &it : scene->nodes())
     {
-        QtNodes::Node* node = it.second.get();
-       if(dynamic_cast<LuaPreambleNodeModel*>(node->nodeDataModel()))
-       {
-           return true;
-       }
+        QtNodes::Node *node = it.second.get();
+        if (dynamic_cast<LuaPreambleNodeModel *>(node->nodeDataModel()))
+        {
+            return true;
+        }
     }
-    return false ;
+    return false;
 }
 
 
-QtNodes::Node* LuaPreamble(QtNodes::FlowScene* scene)
+bool has_blackboard(QtNodes::FlowScene *scene)
 {
-    for(auto &it : scene->nodes())
+    for (auto &it : scene->nodes())
     {
-        QtNodes::Node* node = it.second.get();
-       if(dynamic_cast<LuaPreambleNodeModel*>(node->nodeDataModel()))
-       {
-           return node;
-       }
+        QtNodes::Node *node = it.second.get();
+        if (dynamic_cast<BlackboardNodeModel *>(node->nodeDataModel()))
+        {
+                std::cout << "BB found" << std::endl;
+           // return true;
+        }
     }
-    return NULL ;
+    return false;
 }
+
+
+
+QtNodes::Node *BlackboardNode(QtNodes::FlowScene *scene)
+{
+    for (auto &it : scene->nodes())
+    {
+        QtNodes::Node *node = it.second.get();
+        if (dynamic_cast<YarpBlackboardNodeModel *>(node->nodeDataModel()))
+        {
+            return node;
+        }
+    }
+    return NULL;
+}
+
+
+QtNodes::Node *LuaPreamble(QtNodes::FlowScene *scene)
+{
+    for (auto &it : scene->nodes())
+    {
+        QtNodes::Node *node = it.second.get();
+        if (dynamic_cast<LuaPreambleNodeModel *>(node->nodeDataModel()))
+        {
+            return node;
+        }
+    }
+    return NULL;
+}
+
+
 
 
 // void RunPreamble(lua_State *lua_state, LuaPreambleNodeModel *lua_preamble_node)
@@ -797,4 +807,3 @@ QtNodes::Node* LuaPreamble(QtNodes::FlowScene* scene)
 //     // run the Lua script
 //     luaL_dofile(my_lua_state, filename.c_str());
 // }
-
