@@ -7,10 +7,43 @@ PyObject *python_tick_fn_, *python_halt_fn_, *python_finalize_fn_; //TODO Figure
 static PyObject *
 SetValueOnBlackboard(PyObject *self, PyObject *args)
 {
+    int int_value;
+    const char *str_value;
+    float float_value;
+
+    const char *passed;
     int value = 1;
 
-    std::cout << "*****************Setting Value**********************" << std::endl;
-    return PyLong_FromLong(value);
+    // bool args_ok = PyArg_ParseTuple(args, "si", &passed, &int_value);
+
+    if (PyArg_ParseTuple(args, "si", &passed, &int_value))
+    {
+        std::cout << "*****************Setting Value int **********************" << passed << int_value << std::endl;
+            Py_DECREF(int_value);
+    }
+    else if(PyArg_ParseTuple(args, "sf", &passed, &float_value))
+    {
+        std::cout << "*****************Setting Value float**********************" << passed << float_value << std::endl;
+           // Py_DECREF(float_value);
+
+    }
+
+    else if(PyArg_ParseTuple(args, "ss", &passed, &str_value))
+    {
+        std::cout << "*****************Setting Value str **********************" << passed << str_value << std::endl;
+    Py_DECREF(str_value);
+    }
+    else
+    {
+        std::cout << " Invalid Argument Passed " << std::endl;
+    }
+        std::cout << " Returning " << std::endl;
+
+
+            Py_DECREF(args);
+
+    return NULL;
+    //return PyLong_FromLong(value);
 }
 
 static PyObject *
@@ -33,8 +66,8 @@ static PyMethodDef BlackboardMethods[] = {
 static struct PyModuleDef blackboard_module = {
     PyModuleDef_HEAD_INIT,
     "blackboard", /* name of module */
-    NULL,   /* module documentation, may be NULL */
-    -1,     /* size of per-interpreter state of the module,
+    NULL,         /* module documentation, may be NULL */
+    -1,           /* size of per-interpreter state of the module,
                  or -1 if the module keeps state in global variables. */
     BlackboardMethods};
 
@@ -52,9 +85,7 @@ BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, y
     python_state_ = PyImport_ImportModule((char *)cstr);
 
     if (!python_state_)
-
     {
-
         std::cout << "Unable to open script " << std::endl;
     }
 
@@ -97,6 +128,7 @@ void BT::PythonActionNode::SomeFunction()
 
 BT::ReturnStatus BT::PythonActionNode::Tick()
 {
+    //    return BT::SUCCESS;
     set_status(BT::RUNNING);
     // calling the function tick in the python script with empty argument
     PyObject *empty_args = PyTuple_New(0);
