@@ -56,15 +56,12 @@ void CodeEditor::updateLineNumberArea(const QRect &rect, int dy)
         updateLineNumberAreaWidth(0);
 }
 
-//BehaviorTreeNodeModel *CodeEditor::bt_node_model()
-//{
-//    return bt_node_model_;
-//}
 
-void CodeEditor::set_bt_node_model(LuaNodeModel *bt_node_model)
-{
-    bt_node_model_ = bt_node_model;
-}
+
+// void CodeEditor::set_bt_node_model(LuaNodeModel *bt_node_model)
+// {
+//     bt_node_model_ = bt_node_model;
+// }
 
 
 
@@ -81,7 +78,7 @@ void CodeEditor::resizeEvent(QResizeEvent *e)
 void CodeEditor::closeEvent(QCloseEvent *event)
 {
     writeToFile();
-    bt_node_model_->onCodeUpdated();
+    //bt_node_model_->onCodeUpdated();
 QPlainTextEdit::closeEvent(event);
 }
 

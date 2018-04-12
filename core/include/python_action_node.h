@@ -21,7 +21,7 @@ public:
     ~PythonActionNode();
     BT::ReturnStatus Tick();
     void Finalize();
-
+    void SomeFunction();
     void Halt();
 
 

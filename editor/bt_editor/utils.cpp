@@ -628,12 +628,7 @@ void runTree(QtNodes::FlowScene *scene)
     //     RunPreamble(lua_state, (LuaPreambleNodeModel*)lua_preamble->nodeDataModel());
     // }
 
-
-
-
-
     yarp::os::Property *blackboard = new yarp::os::Property();
-
 
     // has_blackboard(scene);
     QtNodes::Node* blackboard_node = BlackboardNode(scene);
@@ -661,7 +656,10 @@ void runTree(QtNodes::FlowScene *scene)
 
         scene->update();
        // ((YarpBlackboardNodeModel*)blackboard_node)->update_blackboard();
+           if(blackboard_node != NULL)
+    {
                  ((YarpBlackboardNodeModel*)blackboard_node->nodeDataModel())->update_blackboard();
+    }
 
         for (auto &it : scene->nodes())
         {
@@ -671,8 +669,8 @@ void runTree(QtNodes::FlowScene *scene)
     }
     std::cout << "Halting the BT" << std::endl;
     bt_root->Halt();
-    // std::cout << "Finalizing the BT" << std::endl;
-   // bt_root->Finalize();
+     std::cout << "Finalizing the BT" << std::endl;
+     bt_root->Finalize();
     //std::cout << "Closing the Lua state" << std::endl;
     // lua_close(lua_state);
 }

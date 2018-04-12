@@ -4,83 +4,59 @@
 PyObject *python_state_;
 PyObject *python_tick_fn_, *python_halt_fn_, *python_finalize_fn_; //TODO Figure out why if It cannot find Python.h in the header
 
-// static PyObject *
-// spam_system(PyObject *self, PyObject *args)
-// {
-//     std::cout << "Horray" << std::endl;
-//     const char *command;
-//     int sts;
+static PyObject *
+SetValueOnBlackboard(PyObject *self, PyObject *args)
+{
+    int value = 1;
 
-//     if (!PyArg_ParseTuple(args, "s", &command))
-//         return NULL;
-//     sts = system(command);
-//     return PyLong_FromLong(sts);
-// }
+    std::cout << "*****************Setting Value**********************" << std::endl;
+    return PyLong_FromLong(value);
+}
 
-// static PyMethodDef SpamMethods[] = {
-//     {"system", spam_system, METH_VARARGS,
-//      "Execute a shell command."},
-//     {NULL, NULL, 0, NULL} /* Sentinel */
-// };
+static PyObject *
+GetValueOnBlackboard(PyObject *self, PyObject *args)
+{
+    int value = 1;
 
-// static struct PyModuleDef spammodule = {
-//     PyModuleDef_HEAD_INIT,
-//     "ActionPython", /* name of module */
-//     NULL,           /* module documentation, may be NULL */
-//     -1,             /* size of per-interpreter state of the module,
-//                  or -1 if the module keeps state in global variables. */
-//     SpamMethods};
+    std::cout << "*****************Getting Value**********************" << std::endl;
+    return PyLong_FromLong(value);
+}
 
-// PyMODINIT_FUNC
-// PyInit_spam(void)
-// {
-//     return PyModule_Create(&spammodule);
-// }
+static PyMethodDef BlackboardMethods[] = {
+    {"set", SetValueOnBlackboard, METH_VARARGS,
+     "Set Value on Blackboard."},
+    {"get", GetValueOnBlackboard, METH_VARARGS,
+     "Get Value on Blackboard."},
+    {NULL, NULL, 0, NULL} /* Sentinel */
+};
+
+static struct PyModuleDef blackboard_module = {
+    PyModuleDef_HEAD_INIT,
+    "blackboard", /* name of module */
+    NULL,   /* module documentation, may be NULL */
+    -1,     /* size of per-interpreter state of the module,
+                 or -1 if the module keeps state in global variables. */
+    BlackboardMethods};
 
 BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, yarp::os::Property *blackboard) : BT::ActionNode::ActionNode(name)
 {
+
+    std::cout << "Node created" << std::endl;
     filename_ = filename;
-    //std::string filename_wout_extension = filename;
-
-    // blackboard_cmd_ = blackboard_cmd;
-    std::cout << "Reading value from BB" << std::endl;
-
-    std::cout << "Value on BB of a is: " << blackboard->find("a").toString() << std::endl;
-
-    Py_Initialize();
 
     // PyUnicode_FromString wants the filename without extension .py
     std::string filename_wout_extension = filename.substr(0, filename.size() - 3);
     const char *cstr = filename_wout_extension.c_str();
-    //   PyObject *python_module = PyUnicode_FromString((char *)cstr);
 
-    // std::cout << "Loading PyInit_spam" << std::endl;
-
-    // PyImport_AppendInittab((char *)cstr, PyInit_spam);
-
-    // std::cout << "Loaded PyInit_spam" << std::endl;
-
-    // creating python module. Needed to know from which script call the functions tick, halt, etc.
-    //python_state_ = PyImport_Import(python_module);
-
-    // Initializing the python api
-    // Py_Initialize();
-    std::cout << "Py Initialized" << std::endl;
-
+    Py_Initialize();
     python_state_ = PyImport_ImportModule((char *)cstr);
-    std::cout << "Module imported" << std::endl;
 
-    //  PyObject* (*fpFunc)(PyObject*,PyObject*) = turkey_do_something;
-    //  PyMethodDef methd = {"methd",fpFunc,METH_VARARGS,"A new function"};
-    //  PyObject* namef = PyUnicode_FromString(methd.ml_name);
-    // PyObject* pyfoo = PyCFunction_NewEx(&methd,NULL,namef);
-    //     python_state_ = PyImport_ImportModuleEx((char *)cstr, pyfoo, NULL,NULL);
+    if (!python_state_)
 
-    // PyObject* (*fpFunc)(PyObject*,PyObject*) = turkey_do_something;
-    // PyMethodDef methd = {"methd",fpFunc,METH_VARARGS,"A new function"};
-    // PyObject* name2 = PyUnicode_FromString((char *)cstr);
-    // python_state_ = PyCFunction_NewEx(&methd,NULL,name2);
-    //Py_DECREF(name2);
+    {
+
+        std::cout << "Unable to open script " << std::endl;
+    }
 
     // creating the PyObjects related to the functions in the python script.
 
@@ -92,9 +68,31 @@ BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, y
     std::cout << "Methods done" << std::endl;
 
     // calling the function init in the python script with empty argument
+
+    // PyObject* topass = PyModule_Create(&spammodule);
+    PyObject *topass = PyModule_Create(&blackboard_module);
+
+    //PyObject* topass = PyFloat_FromDouble(2.0);
     PyObject *empty_args = PyTuple_New(0);
-    PyObject_CallObject(python_init_fn, empty_args);
+    PyObject *args = PyTuple_Pack(1, topass);
+    PyObject *python_result = PyObject_CallObject(python_init_fn, args);
+    //Py_DECREF(args);                // used for managing reference counts of Python objects.
+    Py_DECREF(python_init_fn);      // used for managing reference counts of Python objects.
+    Py_DECREF(python_tick_fn_);     // used for managing reference counts of Python objects.
+    Py_DECREF(python_halt_fn_);     // used for managing reference counts of Python objects.
+    Py_DECREF(python_finalize_fn_); // used for managing reference counts of Python objects.
+
     std::cout << "init done" << std::endl;
+}
+
+BT::PythonActionNode::~PythonActionNode()
+{
+    std::cout << "Destructor" << std::endl;
+}
+
+void BT::PythonActionNode::SomeFunction()
+{
+    std::cout << "HELLO" << std::endl;
 }
 
 BT::ReturnStatus BT::PythonActionNode::Tick()
@@ -103,6 +101,7 @@ BT::ReturnStatus BT::PythonActionNode::Tick()
     // calling the function tick in the python script with empty argument
     PyObject *empty_args = PyTuple_New(0);
     PyObject *python_result = PyObject_CallObject(python_tick_fn_, empty_args);
+    //Py_DECREF(empty_args);      // used for managing reference counts of Python objects.
 
     // parsing the final return from the python script. The python script has to return True (Success) or False (Failure).
     // The Running status is taken for granted while running the script
@@ -126,12 +125,16 @@ void BT::PythonActionNode::Halt()
     // calling the function finalize in the python script with empty argument
     PyObject *empty_args = PyTuple_New(0);
     PyObject *python_result = PyObject_CallObject(python_halt_fn_, empty_args);
+
+    //Py_DECREF(empty_args);      // used for managing reference counts of Python objects.
 }
 void BT::PythonActionNode::Finalize()
 {
     // calling the function finalize in the python script with empty argument
     PyObject *empty_args = PyTuple_New(0);
     PyObject *python_result = PyObject_CallObject(python_finalize_fn_, empty_args);
+
+    //Py_DECREF(empty_args);          // used for managing reference counts of Python objects.
 
     // Finalizing the python api
     Py_Finalize();

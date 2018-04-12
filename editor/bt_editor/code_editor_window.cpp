@@ -2,7 +2,7 @@
 #include "ui_code_editor_window.h"
 #include <iostream>
 #include <fstream>
-
+#include <python_action_node.h>
 #include <QSettings>
 CodeEditorWindow::CodeEditorWindow(std::string filename, LuaNodeModel *bt_node_model, QWidget *parent) :
     QMainWindow(parent),
@@ -11,7 +11,7 @@ CodeEditorWindow::CodeEditorWindow(std::string filename, LuaNodeModel *bt_node_m
     filename_ = filename;
     lua_bt_node_model_ =  bt_node_model;
 
-    std::string title = "Code Editor for ";//  filename_.c_str());
+    std::string title = "Code Editor for ";
     title.append(filename_);
 
     ui->setupUi(this);
@@ -27,7 +27,7 @@ CodeEditorWindow::CodeEditorWindow(std::string filename, PythonNodeModel *bt_nod
     filename_ = filename;
     python_bt_node_model_ =  bt_node_model;
 
-    std::string title = "Code Editor for ";//  filename_.c_str());
+    std::string title = "Code Editor for ";
     title.append(filename_);
 
     ui->setupUi(this);
@@ -61,6 +61,8 @@ void CodeEditorWindow::closeEvent(QCloseEvent *event)
 void CodeEditorWindow::writeToFile()
 {
 
+
+    std::cout << "File Saved" << std::endl;
     std::ofstream myfile;
     myfile.open (filename_);
     myfile << this->ui->plainTextEdit->toPlainText().toStdString();
