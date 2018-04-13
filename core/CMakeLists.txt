@@ -51,6 +51,11 @@ include_directories ( ${PYTHON_INCLUDE_DIRS} )
 
 
 
+set(generated_libs_dir "${CMAKE_CURRENT_SOURCE_DIR}")
+yarp_idl_to_dir(BlackBoardCmd.thrift ${generated_libs_dir} sources headers include_dirs)
+
+
+
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include/)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/icons/)
 
@@ -96,6 +101,9 @@ ${PROJECT_SOURCE_DIR}/src/python_action_node.cpp
 ${PROJECT_SOURCE_DIR}/src/python_condition_node.cpp
 ${PROJECT_SOURCE_DIR}/gtest/src/action_test_node.cpp
 ${PROJECT_SOURCE_DIR}/gtest/src/condition_test_node.cpp
+
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardCmd.cpp
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard_server.cpp
 
 )
 

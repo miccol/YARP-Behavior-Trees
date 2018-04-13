@@ -3,15 +3,17 @@
 
 PyObject *python_state_,*python_state_2;
 PyObject *python_tick_fn_, *python_halt_fn_, *python_finalize_fn_; //TODO Figure out why if It cannot find Python.h in the header
+     yarp::os::Property* blackboard_ptr_;
 
-static PyObject *
+PyObject *
 SetValueOnBlackboard(PyObject *self, PyObject *args)
 {
+    Py_Initialize();
 
     const char *key;
 
     int int_value;
-    const char *str_value;
+    char *str_value;
     float float_value;
     bool bool_value;
 
@@ -19,6 +21,10 @@ SetValueOnBlackboard(PyObject *self, PyObject *args)
     if (PyArg_ParseTuple(args, "si", &key, &int_value))
     {
         std::cout << "*****************Setting Value int **********************" << key << int_value << std::endl;
+        //blackboard_ptr_->put(key,int_value);
+       // blackboard_ptr_->put("z", 30);
+
+
     }
     else if (PyArg_ParseTuple(args, "sf", &key, &float_value))
     {
@@ -36,13 +42,16 @@ SetValueOnBlackboard(PyObject *self, PyObject *args)
     else
     {
         std::cout << " Invalid Argument Passed " << std::endl;
-        return NULL;
+        //return NULL;
     }
     std::cout << " Returning " << std::endl;
+    //Py_IncRef(args);
      Py_DECREF(args);
      Py_DECREF(self);
-//return PyLong_FromLong(1);
-    Py_RETURN_NONE;
+         //Py_Finalize();
+
+return PyLong_FromLong(1);
+  //  Py_RETURN_NONE;
 }
 
 static PyObject *
@@ -70,19 +79,30 @@ static struct PyModuleDef blackboard_module = {
                  or -1 if the module keeps state in global variables. */
     BlackboardMethods};
 
-BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, yarp::os::Property *blackboard) : BT::ActionNode::ActionNode(name)
+    void BT::PythonActionNode::WriteOnBlackboard(std::string key, yarp::os::Value value)
+    {
+        blackboard_ptr_->put(key,value);
+    }
+
+
+
+
+BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, yarp::os::Property *blackboard_ptr) : BT::ActionNode::ActionNode(name)
 {
 
     std::cout << "Node created" << std::endl;
     filename_ = filename;
+    blackboard_ptr_ = blackboard_ptr;
 
+// blackboard_ptr_->put("x", 10);
+WriteOnBlackboard("y",20);
     // PyUnicode_FromString wants the filename without extension .py
     std::string filename_wout_extension = filename.substr(0, filename.size() - 3);
     const char *cstr = filename_wout_extension.c_str();
 
     Py_Initialize();
     python_state_ = PyImport_ImportModule((char *)cstr);
-    python_state_2 = PyImport_ImportModule((char *)cstr);
+    //python_state_2 = PyImport_ImportModule((char *)cstr);
 
     if (!python_state_)
     {
@@ -91,7 +111,7 @@ BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, y
 
     // creating the PyObjects related to the functions in the python script.
 
-    PyObject *python_init_fn = PyObject_GetAttrString(python_state_2, (char *)"init");
+    PyObject *python_init_fn = PyObject_GetAttrString(python_state_, (char *)"init");
     python_tick_fn_ = PyObject_GetAttrString(python_state_, (char *)"tick");
     python_halt_fn_ = PyObject_GetAttrString(python_state_, (char *)"halt");
     python_finalize_fn_ = PyObject_GetAttrString(python_state_, (char *)"finalize");
@@ -108,12 +128,13 @@ BT::PythonActionNode::PythonActionNode(std::string name, std::string filename, y
     PyObject *args = PyTuple_Pack(1, topass);
     PyObject_CallObject(python_init_fn, args);
     Py_DECREF(args);
+    Py_DECREF(topass);
 
     //Py_DECREF(args);                // used for managing reference counts of Python objects.
-    Py_DECREF(python_init_fn);      // used for managing reference counts of Python objects.
-    Py_DECREF(python_tick_fn_);     // used for managing reference counts of Python objects.
-    Py_DECREF(python_halt_fn_);     // used for managing reference counts of Python objects.
-    Py_DECREF(python_finalize_fn_); // used for managing reference counts of Python objects.
+    //Py_DECREF(python_init_fn);      // used for managing reference counts of Python objects.
+    //Py_DECREF(python_tick_fn_);     // used for managing reference counts of Python objects.
+    //Py_DECREF(python_halt_fn_);     // used for managing reference counts of Python objects.
+    //Py_DECREF(python_finalize_fn_); // used for managing reference counts of Python objects.
 
     std::cout << "init done" << std::endl;
 }
@@ -144,8 +165,11 @@ Py_DECREF(empty_args);
     // parsing the final return from the python script. The python script has to return True (Success) or False (Failure).
     // The Running status is taken for granted while running the script
 
-    bool has_succeeded = true; PyObject_IsTrue(python_result);
+    bool has_succeeded = true;
+    // has_succeeded = PyObject_IsTrue(python_result);
+         std::cout << "Result received" << std::endl;
 //Py_DECREF(python_result);
+
 
     if (has_succeeded)
     {

@@ -4,8 +4,8 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${YARP_MODULE_PATH})
 set(generated_libs_dir "${CMAKE_CURRENT_SOURCE_DIR}")
 yarp_idl_to_dir(BTCmd.thrift ${generated_libs_dir} sources headers include_dirs)
 
-set(generated_libs_dir "${CMAKE_CURRENT_SOURCE_DIR}")
-yarp_idl_to_dir(BlackBoardCmd.thrift ${generated_libs_dir} sources headers include_dirs)
+# set(generated_libs_dir "${CMAKE_CURRENT_SOURCE_DIR}")
+# yarp_idl_to_dir(BlackBoardCmd.thrift ${generated_libs_dir} sources headers include_dirs)
 
 # generated source files now listed in ${sources}
 # generated header files now listed in ${headers}
@@ -41,8 +41,8 @@ set(YARP_BT_NODES_HEADERS
 
 set(MYYARP_BT_NODES_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/BTCmd.cpp
-    # ${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardCmd.cpp
-    # ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard_server.cpp
+     #${CMAKE_CURRENT_SOURCE_DIR}/src/BlackBoardCmd.cpp
+     #${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard_server.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/yarp_bt_module.cpp
     # ${CMAKE_CURRENT_SOURCE_DIR}/src/blackboard.cpp
     )

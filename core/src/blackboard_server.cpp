@@ -2,9 +2,10 @@
 
 
 //TODO add try-catch clause
-BlackBoardServer::BlackBoardServer() : BlackBoardCmd(),yarp::os::RFModule()
+BlackBoardServer::BlackBoardServer(yarp::os::Property* blackboard_ptr ) : BlackBoardCmd(),yarp::os::RFModule()
 {
-    content_ = new BlackBoard();
+    // content_ = new BlackBoard();
+    blackboard_ptr_ = blackboard_ptr;
 }
 
 
@@ -31,7 +32,6 @@ bool BlackBoardServer::configure( yarp::os::ResourceFinder &rf )
 }
 bool BlackBoardServer::updateModule()
 {
-    /* do something very useful */
     return true;
 }
 bool BlackBoardServer::close()
@@ -47,7 +47,8 @@ void BlackBoardServer::SetI16(const std::string &name, const int16_t data)
     {
         yarp::os::Value value = data;
 
-        content_->SetValue(name, "i16", value);
+        // content_->SetValue(name, "i16", value);
+        blackboard_ptr_->put(name,value);
     }
     catch( const std::invalid_argument & ex )
     {
@@ -61,7 +62,8 @@ void BlackBoardServer::SetI32(const std::string &name, const int32_t data)
     {
         yarp::os::Value value = data;
 
-        content_->SetValue(name, "i32", value);
+        // content_->SetValue(name, "i32", value);
+        blackboard_ptr_->put(name,value);
     }
     catch( const std::exception & ex )
     {
@@ -72,7 +74,9 @@ void BlackBoardServer::SetI32(const std::string &name, const int32_t data)
 void BlackBoardServer::SetI64(const std::string &name, const YARP_INT64 data)
 {    try
      {
-        content_->SetValue(name, "i64", (int)data); //loosing data here but a yarp value does not have .makeInt64()
+        // content_->SetValue(name, "i64", (int)data); //loosing data here but a yarp value does not have .makeInt64()
+        blackboard_ptr_->put(name,(int)data);
+
      }
      catch( const std::invalid_argument & ex )
     {
@@ -83,7 +87,8 @@ void BlackBoardServer::SetI64(const std::string &name, const YARP_INT64 data)
 void BlackBoardServer::SetByte(const std::string &name, const int8_t data)
 {    try
      {
-        content_->SetValue(name,"byte",data);
+        // content_->SetValue(name,"byte",data);
+        blackboard_ptr_->put(name,data);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -97,7 +102,9 @@ void BlackBoardServer::SetDouble(const std::string &name, const double data)
      {
         yarp::os::Value value;
         value.makeDouble(data);
-        content_->SetValue(name,"double",data);
+        // content_->SetValue(name,"double",data);
+        blackboard_ptr_->put(name,value);
+
      }
      catch( const std::invalid_argument & ex )
     {
@@ -109,7 +116,8 @@ void BlackBoardServer::SetDouble(const std::string &name, const double data)
 void BlackBoardServer::SetBool(const std::string &name, const double data)
 {    try
      {
-        content_->SetValue(name, "bool", data);
+        // content_->SetValue(name, "bool", data);
+                blackboard_ptr_->put(name,data);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -123,7 +131,9 @@ void BlackBoardServer::SetString(const std::string &name, const std::string &dat
      {
         yarp::os::Value value;
         value.makeString(data);
-        content_->SetValue(name,"string", *value.makeString(data));
+        // content_->SetValue(name,"string", *value.makeString(data));
+                blackboard_ptr_->put(name,value);
+
      }
      catch( const std::invalid_argument & ex )
     {
@@ -134,7 +144,7 @@ void BlackBoardServer::SetString(const std::string &name, const std::string &dat
 int16_t BlackBoardServer::GetI16(const std::string &name)
 {    try
      {
-        return content_->GetI16(name);
+        // return content_->GetI16(name);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -146,7 +156,7 @@ int16_t BlackBoardServer::GetI16(const std::string &name)
 int32_t BlackBoardServer::GetI32(const std::string &name)
 {    try
      {
-        return content_->GetI32(name);
+        // return content_->GetI32(name);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -158,7 +168,7 @@ int32_t BlackBoardServer::GetI32(const std::string &name)
 YARP_INT64 BlackBoardServer::GetI64(const std::string &name)
 {    try
      {
-        return content_->GetI64(name);
+        // return content_->GetI64(name);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -170,7 +180,7 @@ YARP_INT64 BlackBoardServer::GetI64(const std::string &name)
 int8_t BlackBoardServer::GetByte(const std::string &name)
 {    try
      {
-        return content_->GetByte(name);
+        // return content_->GetByte(name);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -182,7 +192,7 @@ int8_t BlackBoardServer::GetByte(const std::string &name)
 double BlackBoardServer::GetDouble(const std::string &name)
 {    try
      {
-        return content_->GetDouble(name);
+        // return content_->GetDouble(name);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -195,7 +205,7 @@ double BlackBoardServer::GetDouble(const std::string &name)
 bool BlackBoardServer::GetBool(const std::string &name)
 {    try
      {
-        return content_->GetBool(name);
+        // return content_->GetBool(name);
      }
      catch( const std::invalid_argument & ex )
     {
@@ -208,7 +218,7 @@ bool BlackBoardServer::GetBool(const std::string &name)
 std::string BlackBoardServer::GetString(const std::string &name)
 {    try
      {
-        return content_->GetString(name);
+        // return content_->GetString(name);
      }
      catch( const std::invalid_argument & ex )
     {

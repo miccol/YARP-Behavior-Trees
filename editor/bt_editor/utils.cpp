@@ -7,7 +7,8 @@
 #include <bt_editor/YARPNodeModel.h>
 #include <bt_editor/PythonNodeModel.h>
 #include <yarp/os/Property.h> // the blackboard is a yarp property
-
+#include <thread>
+#include <functional>
 #include <iostream>
 #include <fstream>
 #include "RootNodeModel.hpp"
@@ -16,6 +17,7 @@
 #include <behavior_tree.h>
 
 #include <blackboard.h>
+#include <blackboard_server.h>
 
 // extern "C" {
 // # include "lua.h"
@@ -609,8 +611,26 @@ int getMode()
 //     return 1; //number of returning values
 // }
 
+void RunServer(BlackBoardServer server)
+{
+        yarp::os::ResourceFinder rf;
+
+    std::cout << " running the server" << std::endl;
+    server.configure(rf);
+    server.runModule();
+    std::cout << " running the server2" << std::endl;
+
+}
+
+
 void runTree(QtNodes::FlowScene *scene)
 {
+
+
+
+    yarp::os::Network yarp;
+    /* create your module */
+   
 
     QtNodes::Node *root = BTRoot(scene);
 
@@ -630,8 +650,21 @@ void runTree(QtNodes::FlowScene *scene)
 
     yarp::os::Property *blackboard = new yarp::os::Property();
 
+
+ BlackBoardServer blackboard_server(blackboard);
+    /* prepare and configure the resource finder */
+    yarp::os::ResourceFinder rf;
+
     // has_blackboard(scene);
     QtNodes::Node* blackboard_node = BlackboardNode(scene);
+
+std::cout << "running module" << std::endl;
+ std::thread t1(&RunServer, blackboard_server);
+
+
+std::cout << " running the tree" << std::endl;
+
+
 
 
 
@@ -669,8 +702,8 @@ void runTree(QtNodes::FlowScene *scene)
     }
     std::cout << "Halting the BT" << std::endl;
     bt_root->Halt();
-     std::cout << "Finalizing the BT" << std::endl;
-     bt_root->Finalize();
+    // std::cout << "Finalizing the BT" << std::endl;
+    //bt_root->Finalize();
     //std::cout << "Closing the Lua state" << std::endl;
     // lua_close(lua_state);
 }

@@ -2,15 +2,15 @@
 #define BLACKBOARDSERVER_H
 
 #include <BlackBoardCmd.h>
-#include <blackboard.h>
 #include <yarp/os/RFModule.h>
+#include <yarp/os/Property.h>
 
 
 
 class BlackBoardServer : public BlackBoardCmd, public yarp::os::RFModule
 {
 public:
-    BlackBoardServer();
+    BlackBoardServer(yarp::os::Property* blackboard_ptr);
     virtual void SetI16(const std::string& name, const int16_t data);
     virtual void SetI32(const std::string& name, const int32_t data);
     virtual void SetI64(const std::string& name, const YARP_INT64 data);
@@ -34,7 +34,7 @@ public:
 
 
 private:
-    BlackBoard* content_;
+    yarp::os::Property* blackboard_ptr_;
     yarp::os::Port cmd_port_;
 
 };

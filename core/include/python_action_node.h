@@ -1,6 +1,5 @@
 #ifndef PYTHON_ACTION_NODE_H
 #define PYTHON_ACTION_NODE_H
-//#include <Python.h>
 
 #include "action_node.h"
 
@@ -17,7 +16,7 @@ namespace BT
 class PythonActionNode : public BT::ActionNode
 {
 public:
-    PythonActionNode(std::string name, std::string filename, yarp::os::Property* blackboard = NULL);
+    PythonActionNode(std::string name, std::string filename, yarp::os::Property* blackboard_ptr = NULL);
     ~PythonActionNode();
     BT::ReturnStatus Tick();
     void Finalize();
@@ -32,6 +31,9 @@ private:
     //lua_State *lua_state_;
     //PyObject* python_state_;
     // PyObject* python_tick_fn_;
+    void WriteOnBlackboard(std::string key, yarp::os::Value value);
+    yarp::os::Value ReadFromBlackboard(std::string key);
+    yarp::os::Property* blackboard_ptr_;
     bool lua_script_done_;
     std::mutex lua_script_done_mutex_;
     // BlackBoardCmd* blackboard_cmd_;
