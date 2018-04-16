@@ -103,7 +103,7 @@ void BlackBoardServer::SetDouble(const std::string &name, const double data)
         yarp::os::Value value;
         value.makeDouble(data);
         // content_->SetValue(name,"double",data);
-        blackboard_ptr_->put(name,value);
+        blackboard_ptr_->put(name,data);
 
      }
      catch( const std::invalid_argument & ex )
@@ -132,7 +132,7 @@ void BlackBoardServer::SetString(const std::string &name, const std::string &dat
         yarp::os::Value value;
         value.makeString(data);
         // content_->SetValue(name,"string", *value.makeString(data));
-                blackboard_ptr_->put(name,value);
+                blackboard_ptr_->put(name,data);
 
      }
      catch( const std::invalid_argument & ex )
