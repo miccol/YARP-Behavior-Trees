@@ -145,6 +145,7 @@ int16_t BlackBoardServer::GetI16(const std::string &name)
 {    try
      {
         // return content_->GetI16(name);
+        return blackboard_ptr_->find(name).asInt();
      }
      catch( const std::invalid_argument & ex )
     {
@@ -156,7 +157,7 @@ int16_t BlackBoardServer::GetI16(const std::string &name)
 int32_t BlackBoardServer::GetI32(const std::string &name)
 {    try
      {
-        // return content_->GetI32(name);
+        return blackboard_ptr_->find(name).asInt();
      }
      catch( const std::invalid_argument & ex )
     {
@@ -168,7 +169,7 @@ int32_t BlackBoardServer::GetI32(const std::string &name)
 YARP_INT64 BlackBoardServer::GetI64(const std::string &name)
 {    try
      {
-        // return content_->GetI64(name);
+        return blackboard_ptr_->find(name).asInt();
      }
      catch( const std::invalid_argument & ex )
     {
@@ -180,7 +181,7 @@ YARP_INT64 BlackBoardServer::GetI64(const std::string &name)
 int8_t BlackBoardServer::GetByte(const std::string &name)
 {    try
      {
-        // return content_->GetByte(name);
+        return blackboard_ptr_->find(name).asInt();
      }
      catch( const std::invalid_argument & ex )
     {
@@ -192,7 +193,7 @@ int8_t BlackBoardServer::GetByte(const std::string &name)
 double BlackBoardServer::GetDouble(const std::string &name)
 {    try
      {
-        // return content_->GetDouble(name);
+        return blackboard_ptr_->find(name).asDouble();
      }
      catch( const std::invalid_argument & ex )
     {
@@ -205,7 +206,7 @@ double BlackBoardServer::GetDouble(const std::string &name)
 bool BlackBoardServer::GetBool(const std::string &name)
 {    try
      {
-        // return content_->GetBool(name);
+        return blackboard_ptr_->find(name).asBool();
      }
      catch( const std::invalid_argument & ex )
     {
@@ -218,7 +219,7 @@ bool BlackBoardServer::GetBool(const std::string &name)
 std::string BlackBoardServer::GetString(const std::string &name)
 {    try
      {
-        // return content_->GetString(name);
+        return blackboard_ptr_->find(name).asString();
      }
      catch( const std::invalid_argument & ex )
     {
